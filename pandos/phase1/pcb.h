@@ -4,7 +4,7 @@
 
 // Allocation and deallocation of pcbs
 
-/* I pcb non più usati vengono restituiti alla lista pcbFree */
+/* I pcb non più usati vengono restituiti alla lista pcbFree_h */
 void freePcb(pcb_t *p);
 
 
