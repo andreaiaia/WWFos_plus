@@ -13,7 +13,7 @@ Questo metodo deve essere chiamato una volta sola in fase di inizializzazione de
 void initPcbs(){
    if(list_empty(&(pcbFree_h)){
 	for(int i=0; i<MAX_PROC; i++){
-		list_add( &(pcbFree_table[i].p_next), &(pcbFree_h) );
+		list_add( &(pcbFree_table[i].p_list), &(pcbFree_h) );
 	}
    }  
 }       
