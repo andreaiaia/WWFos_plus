@@ -2,8 +2,6 @@
 #include "../h/pandos_types.h"
 #include "../h/listx.h"
 
-
-
 // Allocation and deallocation of pcbs //
 
 /* 
@@ -23,7 +21,7 @@ void freePcb(pcb_t *p);
 /* 
 	Questo metodo serve per inizializzare una variabile per fare da puntatore di coda per una process queue.
 	Return: pointer to the tail of an empty process queue
-            or NULL.
+        	or NULL.
 */
 pcb_t *mkEmptyProcQ();
 
@@ -39,8 +37,8 @@ pcb_t *removeProcQ(pcb_t **tp);
 // Process Tree Maintenance //
 
 /*
-Prende il primo child del pcb puntato da p non più un figlio di p.
-Return: NULL if initially there where no children of p
-        or pointer to the removed child.
+	Prende il primo child del pcb puntato da p non più un figlio di p.
+	Return: NULL if initially there where no children of p
+    		or pointer to the removed child.
 */
 pcb_t *removeChild(pcb_t *p);
