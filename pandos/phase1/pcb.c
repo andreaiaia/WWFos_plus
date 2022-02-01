@@ -7,13 +7,19 @@ LIST_HEAD(pcbFree_h);
 pcb_t pcbFree_table[MAX_PROC];
 
 /* 
-Inizializza la lista pcbFree in modo da contenere tutti gli elementi della pcbFree_table. 
-Questo metodo deve essere chiamato una volta sola in fase di inizializzazione della struttura dati. 
+	Viene eseguita solo all'inizio: prende tutti gli elementi della tabella pcbFree_table e li inserisce nella lista pcbFree_h
 */
-void initPcbs(){
+void initPcbs() {
    if(list_empty(&(pcbFree_h)){
 	for(int i=0; i<MAX_PROC; i++){
-		list_add( &(pcbFree_table[i].p_list), &(pcbFree_h) );
+		list_add( &(pcbFree_table[i].p_list), &pcbFree_h );
 	}
-   }  
-}       
+   }
+}
+
+/*
+	Questa funzione prende un processo e lo riaggiunge nella lista pcbFree_h
+*/
+void freePcb(pcb_t *p) {
+	list_add( p, &pcbFree_h );
+}
