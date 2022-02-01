@@ -18,15 +18,14 @@ void initPcbs() {
 }
 
 /*
-	Questa funzione prende un processo e lo riaggiunge nella lista pcbFree_h, fa uso della api del linux kernel per la gestione delle liste
+	Questa funzione prende un processo e lo riaggiunge nella lista pcbFree_h dopo aver verificato che p non punti a NULL, fa uso della api del linux kernel per la gestione delle liste.
 */
 void freePcb(pcb_t *p) {
 	if (p != NULL) list_add( p, &pcbFree_h );
 }
 
 /*
-	Questa funzione crea una lista di PCB e la inizializza come vuota.
-	@param: il puntatore alla testa della lista da creare.
+	Questa funzione prende il puntatore passatogli e usa la macro del kernel linux per creare una lista di PCB vuota.
 */
 void mkEmptyProcQ(struct list_head * head) {
 	head = &(LIST_HEAD(procQ))
