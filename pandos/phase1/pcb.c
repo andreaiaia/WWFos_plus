@@ -103,3 +103,14 @@ int emptyChild(pcb_t *p){
 	return list_empty(&(p->p_child));
 }
 
+/*
+	11. Inserisce il PCB puntato da p come figlio del PCB puntato da prnt.
+	p = puntatore a pcb da inserire come figlio
+	prnt = parent da assegnare a p
+*/
+
+int insertChild(pcb_t *prnt, pcb_t *p){
+	p->p_parent = prnt;
+	list_add(p, &(prnt->p_child));
+}
+

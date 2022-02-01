@@ -65,6 +65,15 @@ pcb_t *removeProcQ(struct list_head *);
 int emptyChild(pcb_t *p);
 
 /*
+	11. Inserisce il PCB puntato da p come figlio del PCB puntato da prnt.
+	p = puntatore a pcb da inserire 
+	prnt = parent da assegnare a p
+*/
+
+int insertChild(pcb_t *prnt, pcb_t *p);
+
+
+/*
 	Prende il primo child del pcb puntato da p non più un figlio di p.
 	Return: NULL if initially there where no children of p
     		or pointer to the removed child.
