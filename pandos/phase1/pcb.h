@@ -16,6 +16,11 @@ void initPcbs();
 */
 void freePcb(pcb_t *);
 
+/*
+	3. Inizializza tutti i campi di un pcb togliendolo dalla lista pcbFree_h
+	Return NULL se la lista pcbFree_h è vuota.
+*/
+pcb_t *allocPcb();
 
 // Process Queue Maintenance //
 
