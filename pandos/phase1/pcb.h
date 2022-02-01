@@ -58,6 +58,12 @@ pcb_t *removeProcQ(struct list_head *);
 
 // Process Tree Maintenance //
 
+/* 
+	10. RETURN TRUE se PCB puntato da P non ha figli, FALSE altrimenti.
+*/
+
+int emptyChild(pcb_t *p);
+
 /*
 	Prende il primo child del pcb puntato da p non più un figlio di p.
 	Return: NULL if initially there where no children of p

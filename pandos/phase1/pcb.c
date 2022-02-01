@@ -94,3 +94,12 @@ pcb_t *headProcQ(struct list_head *head) {
 		return NULL;
   }
 }
+
+/* 
+	10. RETURN TRUE se PCB puntato da P non ha figli, FALSE altrimenti.
+*/
+
+int emptyChild(pcb_t *p){
+	return list_empty(&(p->p_child));
+}
+
