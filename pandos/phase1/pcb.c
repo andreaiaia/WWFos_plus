@@ -82,7 +82,7 @@ void insertProcQ(struct list_head *head, pcb_t *p) {
 	SENZA RIMUOVERLO. Ritorna NULL se la coda non ha elementi.
 */
 pcb_t *headProcQ(struct list_head *head) {
-  if (list_empty( &(pcbFree_h) ) {
+  if (list_empty( &(pcbFree_h) ) ) {
 		return NULL;
   }
 }
