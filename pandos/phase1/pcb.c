@@ -29,5 +29,5 @@ void freePcb(pcb_t *p) {
 	@param: il puntatore alla testa della lista da creare.
 */
 void mkEmptyProcQ(struct list_head * head) {
-	
+	return NULL;
 }
