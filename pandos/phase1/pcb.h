@@ -11,19 +11,18 @@
 void initPcbs();
 
 /* 
-	3. I pcb non più usati vengono restituiti alla lista pcbFree_h 
+	2. I pcb non più usati vengono restituiti alla lista pcbFree_h 
 */
 void freePcb(pcb_t *p);
 
 
 // Process Queue Maintenance //
 
-/* 
-	Questo metodo serve per inizializzare una variabile per fare da puntatore di coda per una process queue.
-	Return: pointer to the tail of an empty process queue
-        	or NULL.
+/*
+	Questa funzione crea una lista di PCB e la inizializza come vuota..
+	@param: il puntatore alla testa della lista da creare.
 */
-pcb_t *mkEmptyProcQ();
+void mkEmptyProcQ(struct list_head * head);
 
 /* 
 	Rimuove il primo elemento il cui puntatore a coda è puntato da tp dalla process queue.
@@ -31,7 +30,7 @@ pcb_t *mkEmptyProcQ();
 	Return: NULL if the process queue is empty 
 		    or pointer to removed element.
 */
-pcb_t *removeProcQ(pcb_t **tp);
+pcb_t * removeProcQ(pcb_t **tp);
 
 
 // Process Tree Maintenance //
@@ -41,4 +40,4 @@ pcb_t *removeProcQ(pcb_t **tp);
 	Return: NULL if initially there where no children of p
     		or pointer to the removed child.
 */
-pcb_t *removeChild(pcb_t *p);
+pcb_t * removeChild(pcb_t *p);
