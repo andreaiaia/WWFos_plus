@@ -31,6 +31,13 @@ pcb_t *allocPcb();
 void mkEmptyProcQ(struct list_head *);
 
 /* 
+	5. Questa funzione return TRUE se la lista puntata da head è vuota
+	false altrimenti
+*/
+
+int emptyProcQ(struct list_head *head);
+
+/* 
 	TODO: AGGIUNGERE DESCRIZIONE
 */
 void insertProcQ(struct list_head *, pcb_t *);
