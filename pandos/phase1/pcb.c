@@ -134,7 +134,6 @@ pcb_t *removeChild(pcb_t *p) {
 	13. Rimuove il PCB puntato da p dalla lista dei figli del padre.
 	Se il PCB puntato da p non ha un padre, restituisce NULL, altrimenti restituisce l’elemento rimosso (cioè p).
 	A differenza della removeChild, p può trovarsi in una posizione arbitraria (ossia non è necessariamente il primo figlio del padre).
-	@author: Alex
 */
 pcb_t *outChild(pcb_t *p) {
 	if(p->p_parent == NULL) {
