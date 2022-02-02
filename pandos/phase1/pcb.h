@@ -38,12 +38,12 @@ void mkEmptyProcQ(struct list_head *);
 int emptyProcQ(struct list_head *head);
 
 /* 
-	TODO: AGGIUNGERE DESCRIZIONE
+	6. Inserisce l’elemento puntato da p nella coda dei processi puntata da head.
 */
 void insertProcQ(struct list_head *, pcb_t *);
 
 /*
-	TODO: AGGIUNGERE DESCRIZIONE
+	7. Restituisce l’elemento di testa della coda dei processi da head, SENZA RIMUOVERLO. Ritorna NULL se la coda non ha elementi.
 */
 pcb_t *headProcQ(struct list_head *):
 
