@@ -6,8 +6,9 @@ LIST_HEAD(pcbFree_h);
 // Dichiarazione dell'array di pcb
 pcb_t pcbFree_table[MAX_PROC];
 
-/* 
-	Viene eseguita solo all'inizio: prende tutti gli elementi della tabella pcbFree_table e li inserisce nella lista pcbFree_h
+/*  
+	1. Viene eseguita solo all'inizio: prende tutti gli elementi della tabella pcbFree_table e li inserisce nella lista pcbFree_h
+	@author: Alex
 */
 void initPcbs() {
 	if (list_empty(&(pcbFree_h))) {
@@ -78,21 +79,22 @@ int emptyProcQ(struct list_head *head) {
 
 
 /*  
-	Inserisce l’elemento puntato da p nella
-	coda dei processi puntata da head.
+	6. Inserisce l’elemento puntato da p nella coda dei processi puntata da head.
+	@author: Alex
 */
 void insertProcQ(struct list_head *head, pcb_t *p) {
 	list_add(&(p->p_list), head);
 }
 
 /*  
-	Restituisce l’elemento di testa della coda dei processi da head,
-	SENZA RIMUOVERLO. Ritorna NULL se la coda non ha elementi.
+	7. Restituisce l’elemento di testa della coda dei processi da head, SENZA RIMUOVERLO. Ritorna NULL se la coda non ha elementi.
+	@author: Alex
 */
 pcb_t *headProcQ(struct list_head *head) {
-  if (list_empty( &(pcbFree_h) ) ) {
+  	if (list_empty(head) ){
 		return NULL;
-  }
+  	}	
+	return container_of(head->next, pcb_t, p_list); 
 }
 
 /* 
@@ -114,3 +116,26 @@ int insertChild(pcb_t *prnt, pcb_t *p){
 	list_add(p, &(prnt->p_child));
 }
 
+/*
+	13. Rimuove il PCB puntato da p dalla lista dei figli del padre. 
+	    Se il PCB puntato da p non ha un padre, restituisce NULL, altrimenti restituisce l’elemento rimosso (cioè p). 
+		A differenza della removeChild, p può trovarsi in una posizione arbitraria (ossia non è necessariamente il primo figlio del padre).
+	@author: Alex
+*/
+pcb_t *outChild(pcb_t *p){
+	if(p->p_parent == NULL){
+		return NULL;
+	}
+	struct list_head tmp = (p->p_parent)->p_child;    // elemento sentinella della lista dei figli del padre di p 
+	struct lsit_head tmp_head = tmp;				  // copia della sentinella da usare per funzione "list_is_last"
+
+	while(tmp->next != p->p_list && list_is_last(tmp->next, tmp_head) == 0 ){
+		tmp = tmp->next;
+	} // quando esco dal while, tmp->next conterrà il pcb da togliere
+
+	if(list_is_last(tmp->next, tmp_head) == 1){   // non c'é elemento che corrisponda a p 
+		return NULL;
+	}
+	list_del(tmp->next);
+	return container_of(tmp->next, pcb_t, p_list)
+}
