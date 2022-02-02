@@ -74,8 +74,16 @@ int insertChild(pcb_t *prnt, pcb_t *p);
 
 
 /*
-	Prende il primo child del pcb puntato da p non più un figlio di p.
+	12. Prende il primo child del pcb puntato da p non più un figlio di p.
 	Return: NULL if initially there where no children of p
     		or pointer to the removed child.
 */
 pcb_t * removeChild(pcb_t *);
+
+/*
+	13. Rimuove il PCB puntato da p dalla lista dei figli del padre.
+	Se il PCB puntato da p non ha un padre, restituisce NULL, altrimenti restituisce l’elemento rimosso (cioè p).
+	A differenza della removeChild, p può trovarsi in una posizione arbitraria (ossia non è necessariamente il primo figlio del padre).
+	@author: Alex
+*/
+pcb_t * outChild(pcb_t * p);

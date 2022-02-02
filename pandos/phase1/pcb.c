@@ -48,13 +48,13 @@ pcb_t *allocPcb() {
 		INIT_LIST_HEAD(&(oggetto->p_sib));
 		/* initializing process status information */
 		/* campi della struct p_s di tipo state_t */
-		oggetto->p_s.entry_hi=0;
-		oggetto->p_s.cause=0;
-		oggetto->p_s.status=0;
-		oggetto->p_s.pc_epc=0;
-		oggetto->p_s.gpr[STATE_GPR_LEN]=0;
-		oggetto->p_s.hi=0;
-		oggetto->p_s.lo=0;
+		oggetto->p_s.entry_hi = 0;
+		oggetto->p_s.cause = 0;
+		oggetto->p_s.status = 0;
+		oggetto->p_s.pc_epc = 0;
+		oggetto->p_s.gpr[STATE_GPR_LEN] = 0;
+		oggetto->p_s.hi = 0;
+		oggetto->p_s.lo = 0;
 		/* fine campi struct p_s di tipo state_t */
 		oggetto->p_time = 0;
 		/* initializing Pointer to the semaphore the process is currently blocked on */
@@ -101,7 +101,7 @@ pcb_t *headProcQ(struct list_head *head) {
 	10. RETURN TRUE se PCB puntato da P non ha figli, FALSE altrimenti.
 */
 
-int emptyChild(pcb_t *p){
+int emptyChild(pcb_t *p) {
 	return list_empty(&(p->p_child));
 }
 
@@ -111,25 +111,39 @@ int emptyChild(pcb_t *p){
 	prnt = parent da assegnare a p
 */
 
-int insertChild(pcb_t *prnt, pcb_t *p){
+int insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt;
 	list_add(p, &(prnt->p_child));
 }
 
 /*
-	13. Rimuove il PCB puntato da p dalla lista dei figli del padre. 
-	    Se il PCB puntato da p non ha un padre, restituisce NULL, altrimenti restituisce l’elemento rimosso (cioè p). 
-		A differenza della removeChild, p può trovarsi in una posizione arbitraria (ossia non è necessariamente il primo figlio del padre).
-	@author: Alex
+	Rimuove il primo figlio del PCB puntato da p e lo restituisce.
+	Return: p->p_child 
+			or NULL.
 */
-pcb_t *outChild(pcb_t *p){
-	if(p->p_parent == NULL){
+pcb_t *removeChild(pcb_t *p) {
+	if (emptyChild(p)) return NULL;
+	else {
+		struct list_head * child = p->p_child;
+		list_del( &(p->p_child) );
+		return child;
+	}
+}
+
+	/*
+		13. Rimuove il PCB puntato da p dalla lista dei figli del padre.
+		Se il PCB puntato da p non ha un padre, restituisce NULL, altrimenti restituisce l’elemento rimosso (cioè p).
+		A differenza della removeChild, p può trovarsi in una posizione arbitraria (ossia non è necessariamente il primo figlio del padre).
+		@author: Alex
+	*/
+pcb_t *outChild(pcb_t *p) {
+	if(p->p_parent == NULL) {
 		return NULL;
 	}
 	struct list_head tmp = (p->p_parent)->p_child;    // elemento sentinella della lista dei figli del padre di p 
 	struct lsit_head tmp_head = tmp;				  // copia della sentinella da usare per funzione "list_is_last"
 
-	while(tmp->next != p->p_list && list_is_last(tmp->next, tmp_head) == 0 ){
+	while(tmp->next != p->p_list && list_is_last(tmp->next, tmp_head) == 0 ) {
 		tmp = tmp->next;
 	} // quando esco dal while, tmp->next conterrà il pcb da togliere
 
