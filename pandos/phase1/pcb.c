@@ -124,32 +124,32 @@ int insertChild(pcb_t *prnt, pcb_t *p) {
 pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
-		struct list_head * child = p->p_child;
-		list_del( &(p->p_child) );
+		struct pcb_t * child = container_of(p->p_child, pcb_t, p_list); // puntatore da ritornare
+		list_del( &(p->p_child) ); // tolgo il processo dalla
 		return child;
 	}
 }
 
-	/*
-		13. Rimuove il PCB puntato da p dalla lista dei figli del padre.
-		Se il PCB puntato da p non ha un padre, restituisce NULL, altrimenti restituisce l’elemento rimosso (cioè p).
-		A differenza della removeChild, p può trovarsi in una posizione arbitraria (ossia non è necessariamente il primo figlio del padre).
-		@author: Alex
-	*/
+/*
+	13. Rimuove il PCB puntato da p dalla lista dei figli del padre.
+	Se il PCB puntato da p non ha un padre, restituisce NULL, altrimenti restituisce l’elemento rimosso (cioè p).
+	A differenza della removeChild, p può trovarsi in una posizione arbitraria (ossia non è necessariamente il primo figlio del padre).
+	@author: Alex
+*/
 pcb_t *outChild(pcb_t *p) {
 	if(p->p_parent == NULL) {
 		return NULL;
 	}
 	struct list_head tmp = (p->p_parent)->p_child;    // elemento sentinella della lista dei figli del padre di p 
-	struct lsit_head tmp_head = tmp;				  // copia della sentinella da usare per funzione "list_is_last"
+	struct list_head tmp_head = tmp;				  // copia della sentinella da usare per funzione "list_is_last"
 
 	while(tmp->next != p->p_list && list_is_last(tmp->next, tmp_head) == 0 ) {
 		tmp = tmp->next;
 	} // quando esco dal while, tmp->next conterrà il pcb da togliere
 
-	if(list_is_last(tmp->next, tmp_head) == 1){   // non c'é elemento che corrisponda a p 
+	if(list_is_last(tmp->next, tmp_head) == 1) {   // non c'é elemento che corrisponda a p 
 		return NULL;
 	}
 	list_del(tmp->next);
-	return container_of(tmp->next, pcb_t, p_list)
+	return container_of(tmp->next, pcb_t, p_list);
 }
