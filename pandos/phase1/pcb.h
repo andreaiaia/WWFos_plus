@@ -53,7 +53,7 @@ pcb_t *headProcQ(struct list_head *):
 	Return: NULL if the process queue is empty
 			or pointer to removed element.
 */
-pcb_t *removeProcQ(struct list_head *);
+pcb_t *removeProcQ(struct list_head *head);
 
 
 // Process Tree Maintenance //
@@ -78,7 +78,7 @@ int insertChild(pcb_t *prnt, pcb_t *p);
 	Return: NULL if initially there where no children of p
     		or pointer to the removed child.
 */
-pcb_t * removeChild(pcb_t *);
+pcb_t * removeChild(pcb_t *p);
 
 /*
 	13. Rimuove il PCB puntato da p dalla lista dei figli del padre.

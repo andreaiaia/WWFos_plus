@@ -97,7 +97,21 @@ pcb_t *headProcQ(struct list_head *head) {
 	return container_of(head->next, pcb_t, p_list); 
 }
 
-/* 
+/*
+	8. Rimuove il primo elemento nella coda dei processi puntata da head.
+	Return: puntatore all'elemento rimosso
+			or NULL se la process queue è vuota.
+*/
+pcb_t *removeProcQ(struct list_head *head) {
+	if (list_empty(head)) return NULL;
+	else {
+		struct pcb_t *p = container_of(head, pcb_t, p_list);
+		list_del(head);
+		return p;
+	}
+}
+
+/*
 	10. RETURN TRUE se PCB puntato da P non ha figli, FALSE altrimenti.
 */
 
@@ -117,14 +131,14 @@ int insertChild(pcb_t *prnt, pcb_t *p) {
 }
 
 /*
-	Rimuove il primo figlio del PCB puntato da p e lo restituisce.
+	12. Rimuove il primo figlio del PCB puntato da p e lo restituisce.
 	Return: p->p_child 
 			or NULL.
 */
 pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
-		struct pcb_t * child = container_of(p->p_child, pcb_t, p_list); // puntatore da ritornare
+		struct pcb_t * child = container_of(&(p->p_child), pcb_t, p_list); // puntatore da ritornare
 		list_del( &(p->p_child) ); // tolgo il processo dalla
 		return child;
 	}
