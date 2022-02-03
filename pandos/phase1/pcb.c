@@ -6,7 +6,7 @@
 */
 void initPcbs() {
 	if (list_empty(&(pcbFree_h))) {
-		for (int i = 0; i < MAX_PROC; i++) {
+		for (int i = 0; i < MAXPROC; i++) {
 			list_add( &(pcbFree_table[i].p_list), &pcbFree_h );
 		}
 	}
