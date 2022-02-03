@@ -4,7 +4,7 @@
 LIST_HEAD(pcbFree_h);
 
 // Dichiarazione dell'array di pcb
-pcb_t pcbFree_table[MAX_PROC];
+pcb_t pcbFree_table[MAXPROC];
 
 /*  
 	1. Viene eseguita solo all'inizio: prende tutti gli elementi della tabella pcbFree_table e li inserisce nella lista pcbFree_h
@@ -140,6 +140,7 @@ pcb_t *removeChild(pcb_t *p) {
 	else {
 		struct pcb_t * child = container_of(&(p->p_child), pcb_t, p_list); // puntatore da ritornare
 		list_del( &(p->p_child) ); // tolgo il processo dalla
+		child->p_parent = NULL;
 		return child;
 	}
 }
