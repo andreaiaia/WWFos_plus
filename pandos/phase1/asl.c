@@ -9,7 +9,7 @@
     @param: 
     Return: 
 */
-pcb_t* removeBlocked(int *semAdd){
+pcb_t *removeBlocked(int *semAdd) {
     if(semAdd == NULL){
         return NULL;
     }
@@ -24,6 +24,39 @@ pcb_t* removeBlocked(int *semAdd){
             or NULL se il PCB non compare nella coda (stato di errore).
 */
 pcb_t *outBlocked(pcb_t *p) {
+    struct semd_t *s_iter;
+    // Questo ciclo scorre la lista dei semafori (semd_h) e ad ogni iterata s_iter punta al semd_t corrente
+    list_for_each_entry(s_iter, &semd_h, s_link) {
+        // Controllo di aver trovato il semd corretto confrontando le chiavi
+        if (s_iter->s_key == p->p_semAdd) {
+            struct pcb_t *p_iter;
+            /*
+            Questo ciclo scorre nella lista dei processi bloccati per trovare il pcb_t
+            che ci interessa. Ad ogni iterata p_iter punta al pcb_t corrente.
+            */
+            list_for_each_entry(p_iter, &(s_iter->s_procq), p_list) {
+                if (p_iter == p) {
+                    list_del(&(p_iter->p_list));
+                    /* 
+                    Se il pcb rimosso era l'unico, il semd diventa libero e viene tolto dalla lista 
+                    dei semd attivi e messo in quella dei semd liberi .
+                    */
+                    if (list_empty( &(s_iter->s_procq) )) {
+                        list_del( &(s_iter->s_link) );
+                        list_add( &(s_iter->s_link), &semdFree_h );
+                    }
+
+                    return p;
+                }
+            }
+            /*
+            Non necessario, l'ho messo solo per terminare prima l'esecuzione nel caso non ci sia
+            un p_iter == p, in tal caso non ha senso continuare il ciclo.
+            */
+            return NULL; 
+        }
+    }
+    // Stato di errore
     return NULL;
 }
 
@@ -42,7 +75,7 @@ pcb_t *headBlocked(int *semAdd) {
     Questo metodo viene invocato una volta sola durante l'inizializzazione dei dati.
 */
 void initASL() {
-    // Controllo di sicurezza, se la lista dei semafori liberi non è vuota la funzione termina
+    // Controllo per sicurezza, se la lista dei semafori liberi non è vuota la funzione termina
     if (!list_empty(&semdFree_h)) return;
 
     /* 

@@ -22,7 +22,7 @@ LIST_HEAD(semd_h);
     @param: 
     Return: 
 */
-pcb_t* removeBlocked(int *semAdd);
+pcb_t *removeBlocked(int *semAdd);
 
 /*
     16. Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato (p->p_semAdd).
