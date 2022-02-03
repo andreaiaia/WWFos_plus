@@ -15,6 +15,16 @@ LIST_HEAD(semd_h);
 // Gestione della ASL (Active Semaphore List)
 
 /*
+    15. Ritorna il primo PCB dalla coda dei processi bloccati (s_procq) associata al SEMD della ASL con chiave semAdd. 
+    Se tale descrittore non esiste nella ASL, restituisce NULL. Altrimenti, restituisce l’elemento rimosso. 
+    Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descrittore
+    corrispondente dalla ASL e lo inserisce nella coda dei descrittori liberi (semdFree_h). 
+    @param: 
+    Return: 
+*/
+pcb_t* removeBlocked(int *semAdd);
+
+/*
     16. Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato (p->p_semAdd).
     Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il semd corrispondente da semd_h e lo inserisce in semdFree_h (lo rimette nella coda dei semafori liberi).
     @param: puntatore a PCB da rimuovere.
