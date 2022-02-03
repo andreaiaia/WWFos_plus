@@ -149,19 +149,20 @@ pcb_t *removeChild(pcb_t *p) {
 	13. Rimuove il PCB puntato da p dalla lista dei figli del padre.
 	Se il PCB puntato da p non ha un padre, restituisce NULL, altrimenti restituisce l’elemento rimosso (cioè p).
 	A differenza della removeChild, p può trovarsi in una posizione arbitraria (ossia non è necessariamente il primo figlio del padre).
+	@author: Alex
 */
 pcb_t *outChild(pcb_t *p) {
 	if(p->p_parent == NULL) {
 		return NULL;
 	}
-	struct list_head tmp = (p->p_parent)->p_child;    // elemento sentinella della lista dei figli del padre di p 
-	struct list_head tmp_head = tmp;				  // copia della sentinella da usare per funzione "list_is_last"
+	struct list_head *tmp = &( (p->p_parent)->p_child );    // elemento sentinella della lista dei figli del padre di p 
+	struct list_head *tmp_head = tmp;				 	    // copia della sentinella da usare per funzione "list_is_last"
 
 	while(tmp->next != p->p_list && list_is_last(tmp->next, tmp_head) == 0 ) {
 		tmp = tmp->next;
 	} // quando esco dal while, tmp->next conterrà il pcb da togliere
 
-	if(list_is_last(tmp->next, tmp_head) == 1) {   // non c'é elemento che corrisponda a p 
+	if(list_is_last(tmp->next, &tmp_head) == 1) {   // non c'é elemento che corrisponda a p 
 		return NULL;
 	}
 	list_del(tmp->next);
