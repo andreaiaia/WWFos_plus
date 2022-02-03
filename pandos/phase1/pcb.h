@@ -2,6 +2,13 @@
 #include "../h/pandos_types.h"
 #include "../h/listx.h"
 
+// Dichiarazione della lista dei pcb liberi
+LIST_HEAD(pcbFree_h);
+
+// Dichiarazione dell'array di pcb
+pcb_t pcbFree_table[MAXPROC];
+
+
 // Allocation and deallocation of pcbs //
 
 /* 
