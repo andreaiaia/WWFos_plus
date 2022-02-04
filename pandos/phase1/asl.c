@@ -50,8 +50,8 @@ pcb_t *outBlocked(pcb_t *p) {
                 }
             }
             /*
-            Non necessario, l'ho messo solo per terminare prima l'esecuzione nel caso non ci sia
-            un p_iter == p, in tal caso non ha senso continuare il ciclo.
+            Return non strettamente necessario, l'ho messo solo per terminare prima l'esecuzione nel caso in cui
+            il semaforo non contenga un p_iter == p, in tal caso non ha senso continuare il ciclo.
             */
             return NULL; 
         }
@@ -67,6 +67,17 @@ pcb_t *outBlocked(pcb_t *p) {
             or NULL se non c'è il SEMD o se la sua coda è vuota.
 */
 pcb_t *headBlocked(int *semAdd) {
+    struct semd_t *s_iter;
+    list_for_each_entry(s_iter, &semd_h, s_link) {
+        if (s_iter->s_key == semAdd) {
+            if (list_empty( &(s_iter->s_procq) )) return NULL; // La coda dei pcb è vuota
+
+            // Uso la macro container_of per prendere il primo pcb della coda e restituirlo
+            struct pcb_t *p = container_of( &(s_iter->s_procq), pcb_t, p_list);
+            return p;
+        }
+    }
+    // Non esiste il semd
     return NULL;
 }
 
