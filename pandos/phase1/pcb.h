@@ -52,7 +52,7 @@ void insertProcQ(struct list_head *, pcb_t *);
 /*
 	7. Restituisce l’elemento di testa della coda dei processi da head, SENZA RIMUOVERLO. Ritorna NULL se la coda non ha elementi.
 */
-pcb_t *headProcQ(struct list_head *):
+pcb_t *headProcQ(struct list_head *head);
 
 /*
 	8. Rimuove il primo elemento il cui puntatore a coda è puntato da tp dalla process queue.
