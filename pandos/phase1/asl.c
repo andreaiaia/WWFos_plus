@@ -8,13 +8,26 @@
     corrispondente dalla ASL e lo inserisce nella coda dei descrittori liberi (semdFree_h). 
     @param: 
     Return: 
-*/
+*/   
 pcb_t *removeBlocked(int *semAdd) {
-    if(semAdd == NULL){
-        return NULL;
+    struct semd_t *s_iter;
+    list_for_each_entry(s_iter, &semd_h, s_link) {   // scorro ASL
+        if (s_iter->s_key == semAdd) {
+            if (list_empty( &(s_iter->s_procq) )) return NULL; // La coda dei pcb è vuota
+    
+            struct pcb_t *p = container_of( &(s_iter->s_procq), pcb_t, p_list);
+
+            list_del( &(s_iter->s_procq->next) );  // tolgo pcb trovato da s_procq
+            if(list_empty( &(s_iter->s_procq) ) == 1){    // se s_procq diventa vuota
+                list_del( p->p_list );
+                list_add( p->p_list, &semdFree_h );
+            }
+            return p;
+        }
     }
-    pcb_t *tmp = container_of()
-}
+    // Non esiste il semd
+    return NULL;
+}    
 
 /*
     16. Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato (p->p_semAdd).
