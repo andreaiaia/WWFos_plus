@@ -2,12 +2,10 @@
 
 
 /*
-    15. Ritorna il primo PCB dalla coda dei processi bloccati (s_procq) associata al SEMD della ASL con chiave semAdd. 
-    Se tale descrittore non esiste nella ASL, restituisce NULL. Altrimenti, restituisce l’elemento rimosso. 
-    Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descrittore
-    corrispondente dalla ASL e lo inserisce nella coda dei descrittori liberi (semdFree_h). 
-    @param: 
-    Return: 
+    15. Rimuove il primo PCB dalla coda dei processi bloccati (s_procq) associata al SEMD della ASL con chiave semAdd. Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descrittore corrispondente dalla ASL e lo inserisce nella coda dei descrittori liberi (semdFree_h). 
+    @param: chiave del semd
+    Return: Puntatore al pcb rimosso
+            or NULL.
 */   
 pcb_t *removeBlocked(int *semAdd) {
     struct semd_t *s_iter;
@@ -86,7 +84,7 @@ pcb_t *headBlocked(int *semAdd) {
             if (list_empty( &(s_iter->s_procq) )) return NULL; // La coda dei pcb è vuota
 
             // Uso la macro container_of per prendere il primo pcb della coda e restituirlo
-            struct pcb_t *p = container_of( &(s_iter->s_procq), pcb_t, p_list);
+            struct pcb_t *p = container_of( &(s_iter->s_procq), pcb_t, p_list );
             return p;
         }
     }
