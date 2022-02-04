@@ -106,6 +106,35 @@ pcb_t *removeProcQ(struct list_head *head) {
 }
 
 /*
+	9. Rimuove il PCB puntato da p dalla coda dei
+	processi puntata da head. Se p non è presente
+	nella coda, restituisce NULL. (NOTA: p può
+	trovarsi in una posizione arbitraria della coda).
+	@param: puntatore alla testa della lista
+	@param: puntatore al PCB da rimuovere
+	
+	Return: NULL se p non è presente nella coda.
+*/
+
+pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
+	int trovato = 0;
+	pcb_t *oggetto = NULL;
+	struct list_head *iteratore;
+	list_for_each(iteratore, head){
+		oggetto = container_of(iteratore, pcb_t, p_list);
+		if (oggetto=p) trovato=1;	
+	}
+	if (trovato) {
+		list_del(oggetto);
+	}
+	else {
+		return NULL;
+	}	
+}
+
+
+
+/*
 	10. RETURN TRUE se PCB puntato da P non ha figli, FALSE altrimenti.
 */
 
