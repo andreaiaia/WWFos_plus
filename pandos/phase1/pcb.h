@@ -2,13 +2,6 @@
 #include "../h/pandos_types.h"
 #include "../h/listx.h"
 
-// Dichiarazione dell'array di pcb (allocazione in memoria dei pcb)
-static pcb_t pcbFree_table[MAXPROC];
-
-// Dichiarazione della lista dei pcb liberi
-static LIST_HEAD(pcbFree_h);
-
-
 // Allocation and deallocation of pcbs //
 
 /* 
@@ -41,7 +34,6 @@ void mkEmptyProcQ(struct list_head *head);
 	5. Questa funzione return TRUE se la lista puntata da head è vuota
 	false altrimenti
 */
-
 int emptyProcQ(struct list_head *head);
 
 /* 
@@ -69,11 +61,9 @@ pcb_t *removeProcQ(struct list_head *head);
 	nella coda, restituisce NULL. (NOTA: p può
 	trovarsi in una posizione arbitraria della coda).
 	@param: puntatore alla testa della lista
-	@param: puntatore al PCB da rimuovere
-	
+	@param: puntatore al PCB da rimuovere	
 	Return: NULL se p non è presente nella coda.
 */
-
 pcb_t* outProcQ(struct list_head* head, pcb_t *p);
 
 // Process Tree Maintenance //
@@ -81,7 +71,6 @@ pcb_t* outProcQ(struct list_head* head, pcb_t *p);
 /* 
 	10. RETURN TRUE se PCB puntato da P non ha figli, FALSE altrimenti.
 */
-
 int emptyChild(pcb_t *p);
 
 /*
@@ -89,7 +78,6 @@ int emptyChild(pcb_t *p);
 	p = puntatore a pcb da inserire 
 	prnt = parent da assegnare a p
 */
-
 int insertChild(pcb_t *prnt, pcb_t *p);
 
 

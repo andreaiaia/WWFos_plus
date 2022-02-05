@@ -1,5 +1,12 @@
 #include "asl.h"
 
+// Tabella dei semafori di dimensione massima MAXPROC (allocazione in memoria dei semafori)
+static semd_t semd_table[MAXPROC];
+// Lista dei semafori liberi/inutilizzati
+static LIST_HEAD(semdFree_h);
+// Lista dei semafori attivi/utilizzati
+static LIST_HEAD(semd_h);
+
 /*
     14. Viene inserito il PCB puntato da p nella coda dei
     processi bloccati associata al SEMD con chiave
@@ -14,7 +21,7 @@
 
 */
 
-int insertBlocked(int *semAdd, pcb_t *p){
+int insertBlocked(int *semAdd, pcb_t *p) {
 
 
 
