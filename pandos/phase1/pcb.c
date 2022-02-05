@@ -31,10 +31,8 @@ pcb_t *allocPcb() {
 	}
 	else {
 		struct list_head *elem = ((&pcbFree_h)->prev);
-		(&pcbFree_h)->prev = (&pcbFree_h)->prev->prev;
-		/* forse ha più senso farlo così
+		//(&pcbFree_h)->prev = (&pcbFree_h)->prev->prev;
 		list_del(elem);
-		*/
 		pcb_t *oggetto = container_of(elem, pcb_t, p_list);
 		/* initializing process tree fields */
 		oggetto->p_parent = NULL;
