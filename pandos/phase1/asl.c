@@ -4,13 +4,14 @@
 static semd_t semd_table[MAXPROC];
 // Lista dei semafori liberi/inutilizzati
 static LIST_HEAD(semdFree_h);
-// Lista dei semafori attivi/utilizzati
+// Lista dei semafori attivi/utilizzati (ASL)
 static LIST_HEAD(semd_h);
 
 /*
     14. Viene inserito il PCB puntato da p nella coda dei
     processi bloccati associata al SEMD con chiave
-    semAdd. Se il semaforo corrispondente non è
+    semAdd. 
+    Se il semaforo corrispondente non è
     presente nella ASL, alloca un nuovo SEMD dalla
     lista di quelli liberi (semdFree) e lo inserisce nella
     ASL, settando I campi in maniera opportuna (i.e.
@@ -22,11 +23,33 @@ static LIST_HEAD(semd_h);
 */
 
 int insertBlocked(int *semAdd, pcb_t *p) {
-
-
-
-
-
+    semd_PTR s_iteratore;
+    int flag = 0;
+    //scorre la lista dei semafori attivi/utilizzati
+    list_for_each_entry(s_iteratore, &semd_h, s_link){
+    //se trova il semaforo con chiave semAdd inserisce il pcb p
+    //all'interno della lista dei processi bloccati dal semaforo
+        if ((s_iteratore->s_key == semAdd) && (flag==0)) {
+            p->p_semAdd = s_iteratore->s_key;
+            s_iteratore->s_key = s_iteratore->s_key++;
+            list_add(p, &(s_iteratore->s_procq));
+            flag=1;
+            return FALSE;
+        }
+    }
+    //caso in cui il semaforo non è presente nella ASL
+    if (flag == 0) {
+        // return TRUE se non ci sono semafori liberi da allocare
+        if (list_empty(&semdFree_h)) return TRUE;
+        //allocazione nuovo semd dalla lista semdFree
+        semd_PTR newsem = list_next(&(semdFree_h));
+        list_del(newsem);
+        newsem->s_key = semAdd;
+        *(newsem->s_key) = 1;
+        list_add(newsem, &(semd_h));
+        list_add(p, &(newsem->s_procq));
+        return FALSE;
+    }
 }
 
 

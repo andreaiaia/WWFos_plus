@@ -18,14 +18,14 @@ void initPcbs() {
 }
 
 /*
-	Questa funzione prende un processo e lo riaggiunge nella lista pcbFree_h dopo aver verificato che p non punti a NULL, fa uso della api del linux kernel per la gestione delle liste.
+	2. Questa funzione prende un processo e lo riaggiunge nella lista pcbFree_h dopo aver verificato che p non punti a NULL, fa uso della api del linux kernel per la gestione delle liste.
 */
 void freePcb(pcb_t *p) {
 	if (p != NULL) list_add( p, &pcbFree_h );
 }
 
 /*
-	Questa funzione prende un processo dalla lista pcbFree_h, lo rimuove, inizializzando poi i suoi campi.
+	3. Questa funzione prende un processo dalla lista pcbFree_h, lo rimuove, inizializzando poi i suoi campi.
 	Return del processo.
 	Nel caso la lista pcbFree_h fosse vuota, return NULL.
 */
@@ -38,7 +38,7 @@ pcb_t *allocPcb() {
 		struct list_head *elem = ((&pcbFree_h)->prev);
 		//(&pcbFree_h)->prev = (&pcbFree_h)->prev->prev;
 		list_del(elem);
-		pcb_t *oggetto = container_of(elem, pcb_t, p_list);
+		pcb_PTR oggetto = container_of(elem, pcb_t, p_list);
 		/* initializing process tree fields */
 		oggetto->p_parent = NULL;
 		INIT_LIST_HEAD(&(oggetto->p_child));
@@ -61,14 +61,14 @@ pcb_t *allocPcb() {
 }
 
 /*
-	Questa funzione prende il puntatore passatogli e usa la macro del kernel linux per creare una lista di PCB vuota.
+	4. Questa funzione prende il puntatore passatogli e usa la macro del kernel linux per creare una lista di PCB vuota.
 */
 void mkEmptyProcQ(struct list_head * head) {
 	head = &(LIST_HEAD(procQ));
 }
 
 /* 
-	return TRUE se la lista puntata da head è vuota	false altrimenti
+	5. return TRUE se la lista puntata da head è vuota	false altrimenti
 */
 int emptyProcQ(struct list_head *head) {
 	return(list_empty(head));
@@ -114,14 +114,13 @@ pcb_t *removeProcQ(struct list_head *head) {
 	nella coda, restituisce NULL. (NOTA: p può
 	trovarsi in una posizione arbitraria della coda).
 	@param: puntatore alla testa della lista
-	@param: puntatore al PCB da rimuovere
-	
+	@param: puntatore al PCB da rimuovere	
 	Return: NULL se p non è presente nella coda.
 */
 
 pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 	int trovato = 0;
-	pcb_t *oggetto = NULL;
+	pcb_PTR oggetto = NULL;
 	struct list_head *iteratore;
 	list_for_each(iteratore, head){
 		oggetto = container_of(iteratore, pcb_t, p_list);
