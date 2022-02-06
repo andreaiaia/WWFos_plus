@@ -25,26 +25,30 @@ void freePcb(pcb_t *p) {
 }
 
 /*
-	3. Questa funzione prende un processo dalla lista pcbFree_h, lo rimuove, inizializzando poi i suoi campi.
-	Return del processo.
-	Nel caso la lista pcbFree_h fosse vuota, return NULL.
-*/
+	3. 
+	Prende un processo dalla lista pcbFree_h, 
+	lo rimuove ed inizializza i suoi campi.
 
+	Return: NULL se pcbFree_h vuota, pcb_t* altrimenti.
+	
+	author: -W
+*/
 pcb_t *allocPcb() {
 	if (list_empty(&(pcbFree_h))) {
 		return(NULL);
 	}
 	else {
 		struct list_head *elem = ((&pcbFree_h)->prev);
-		//(&pcbFree_h)->prev = (&pcbFree_h)->prev->prev;
 		list_del(elem);
 		pcb_PTR oggetto = container_of(elem, pcb_t, p_list);
-		/* initializing process tree fields */
+		/* Inizializzo i campi dell'albero dei processi */
 		oggetto->p_parent = NULL;
 		INIT_LIST_HEAD(&(oggetto->p_child));
 		INIT_LIST_HEAD(&(oggetto->p_sib));
-		/* initializing process status information */
-		/* campi della struct p_s di tipo state_t */
+		/* Inizializzo i campi riguardanti le informazioni 
+		   sullo stato del processo */
+
+		/* Campi della struct p_s di tipo state_t */
 		oggetto->p_s.entry_hi = 0;
 		oggetto->p_s.cause = 0;
 		oggetto->p_s.status = 0;
@@ -52,9 +56,9 @@ pcb_t *allocPcb() {
 		oggetto->p_s.gpr[STATE_GPR_LEN] = 0;
 		oggetto->p_s.hi = 0;
 		oggetto->p_s.lo = 0;
-		/* fine campi struct p_s di tipo state_t */
+		/* Fine campi struct p_s di tipo state_t */
 		oggetto->p_time = 0;
-		/* initializing Pointer to the semaphore the process is currently blocked on */
+		/* Inizializzo il puntatore al semaforo bloccante */
 		oggetto->p_semAdd = NULL;
 		return(oggetto);
 	} 
@@ -68,7 +72,14 @@ void mkEmptyProcQ(struct list_head * head) {
 }
 
 /* 
-	5. return TRUE se la lista puntata da head è vuota	false altrimenti
+	5.
+	Verifica se una lista è vuota.
+
+	head: lista da controllare
+
+	return: 1 se la lista è vuota, 0 altrimenti
+
+	author: -W
 */
 int emptyProcQ(struct list_head *head) {
 	return(list_empty(head));
@@ -109,15 +120,17 @@ pcb_t *removeProcQ(struct list_head *head) {
 }
 
 /*
-	9. Rimuove il PCB puntato da p dalla coda dei
-	processi puntata da head. Se p non è presente
-	nella coda, restituisce NULL. (NOTA: p può
-	trovarsi in una posizione arbitraria della coda).
-	@param: puntatore alla testa della lista
-	@param: puntatore al PCB da rimuovere	
-	Return: NULL se p non è presente nella coda.
-*/
+	9. 
+	Rimuove il pcb puntato da p dalla coda 
+	dei processi puntata da head. 
+	
+	head: puntatore alla testa della lista
+	p: puntatore al pcb da rimuovere	
 
+	Return: NULL se p non è presente nella coda.
+
+	author: -W
+*/
 pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 	int trovato = 0;
 	pcb_PTR oggetto = NULL;
@@ -137,20 +150,29 @@ pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 
 
 /*
-	10. RETURN TRUE se PCB puntato da P non ha figli, FALSE altrimenti.
-*/
+	10.
+	Verifica se il pcb passato ha figli.
 
+	p: puntatore a pcb da testare.
+	
+	Return: 1 se non ha figli, 0 altrimenti.
+
+	author: -W
+*/
 int emptyChild(pcb_t *p) {
 	return list_empty(&(p->p_child));
 }
 
 /*
-	11. Inserisce il PCB puntato da p come figlio del PCB puntato da prnt.
-	p = puntatore a pcb da inserire come figlio
+	11. 
+	Inserisce il pcb puntato da p come figlio del pcb puntato da prnt.
+	
+	p = puntatore a pcb da inserire 
 	prnt = parent da assegnare a p
-*/
 
-int insertChild(pcb_t *prnt, pcb_t *p) {
+	author: -W
+*/
+void insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt;
 	list_add(p, &(prnt->p_child));
 }

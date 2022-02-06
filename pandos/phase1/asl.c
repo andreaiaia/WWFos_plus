@@ -8,27 +8,27 @@ static LIST_HEAD(semdFree_h);
 static LIST_HEAD(semd_h);
 
 /*
-    14. Viene inserito il PCB puntato da p nella coda dei
-    processi bloccati associata al SEMD con chiave
-    semAdd. 
+    14. 
+    Inserisce il pcb puntato da p nella coda dei 
+    processi bloccati associata al semaforo
+    avente chiave semAdd.
+
     Se il semaforo corrispondente non è
     presente nella ASL, alloca un nuovo SEMD dalla
     lista di quelli liberi (semdFree) e lo inserisce nella
-    ASL, settando I campi in maniera opportuna (i.e.
-    key e s_procQ). Se non è possibile allocare un
-    nuovo SEMD perché la lista di quelli liberi è vuota,
-    restituisce TRUE. In tutti gli altri casi, restituisce
-    FALSE
+    ASL, settando I campi in maniera opportuna. 
+    
+    Return: 1 se semdFree_h è vuota, 0 altrimenti.
 
+    author: -W
 */
-
 int insertBlocked(int *semAdd, pcb_t *p) {
     semd_PTR s_iteratore;
     int flag = 0;
-    //scorre la lista dei semafori attivi/utilizzati
+    /* scorre la lista dei semafori attivi/utilizzati */
     list_for_each_entry(s_iteratore, &semd_h, s_link){
-    //se trova il semaforo con chiave semAdd inserisce il pcb p
-    //all'interno della lista dei processi bloccati dal semaforo
+    /* se trova il semaforo con chiave semAdd inserisce il pcb p
+    all'interno della lista dei processi bloccati dal semaforo */
         if ((s_iteratore->s_key == semAdd) && (flag==0)) {
             p->p_semAdd = s_iteratore->s_key;
             s_iteratore->s_key = s_iteratore->s_key++;
@@ -37,11 +37,11 @@ int insertBlocked(int *semAdd, pcb_t *p) {
             return FALSE;
         }
     }
-    //caso in cui il semaforo non è presente nella ASL
+    /* caso in cui il semaforo non è presente nella ASL */
     if (flag == 0) {
-        // return TRUE se non ci sono semafori liberi da allocare
+        /* return TRUE se non ci sono semafori liberi da allocare */
         if (list_empty(&semdFree_h)) return TRUE;
-        //allocazione nuovo semd dalla lista semdFree
+        /* allocazione nuovo semd dalla lista semdFree */
         semd_PTR newsem = list_next(&(semdFree_h));
         list_del(newsem);
         newsem->s_key = semAdd;
