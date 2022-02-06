@@ -11,8 +11,10 @@
 void initPcbs();
 
 /*
-	2. Il pcb non più usato viene restituito alla lista pcbFree_h
-	@param: puntatore al processo da aggiungere a pcbFree_h.
+	2. 
+	Il pcb non più usato viene restituito alla lista pcbFree_h
+	
+	p: puntatore al processo da aggiungere a pcbFree_h.
 */
 void freePcb(pcb_t *p);
 
@@ -30,8 +32,10 @@ pcb_t *allocPcb();
 // Process Queue Maintenance //
 
 /*
-	4. Questa funzione crea una lista di PCB e la inizializza come vuota.
-	@param: il puntatore alla testa della lista da creare.
+	4. 
+	Questa funzione crea una lista di PCB e la inizializza come vuota.
+	
+	head: il puntatore alla testa della lista da creare.
 */
 void mkEmptyProcQ(struct list_head *head);
 
@@ -50,7 +54,7 @@ int emptyProcQ(struct list_head *head);
 /* 
 	6. Inserisce l’elemento puntato da p nella coda dei processi puntata da head.
 */
-void insertProcQ(struct list_head *, pcb_t *);
+void insertProcQ(struct list_head *head, pcb_t *p);
 
 /*
 	7. Restituisce l’elemento di testa della coda dei processi da head, SENZA RIMUOVERLO. Ritorna NULL se la coda non ha elementi.
@@ -58,11 +62,13 @@ void insertProcQ(struct list_head *, pcb_t *);
 pcb_t *headProcQ(struct list_head *head);
 
 /*
-	8. Rimuove il primo elemento il cui puntatore a coda è puntato da tp dalla process queue.
+	8. 
+	Rimuove il primo elemento il cui puntatore a coda è puntato da tp dalla process queue.
 	Se necessario aggiorna il puntatore di coda della process queue.
-	@param: puntatore alla sentinella della coda procQ.
-	Return: puntatore al PCB rimosso
-			or NULL se la coda è vuota.
+	
+	head: puntatore alla sentinella della coda procQ.
+	
+	Return: puntatore al PCB rimosso || NULL se la coda è vuota.
 */
 pcb_t *removeProcQ(struct list_head *head);
 
@@ -108,10 +114,12 @@ void insertChild(pcb_t *prnt, pcb_t *p);
 
 
 /*
-	12. Rende il primo child del pcb puntato da p non più un figlio di p.
-	@param: puntatore al pcb padre
-	Return: puntatore al figlio rimosso
-			or NULL se il pcb puntato da p non ha figli. 
+	12. 
+	Rende il primo child del pcb puntato da p non più un figlio di p.
+	
+	p: puntatore al pcb padre
+	
+	Return: puntatore al figlio rimosso || NULL se il pcb puntato da p non ha figli. 
 */
 pcb_t * removeChild(pcb_t *p);
 
