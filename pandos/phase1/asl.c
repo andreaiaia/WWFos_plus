@@ -67,10 +67,10 @@ pcb_t *removeBlocked(int *semAdd) {
     
             struct pcb_t *p = container_of( &(s_iter->s_procq), pcb_t, p_list);
 
-            list_del( &(s_iter->s_procq->next) );  // tolgo pcb trovato da s_procq
+            list_del( &(s_iter->s_procq.next) );  // tolgo pcb trovato da s_procq
             if(list_empty( &(s_iter->s_procq) ) == 1){    // se s_procq diventa vuota
-                list_del( p->p_list );
-                list_add( p->p_list, &semdFree_h );
+                list_del( &(p->p_list) );
+                list_add( &(p->p_list), &semdFree_h );
             }
             return p;
         }

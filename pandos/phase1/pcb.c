@@ -205,7 +205,7 @@ pcb_t *outChild(pcb_t *p) {
 	struct list_head *tmp = &( (p->p_parent)->p_child );    // elemento sentinella della lista dei figli del padre di p 
 	struct list_head *tmp_head = tmp;				 	    // copia della sentinella da usare per funzione "list_is_last"
 
-	while(tmp->next != p->p_list && list_is_last(tmp->next, tmp_head) == 0 ) {
+	while(tmp->next != &(p->p_list) && list_is_last(tmp->next, tmp_head) == 0 ) {
 		tmp = tmp->next;
 	} // quando esco dal while, tmp->next conterrà il pcb da togliere
 
