@@ -140,7 +140,7 @@ pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 		if (oggetto==p) trovato=1;	
 	}
 	if (trovato) {
-		list_del(oggetto);
+		list_del(iteratore);
 	}
 	else {
 		return NULL;
