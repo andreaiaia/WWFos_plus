@@ -136,12 +136,16 @@ pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 	int trovato = 0;
 	pcb_PTR oggetto = NULL;
 	struct list_head *iteratore;
+	struct list_head *daeliminare;
 	list_for_each(iteratore, head){
 		oggetto = container_of(iteratore, pcb_t, p_list);
-		if (oggetto==p) trovato=1;	
+		if (oggetto==p) {
+		trovato=1;	
+		daeliminare=iteratore;
+		}
 	}
 	if (trovato) {
-		list_del(iteratore);
+		list_del(daeliminare);
 	}
 	else {
 		return NULL;
