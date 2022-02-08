@@ -210,7 +210,7 @@ pcb_t *outChild(pcb_t *p) {
 		tmp = tmp->next;
 	} // quando esco dal while, tmp->next conterrà il pcb da togliere
 
-	if(list_is_last(&(tmp->next), &tmp_head) == 1) {   // non c'é elemento che corrisponda a p 
+	if(list_is_last(tmp->next, tmp_head) == 1) {   // non c'é elemento che corrisponda a p 
 		return NULL;
 	}
 	list_del(tmp->next);
