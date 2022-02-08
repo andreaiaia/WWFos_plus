@@ -21,7 +21,7 @@ void initPcbs() {
 	2. Questa funzione prende un processo e lo riaggiunge nella lista pcbFree_h dopo aver verificato che p non punti a NULL, fa uso della api del linux kernel per la gestione delle liste.
 */
 void freePcb(pcb_t *p) {
-	if (p != NULL) list_add( p, &pcbFree_h );
+	if (p != NULL) list_add( &(p->p_list), &pcbFree_h );
 }
 
 /*
