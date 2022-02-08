@@ -10,7 +10,7 @@ static LIST_HEAD(pcbFree_h);
 	@author: Alex
 */
 void initPcbs() {
-	if (list_empty(&(pcbFree_h))) {
+	if (list_empty(&pcbFree_h)) {
 		for (int i = 0; i < MAXPROC; i++) {
 			list_add( &(pcbFree_table[i].p_list), &pcbFree_h );
 		}
@@ -34,7 +34,7 @@ void freePcb(pcb_t *p) {
 	author: -W
 */
 pcb_t *allocPcb() {
-	if (list_empty(&(pcbFree_h))) {
+	if (list_empty(&pcbFree_h)) {
 		return(NULL);
 	}
 	else {
@@ -107,9 +107,10 @@ pcb_t *headProcQ(struct list_head *head) {
 }
 
 /*
-	8. Rimuove il primo elemento nella coda dei processi puntata da head.
-	Return: puntatore all'elemento rimosso
-			or NULL se la process queue è vuota.
+	8. 
+	Rimuove il primo elemento nella coda dei processi puntata da head.
+	
+	Return: puntatore all'elemento rimosso || NULL se la process queue è vuota.
 */
 pcb_t *removeProcQ(struct list_head *head) {
 	if (list_empty(head)) return NULL;
@@ -149,8 +150,6 @@ pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 	return NULL;
 }
 
-
-
 /*
 	10.
 	Verifica se il pcb passato ha figli.
@@ -180,9 +179,10 @@ void insertChild(pcb_t *prnt, pcb_t *p) {
 }
 
 /*
-	12. Rimuove il primo figlio del PCB puntato da p e lo restituisce.
-	Return: p->p_child 
-			or NULL.
+	12. 
+	Rimuove il primo figlio del PCB puntato da p e lo restituisce.
+	
+	Return: p->p_child || NULL.
 */
 pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
