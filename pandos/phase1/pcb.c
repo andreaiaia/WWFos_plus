@@ -137,7 +137,7 @@ pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 	struct list_head *iteratore;
 	list_for_each(iteratore, head){
 		oggetto = container_of(iteratore, pcb_t, p_list);
-		if (oggetto=p) trovato=1;	
+		if (oggetto==p) trovato=1;	
 	}
 	if (trovato) {
 		list_del(oggetto);
