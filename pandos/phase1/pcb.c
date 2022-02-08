@@ -145,6 +145,7 @@ pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 	else {
 		return NULL;
 	}	
+	return NULL;
 }
 
 
