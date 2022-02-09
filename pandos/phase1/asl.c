@@ -49,7 +49,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         semd_PTR sem = container_of(newsem, semd_t, s_link);
         sem->s_key = semAdd;
         *(sem->s_key) = 1;
-        list_add(sem, &(semd_h));
+        list_add(newsem, &(semd_h));
         list_add(p, &(sem->s_procq));
         return FALSE;
     }
