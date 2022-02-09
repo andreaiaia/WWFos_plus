@@ -50,7 +50,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         sem->s_key = semAdd;
         *(sem->s_key) = 1;
         list_add(newsem, &(semd_h));
-        list_add(p, &(sem->s_procq));
+        list_add(&(p->p_list), &(sem->s_procq));
         return FALSE;
     }
 }
