@@ -53,6 +53,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         list_add(&(p->p_list), &(sem->s_procq));
         return FALSE;
     }
+    return FALSE;
 }
 
 
