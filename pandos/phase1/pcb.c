@@ -68,8 +68,9 @@ pcb_t *allocPcb() {
 	4. Questa funzione prende il puntatore passatogli e usa la macro del kernel linux per creare una lista di PCB vuota.
 */
 void mkEmptyProcQ(struct list_head * head) {
-	LIST_HEAD(procQ);
-	head = &procQ;
+	//LIST_HEAD(procQ);
+	//head = &procQ;
+	head = LIST_HEAD_INIT(procQ);
 }
 
 /* 
