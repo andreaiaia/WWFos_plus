@@ -110,8 +110,9 @@ pcb_t *headProcQ(struct list_head *head) {
 */
 pcb_t *headProcQ(struct list_head *head) {
   	pcb_PTR res = NULL;
-	if (head->next != head) {
-		res=container_of(head->next, pcb_t, p_list);
+	struct list_head *test = list_next(head);
+	if (test) {
+		res=container_of(test, pcb_t, p_list);
 	}
 	return res;
 }
