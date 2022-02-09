@@ -112,8 +112,8 @@ pcb_t *headProcQ(struct list_head *head) {
   	if (list_empty(head) ){
 		return NULL;
   	}
-	pcb_PTR *test=container_of(head->next, pcb_t, p_list);
-	return test; 
+	struct list_head *test = list_next(head);
+	return container_of(test, pcb_t, p_list);
 }
 
 /*
