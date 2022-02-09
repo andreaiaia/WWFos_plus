@@ -23,8 +23,8 @@ static LIST_HEAD(semd_h);
     author: -W
 */
 int insertBlocked(int *semAdd, pcb_t *p) {
-    struct list_head *s_iteratore;
-    struct list_head *l_iteratore;
+    struct list_head *s_iteratore = NULL;
+    struct list_head *l_iteratore = NULL;
     int flag = 0;
     /* scorre la lista dei semafori attivi/utilizzati */
     list_for_each(l_iteratore, &semd_h){
