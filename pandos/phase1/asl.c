@@ -44,12 +44,13 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         /* return TRUE se non ci sono semafori liberi da allocare */
         if (list_empty(&semdFree_h)) return TRUE;
         /* allocazione nuovo semd dalla lista semdFree */
-        semd_PTR newsem = list_next(&(semdFree_h));
+        struct list_head *newsem = list_next(&(semdFree_h));
         list_del(newsem);
-        newsem->s_key = semAdd;
-        *(newsem->s_key) = 1;
-        list_add(newsem, &(semd_h));
-        list_add(p, &(newsem->s_procq));
+        semd_PTR sem = container_of(newsem, semd_t, s_link);
+        sem->s_key = semAdd;
+        *(sem->s_key) = 1;
+        list_add(sem, &(semd_h));
+        list_add(p, &(sem->s_procq));
         return FALSE;
     }
 }
