@@ -31,7 +31,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         all'interno della lista dei processi bloccati dal semaforo */
         if ((s_iteratore->s_key == semAdd) && (flag==0)) {
             p->p_semAdd = s_iteratore->s_key;
-            s_iteratore->s_key = s_iteratore->s_key++;
+            *(s_iteratore->s_key) = *(s_iteratore->s_key) + 1;
             list_add(p, &(s_iteratore->s_procq));
             flag=1;
             return FALSE;
