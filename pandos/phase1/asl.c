@@ -69,7 +69,7 @@ pcb_t *removeBlocked(int *semAdd) {
     struct semd_t *s_iter;
     list_for_each_entry(s_iter, &semd_h, s_link) {   // scorro ASL
         if (s_iter->s_key == semAdd) {
-            if (list_empty( &(s_iter->s_procq) )) return NULL; // La coda dei pcb è vuota
+            if (list_empty( (s_iter->s_procq) )) return NULL; // La coda dei pcb è vuota
     
             struct pcb_t *p = container_of( &(s_iter->s_procq), pcb_t, p_list);
 
