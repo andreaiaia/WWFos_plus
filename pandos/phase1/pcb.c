@@ -196,16 +196,6 @@ pcb_t *removeChild(pcb_t *p) {
 		return child;
 	}
 }
-/*
-pcb_t *removeChild(pcb_t *p) {
-  if (emptyChild(p)) return NULL;
-  else {
-    struct pcb_t * child = container_of(&(p->p_child), pcb_t, p_list); // puntatore da ritornare
-    list_del( &(p->p_child) ); // tolgo il processo dalla
-    child->p_parent = NULL;
-    return child;
-  }
-}*/
 
 /*
 	13. Rimuove il PCB puntato da p dalla lista dei figli del padre.
