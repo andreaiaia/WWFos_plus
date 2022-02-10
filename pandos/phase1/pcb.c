@@ -218,16 +218,13 @@ pcb_t *removeChild(pcb_t *p) {
 */
 pcb_t *outChild(pcb_t *p) {
 	if(p->p_parent == NULL) return NULL;
-	pcb_PTR temp = NULL;
-	/*struct list_head *lala;
-	lala = &(p->p_parent->p_list);*/
-	list_for_each_entry(temp, &(p->p_parent->p_list), p_list){
-		if (temp == p) {
-			list_del(&p->p_list);
-			p->p_parent=NULL;
-			return(p);
+	struct list_head *figlidelpadre = &(p->p_parent->p_child);
+	pcb_PTR temp = NULL; //conterrà uno ad uno i figli del padre
+	list_for_each_entry(temp, figlidelpadre, p_list) {
+		if (p == temp) {
+			list_del(temp); //non sono sicuro di questa
+			temp->p_parent = NULL;
+			return p;
 		}
-		else return NULL;
 	}
-	return NULL;	
 }
