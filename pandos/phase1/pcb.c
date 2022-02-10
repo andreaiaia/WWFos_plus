@@ -131,7 +131,7 @@ pcb_t *removeProcQ(struct list_head *head) {
 	else {
 		//struct pcb_t *p = container_of(head, pcb_t, p_list); modifica -W
 		pcb_PTR p = container_of(head->next, pcb_t, p_list);
-		list_del(head);
+		list_del(head->next);
 		return p;
 	}
 }
