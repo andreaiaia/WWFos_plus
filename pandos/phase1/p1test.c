@@ -267,7 +267,8 @@ int main(void) {
             adderrbuf("insertBlocked(2): unexpected TRUE   ");
     }
     /* check if semaphore descriptors are returned to free list */
-   
+    addokbuf(" va meno bene \n");
+
     p = removeBlocked(&sem[11]);
     addokbuf(" va benissimo \n");
 /*
