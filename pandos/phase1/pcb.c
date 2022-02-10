@@ -73,7 +73,7 @@ pcb_t *allocPcb() {
 */
 void mkEmptyProcQ(struct list_head * head) {
 	//LIST_HEAD(procQ);
-	//head = &procQ;
+	//head = &procQ; modifica -W
 	INIT_LIST_HEAD(head);
 }
 
@@ -129,7 +129,8 @@ pcb_t *headProcQ(struct list_head *head) {
 pcb_t *removeProcQ(struct list_head *head) {
 	if (list_empty(head)) return NULL;
 	else {
-		struct pcb_t *p = container_of(head, pcb_t, p_list);
+		//struct pcb_t *p = container_of(head, pcb_t, p_list); modifica -W
+		pcb_PTR *p = container_of(head->next, pcb_t, p_list);
 		list_del(head);
 		return p;
 	}
