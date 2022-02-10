@@ -192,8 +192,8 @@ pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
 		pcb_PTR child = container_of(((p->p_child).next), pcb_t, p_list); // puntatore da ritornare
-		//outProcQ(&(p->p_child), p);
-		list_del(&(child->p_list));
+		outProcQ(&(p->p_child), p);
+		//list_del(&(child->p_list));
 		//child->p_parent = NULL;
 		p->p_parent = NULL;
 		return child;
