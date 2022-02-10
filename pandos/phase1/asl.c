@@ -73,6 +73,7 @@ pcb_t *removeBlocked(int *semAdd) {
             }
         return tmp;
         }  
+    }
     return NULL;   
 }
 /*
