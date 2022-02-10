@@ -38,7 +38,8 @@ pcb_t *allocPcb() {
 		return(NULL);
 	}
 	else {
-		struct list_head *elem = ((&pcbFree_h)->prev);
+		//struct list_head *elem = ((&pcbFree_h)->prev);
+		struct list_head *elem = list_prev(&pcbFree_h);
 		list_del(elem);
 		pcb_PTR oggetto = container_of(elem, pcb_t, p_list);
 		/* Inizializzo i campi dell'albero dei processi */
