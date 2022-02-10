@@ -64,15 +64,16 @@ int insertBlocked(int *semAdd, pcb_t *p) {
 */   
 pcb_t *removeBlocked(int *semAdd) {
     semd_PTR s_iter;
+    pcb_PTR res = NULL;
     list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
             //pcb_PTR tmp = container_of(&(s_iter.s_procq)->next), pcb_t, p_list);
-            removeProcQ(&(s_iter->s_procq));
+            res = removeProcQ(&(s_iter->s_procq));
             if (emptyProcQ(&(s_iter->s_procq))){
                  list_del(&(s_iter->s_link));
                  list_add_tail(&(s_iter->s_link), &semdFree_h);
             }
-        return s_iter;
+        return res;
         }  
     }
     return NULL;   
