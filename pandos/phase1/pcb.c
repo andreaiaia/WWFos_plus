@@ -209,7 +209,7 @@ pcb_t *outChild(pcb_t *p) {
 	pcb_PTR temp = NULL;
 	list_for_each_entry(temp, &((p->p_parent)->p_child), p_child){
 		if (temp == p) {
-			list_del(p);
+			list_del(&(p->p_list));
 			p->p_parent=NULL;
 			return(p);
 		}
