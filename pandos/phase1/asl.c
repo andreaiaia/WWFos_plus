@@ -66,13 +66,13 @@ pcb_t *removeBlocked(int *semAdd) {
     semd_PTR s_iter;
     list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
-            pcb_PTR tmp = container_of((&s_iter->s_procq)->next, pcb_t, p_list);
+            //pcb_PTR tmp = container_of(&(s_iter.s_procq)->next), pcb_t, p_list);
             removeProcQ(&(s_iter->s_procq));
-            if (list_empty(&(s_iter->s_procq))) {
-                 list_del(&(tmp->p_list));
-                 list_add_tail(&(tmp->p_list), &semdFree_h);
+            if (emptyProcQ(&(s_iter->s_procq))){
+                 list_del(&(s_iter->s_link));
+                 list_add_tail(&(s_iter->s_link), &semdFree_h);
             }
-        return tmp;
+        return s_iter;
         }  
     }
     return NULL;   
