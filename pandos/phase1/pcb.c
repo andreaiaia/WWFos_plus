@@ -125,9 +125,7 @@ pcb_t *headProcQ(struct list_head *head) {
 pcb_t *removeProcQ(struct list_head *head) {
 	if (list_empty(head)) return NULL;
 	else {
-		//struct pcb_t *p = container_of(head, pcb_t, p_list); modifica -W
 		pcb_PTR p = container_of(head->next, pcb_t, p_list);
-		//list_del(head); modifica da W-
 		list_del(&(p->p_list));
 		return p;
 	}
@@ -180,7 +178,7 @@ int emptyChild(pcb_t *p) {
 */
 void insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt;
-	list_add_tail(&(p->p_list), &(prnt->p_child));
+	list_add(&(p->p_list), &(prnt->p_child));
 }
 
 /*
