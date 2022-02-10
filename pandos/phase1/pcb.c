@@ -194,6 +194,7 @@ pcb_t *removeChild(pcb_t *p) {
 		struct list_head *temp = (p->p_child).next;
 		pcb_PTR child = container_of(temp, pcb_t, p_list); // puntatore da ritornare
 		p->p_parent = NULL;
+		list_del(temp);
 		return child;
 	}
 }
