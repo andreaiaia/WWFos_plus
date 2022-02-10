@@ -209,7 +209,7 @@ pcb_t *outChild(pcb_t *p) {
 	if(p->p_parent == NULL) return NULL;
 	pcb_PTR temp = NULL;
 	struct list_head *lala;
-	lala = p->p_parent.p_list;
+	lala = p->p_parent->p_list;
 	struct list_head *listafigli = lala;
 	list_for_each_entry(temp, lala, p_list){
 		if (temp == p) {
