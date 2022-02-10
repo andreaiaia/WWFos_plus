@@ -154,6 +154,7 @@ pcb_t *headBlocked(int *semAdd) {
     Questo metodo viene invocato una volta sola durante l'inizializzazione dei dati.
 */
 void initASL() {
+    INIT_LIST_HEAD(&semdFree_h);
     // Controllo per sicurezza, se la lista dei semafori liberi non è vuota la funzione termina
     if (!list_empty(&semdFree_h)) return;
 
