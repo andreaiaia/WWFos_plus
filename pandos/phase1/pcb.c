@@ -112,8 +112,8 @@ pcb_t *headProcQ(struct list_head *head) {
   	if (list_empty(head) ){
 		return NULL;
   	}	
-	//return container_of(head->next, pcb_t, p_list); 
-	return container_of(head, pcb_t, p_list);
+	return container_of(head->next, pcb_t, p_list); 
+	
 }
 
 /*
@@ -192,7 +192,7 @@ void insertChild(pcb_t *prnt, pcb_t *p) {
 pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
-		struct list_head *temp = p->p_child.next;
+		struct list_head *temp = &(p->p_child);
 		pcb_PTR child = container_of(temp, pcb_t, p_list); // puntatore da ritornare
 		p->p_parent = NULL;
 		list_del(temp);
