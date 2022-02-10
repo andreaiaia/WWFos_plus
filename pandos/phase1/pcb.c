@@ -151,7 +151,6 @@ pcb_t *removeProcQ(struct list_head *head) {
 */
 pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 	pcb_PTR oggetto;
-	int trovato = 0;
 	list_for_each_entry(oggetto, head, p_list){
 		if (oggetto==p) {
 			list_del(&oggetto->p_list);
@@ -171,7 +170,7 @@ pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 	author: -W
 */
 int emptyChild(pcb_t *p) {
-	return list_empty(&(p->p_child));
+	return list_empty(&p->p_child);
 }
 
 /*
