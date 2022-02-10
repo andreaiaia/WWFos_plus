@@ -60,14 +60,14 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     Return: Puntatore al pcb rimosso || NULL.
 */   
 pcb_t *removeBlocked(int *semAdd) {
-    struct semd_t *s_iter;
+    semd_PTR s_iter;
     list_for_each_entry(s_iter, &semd_h, s_link) {   // scorro ASL
         if (s_iter->s_key == semAdd) {
             if (list_empty( &(s_iter->s_procq) )) return NULL; // La coda dei pcb è vuota
-    
-            struct pcb_t *p = container_of( &(s_iter->s_procq), pcb_t, p_list);
-
-            list_del((s_iter->s_procq.next) );  // tolgo pcb trovato da s_procq
+            pcb_PTR p = container_of( &(s_iter->s_procq), pcb_t, p_list);
+            *semAdd = *semAdd - 1;
+            list_del((s_iter->s_procq.next) );  // tolgo pcb trovato da 
+            
             if(list_empty( &(s_iter->s_procq) ) == 1){    // se s_procq diventa vuota
                 list_del( &(p->p_list) );
                 list_add( &(p->p_list), &semdFree_h );
