@@ -35,6 +35,19 @@ int insertBlocked(int *semAdd, pcb_t *p) {
             return FALSE;
         }
     }
+    //Caso in cui il semaforo non è presente nella ASL
+    if (flag == 0) {
+        //return true se non ci sono semafori liberi da allocare
+        if (list_empty(&semdFree_h)) return TRUE;
+        //allocazione nuovo semd dalla lista semdFree
+        semd_PTR semallocato = container_of(list_next(&semdFree_h), semd_t, s_link);
+        list_del(list_next(&semdFree_h));
+        semallocato->s_key = semAdd;
+        //*(semallocato->s_key) = 1;
+        list_add(&(semallocato->s_link), &semd_h);
+        return FALSE;
+    }
+
     /* caso in cui il semaforo non è presente nella ASL 
     if (flag == 0) {
         // return TRUE se non ci sono semafori liberi da allocare 
