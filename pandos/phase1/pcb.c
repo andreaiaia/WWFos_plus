@@ -179,7 +179,7 @@ int emptyChild(pcb_t *p) {
 */
 void insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt; //baluba
-	list_add(&(p->p_list), &(prnt->p_child));
+	list_add_tail(&(p->p_list), &(prnt->p_child));
 }
 
 /*
@@ -205,19 +205,14 @@ pcb_t *removeChild(pcb_t *p) {
 	@author: Alex
 */
 pcb_t *outChild(pcb_t *p) {
-	if(p->p_parent == NULL) {
-		return NULL;
+	if(p->p_parent == NULL) return NULL;
+	pcb_PTR temp = NULL;
+	pcb_PTR darimuovere = NULL;
+	list_for_each_entry(temp, &((p->p_parent)->p_child), p_child){
+		if (temp == p) {
+			list_del(p);
+			return(p);
+		}
+		else return NULL;
 	}
-	struct list_head *tmp = &( (p->p_parent)->p_child );    // elemento sentinella della lista dei figli del padre di p 
-	struct list_head *tmp_head = tmp;				 	    // copia della sentinella da usare per funzione "list_is_last"
-
-	while(tmp->next != &(p->p_list) && list_is_last(tmp->next, tmp_head) == 0 ) {
-		tmp = tmp->next;
-	} // quando esco dal while, tmp->next conterrà il pcb da togliere
-
-	if(list_is_last(tmp->next, tmp_head) == 1) {   // non c'é elemento che corrisponda a p 
-		return NULL;
-	}
-	list_del(tmp->next);
-	return container_of(tmp->next, pcb_t, p_list);
 }
