@@ -150,26 +150,16 @@ pcb_t *removeProcQ(struct list_head *head) {
 	author: -W
 */
 pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
+	pcb_PTR oggetto;
 	int trovato = 0;
-	pcb_PTR oggetto = NULL;
-	struct list_head *iteratore;
-	struct list_head *daeliminare;
-	list_for_each(iteratore, head){
-		oggetto = container_of(iteratore, pcb_t, p_list);
+	list_for_each_entry(oggetto, head, p_list){
 		if (oggetto==p) {
-		trovato=1;	
-		daeliminare=iteratore;
-		}
+			list_del(&oggetto->p_list);
+			return oggetto;
+		}		
 	}
-	if (trovato) {
-		list_del(daeliminare);
-	}
-	else {
-		return NULL;
-	}	
 	return NULL;
 }
-
 /*
 	10.
 	Verifica se il pcb passato ha figli.
