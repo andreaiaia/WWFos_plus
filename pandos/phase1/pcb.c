@@ -228,4 +228,5 @@ pcb_t *outChild(pcb_t *p) {
 			return p;
 		}
 	}
+	return NULL;
 }
