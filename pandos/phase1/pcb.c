@@ -115,15 +115,6 @@ pcb_t *headProcQ(struct list_head *head) {
 	return container_of(head->next, pcb_t, p_list); 
 }
 
-/*pcb_t *headProcQ(struct list_head *head) {
-  	pcb_PTR res = NULL;
-	struct list_head *test = list_next(head);
-	if (test != NULL) {
-		res=container_of(test, pcb_t, p_list);
-	}
-	return res;
-}*/
-
 /*
 	8. 
 	Rimuove il primo elemento nella coda dei processi puntata da head.
@@ -188,7 +179,7 @@ int emptyChild(pcb_t *p) {
 */
 void insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt;
-	list_add(&(p->p_list), &(prnt->p_child));
+	list_add(&p->p_list, &prnt->p_child);
 }
 
 /*
