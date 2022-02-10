@@ -23,8 +23,6 @@ static LIST_HEAD(semd_h);
     author: -W
 */
 int insertBlocked(int *semAdd, pcb_t *p) {
-    struct list_head *s_iteratore = NULL;
-    struct list_head *l_iteratore = NULL;
     semd_PTR tmp = NULL;
     int flag = 0;
     /* scorre la lista dei semafori attivi/utilizzati */
@@ -32,7 +30,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         if ((tmp->s_key == semAdd) && (flag==0)) {
             p_semAdd = tmp->s_key;
             *(tmp->s_key) = *(tmp->s_key) + 1;
-            list_add_tail(p->p_list, tmp->s_procq);
+            list_add_tail(p->p_list, &(tmp->s_procq));
             flag=1;
             return FALSE;
         }
