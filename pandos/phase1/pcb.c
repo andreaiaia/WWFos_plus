@@ -191,8 +191,8 @@ void insertChild(pcb_t *prnt, pcb_t *p) {
 pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
-		pcb_PTR temp = (p->p_child).next;
-		pcb_PTR child = container_of(((p->p_child).next), pcb_t, p_list); // puntatore da ritornare
+		struct list_head *temp = (p->p_child).next;
+		pcb_PTR child = container_of(temp, pcb_t, p_list); // puntatore da ritornare
 		p->p_parent = NULL;
 		return child;
 	}
