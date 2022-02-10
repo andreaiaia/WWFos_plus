@@ -53,7 +53,9 @@ int insertBlocked(int *semAdd, pcb_t *p) {
 
 /*
     15. 
-    Rimuove il primo PCB dalla coda dei processi bloccati (s_procq) associata al SEMD della ASL con chiave semAdd. Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descrittore corrispondente dalla ASL e lo inserisce nella coda dei descrittori liberi (semdFree_h). 
+    Rimuove il primo PCB dalla coda dei processi bloccati (s_procq) associata al SEMD della ASL con chiave semAdd. 
+    Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descrittore corrispondente dalla ASL 
+    e lo inserisce nella coda dei descrittori liberi (semdFree_h). 
     
     semAdd: chiave del semd
     
@@ -61,24 +63,18 @@ int insertBlocked(int *semAdd, pcb_t *p) {
 */   
 pcb_t *removeBlocked(int *semAdd) {
     semd_PTR s_iter;
-    list_for_each_entry(s_iter, &semd_h, s_link) {   // scorro ASL
+    list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
-            if (list_empty( &(s_iter->s_procq) )) return NULL; // La coda dei pcb è vuota
-            pcb_PTR p = container_of( &(s_iter->s_procq), pcb_t, p_list);
-            *semAdd = *semAdd - 1;
-            list_del((s_iter->s_procq.next) );  // tolgo pcb trovato da 
-            
-            if(list_empty( &(s_iter->s_procq) ) == 1){    // se s_procq diventa vuota
-                list_del( &(p->p_list) );
-                list_add( &(p->p_list), &semdFree_h );
+            pcb_PTR tmp = container_of(s_iter->s_procq.next, pcb_t, p_list);
+            list_del(s_iter->s_procq.next);
+            if (list_empty(&(s_iter->s_procq))) {
+                 list_del(&(tmp->p_list));
+                 list_add_tail(&(tmp->p_list), &semdFree_h);
             }
-            return p;
-        }
-    }
-    // Non esiste il semd
-    return NULL;
-}    
-
+        return tmp;
+        }  
+    return NULL;   
+}
 /*
     16. 
     Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato (p->p_semAdd).
