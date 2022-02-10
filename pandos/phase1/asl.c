@@ -65,7 +65,7 @@ pcb_t *removeBlocked(int *semAdd) {
     semd_PTR s_iter;
     list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
-            struct list_head *trash = list_next(&(s_iter->s_procq));
+            struct list_head *trash = ((&(s_iter->s_procq))->next);
             pcb_PTR tmp = container_of(trash, pcb_t, p_list);
             list_del(trash);
             /*if (list_empty(&(s_iter->s_procq))) {
