@@ -30,7 +30,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     list_for_each_entry(tmp, &semd_h, s_link){
         if ((tmp->s_key == semAdd) && (flag==0)) {
             p->p_semAdd = tmp->s_key;
-            *(tmp->s_key) = *(tmp->s_key) + 1;
+            //*(tmp->s_key) = *(tmp->s_key) + 1;
             list_add_tail(&(p->p_list), &(tmp->s_procq));
             flag=1;
             return FALSE;
@@ -66,14 +66,12 @@ pcb_t *removeBlocked(int *semAdd) {
     semd_PTR s_iter;
     list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
-            struct list_head *trash = NULL;
-            trash = (&s_iter->s_procq)->next;
-            pcb_PTR tmp = container_of(trash, pcb_t, p_list);
+            pcb_PTR tmp = container_of((&s_iter->s_procq)->next, pcb_t, p_list);
             removeProcQ(&(s_iter->s_procq));
-            /*if (list_empty(&(s_iter->s_procq))) {
+            if (list_empty(&(s_iter->s_procq))) {
                  list_del(&(tmp->p_list));
                  list_add_tail(&(tmp->p_list), &semdFree_h);
-            }*/
+            }
         return tmp;
         }  
     }
