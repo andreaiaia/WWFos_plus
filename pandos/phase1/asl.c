@@ -35,11 +35,11 @@ int insertBlocked(int *semAdd, pcb_t *p) {
             return FALSE;
         }
     }
-    /* caso in cui il semaforo non è presente nella ASL */
+    /* caso in cui il semaforo non è presente nella ASL 
     if (flag == 0) {
-        /* return TRUE se non ci sono semafori liberi da allocare */
+        // return TRUE se non ci sono semafori liberi da allocare 
         if (list_empty(&semdFree_h)) return TRUE;
-        /* allocazione nuovo semd dalla lista semdFree */
+        // allocazione nuovo semd dalla lista semdFree 
         struct list_head *newsem = list_next(&(semdFree_h));
         semd_PTR sem = container_of(newsem, semd_t, s_link);
         list_del(newsem);
@@ -48,7 +48,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         list_add_tail(newsem, &(semd_h));
         list_add_tail(&(p->p_list), &(sem->s_procq));
         return FALSE;
-    }
+    }*/
     return FALSE;
 }
 
