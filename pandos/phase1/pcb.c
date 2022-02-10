@@ -38,14 +38,14 @@ pcb_t *allocPcb() {
 		return(NULL);
 	}
 	else {
-		//struct list_head *elem = ((&pcbFree_h)->prev);
+		//struct list_head *elem = list_prev(&pcbFree_h);
 		struct list_head *elem = list_next(&pcbFree_h);
 		list_del(elem);
 		pcb_PTR oggetto = container_of(elem, pcb_t, p_list);
 		/* Inizializzo i campi dell'albero dei processi */
 		oggetto->p_parent = NULL;
-		INIT_LIST_HEAD(&(oggetto->p_child));
-		INIT_LIST_HEAD(&(oggetto->p_sib));
+		//INIT_LIST_HEAD(&(oggetto->p_child));
+		//INIT_LIST_HEAD(&(oggetto->p_sib));
 		/* Inizializzo i campi riguardanti le informazioni 
 		   sullo stato del processo */
 
