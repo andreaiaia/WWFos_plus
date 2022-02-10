@@ -99,9 +99,7 @@ int emptyProcQ(struct list_head *head) {
 	@author: Alex
 */
 void insertProcQ(struct list_head *head, pcb_t *p) {
-	//list_add(&(p->p_list), head);
-	list_add_tail(&(p->p_list), head); // Modifica da -W
-	//list_add(&p->p_list, head); //modifica da -W non funziona
+	list_add_tail(&(p->p_list), head);
 }
 
 /*  
