@@ -10,6 +10,7 @@ static LIST_HEAD(pcbFree_h);
 	@author: Alex
 */
 void initPcbs() {
+	INIT_LIST_HEAD(&pcbFree_h); //aggiunta da -W
 	if (list_empty(&pcbFree_h)) {
 		for (int i = 0; i < MAXPROC; i++) {
 			list_add( &(pcbFree_table[i].p_list), &pcbFree_h );
