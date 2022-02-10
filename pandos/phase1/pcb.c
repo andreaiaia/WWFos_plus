@@ -179,7 +179,7 @@ int emptyChild(pcb_t *p) {
 */
 void insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt; //baluba
-	list_add_tail(&(p->p_list), &(prnt->p_child));
+	list_add(&(p->p_list), &(prnt->p_child));
 }
 
 /*
