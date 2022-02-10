@@ -207,7 +207,6 @@ pcb_t *removeChild(pcb_t *p) {
 pcb_t *outChild(pcb_t *p) {
 	if(p->p_parent == NULL) return NULL;
 	pcb_PTR temp = NULL;
-	pcb_PTR darimuovere = NULL;
 	list_for_each_entry(temp, &((p->p_parent)->p_child), p_child){
 		if (temp == p) {
 			list_del(p);
@@ -215,4 +214,5 @@ pcb_t *outChild(pcb_t *p) {
 		}
 		else return NULL;
 	}
+	return NULL;	
 }
