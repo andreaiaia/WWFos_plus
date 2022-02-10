@@ -25,16 +25,14 @@ static LIST_HEAD(semd_h);
 int insertBlocked(int *semAdd, pcb_t *p) {
     struct list_head *s_iteratore = NULL;
     struct list_head *l_iteratore = NULL;
+    semd_PTR tmp = NULL;
     int flag = 0;
     /* scorre la lista dei semafori attivi/utilizzati */
-    list_for_each(l_iteratore, &semd_h){
-        semd_PTR elem = container_of(s_iteratore, semd_t, s_link); 
-        /* se trova il semaforo con chiave semAdd inserisce il pcb p
-        all'interno della lista dei processi bloccati dal semaforo */
-        if ((elem->s_key == semAdd) && (flag==0)) {
-            p->p_semAdd = elem->s_key;
-            *(elem->s_key) = *(elem->s_key) + 1;
-            list_add(l_iteratore, &(elem->s_procq));
+    list_for_each_entry(tmp, &semd_h, s_link){
+        if ((tmp->s_key == semAdd) && (flag==0)) {
+            p_semAdd = tmp->s_key;
+            *(tmp->s_key) = *(tmp->s_key) + 1;
+            list_add_tail(p->p_list, tmp->s_procq);
             flag=1;
             return FALSE;
         }
