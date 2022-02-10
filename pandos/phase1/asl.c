@@ -41,8 +41,8 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         if (list_empty(&semdFree_h)) return TRUE;
         /* allocazione nuovo semd dalla lista semdFree */
         struct list_head *newsem = list_next(&(semdFree_h));
-        list_del(newsem);
         semd_PTR sem = container_of(newsem, semd_t, s_link);
+        list_del(newsem);
         sem->s_key = semAdd;
         *(sem->s_key) = *(semAdd) + 1;
         list_add_tail(newsem, &(semd_h));
