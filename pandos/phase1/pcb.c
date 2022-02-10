@@ -10,7 +10,7 @@ static LIST_HEAD(pcbFree_h);
 	@author: Alex
 */
 void initPcbs() {
-	//INIT_LIST_HEAD(&pcbFree_h); //aggiunta da -W secondo me ci va
+	INIT_LIST_HEAD(&pcbFree_h); //aggiunta da -W secondo me ci va
 	if (list_empty(&pcbFree_h)) {
 		for (int i = 0; i < MAXPROC; i++) {
 			list_add( &(pcbFree_table[i].p_list), &pcbFree_h );
@@ -23,7 +23,7 @@ void initPcbs() {
 */
 void freePcb(pcb_t *p) {
 	//if (p != NULL) list_add( &(p->p_list), &pcbFree_h );
-	if (p != NULL) list_add( &p->p_list, &pcbFree_h ); //modifica da -W
+	if (p != NULL) list_add( &(p->p_list), &pcbFree_h ); //modifica da -W
 }
 
 /*
@@ -100,7 +100,7 @@ int emptyProcQ(struct list_head *head) {
 */
 void insertProcQ(struct list_head *head, pcb_t *p) {
 	//list_add(&(p->p_list), head);
-	list_add_tail(&p->p_list, head); // Modifica da -W
+	list_add_tail(&(p->p_list), head); // Modifica da -W
 	//list_add(&p->p_list, head); //modifica da -W non funziona
 }
 
@@ -127,7 +127,7 @@ pcb_t *removeProcQ(struct list_head *head) {
 		//struct pcb_t *p = container_of(head, pcb_t, p_list); modifica -W
 		pcb_PTR p = container_of(head->next, pcb_t, p_list);
 		//list_del(head); modifica da W-
-		list_del(&p->p_list);
+		list_del(&(p->p_list));
 		return p;
 	}
 }
@@ -148,7 +148,7 @@ pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 	pcb_PTR oggetto;
 	list_for_each_entry(oggetto, head, p_list){
 		if (oggetto==p) {
-			list_del(&oggetto->p_list);
+			list_del(&(oggetto->p_list));
 			return oggetto;
 		}		
 	}
@@ -179,7 +179,7 @@ int emptyChild(pcb_t *p) {
 */
 void insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt; //baluba
-	list_add_tail(&p->p_list, &(prnt->p_child));
+	list_add_tail(&(p->p_list), &(prnt->p_child));
 }
 
 /*
