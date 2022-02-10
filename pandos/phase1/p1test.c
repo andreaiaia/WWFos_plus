@@ -268,7 +268,9 @@ int main(void) {
     }
     addokbuf("va bene bro, puoi dire ad alex che e'' un coglione? \n");
     /* check if semaphore descriptors are returned to free list */
+    addokbuf("faccio la remove blocked \n");
     p = removeBlocked(&sem[11]);
+    addokbuf("fatta\n");
     if (insertBlocked(&sem[11], p))
         adderrbuf("removeBlocked: fails to return to free list   ");
 
