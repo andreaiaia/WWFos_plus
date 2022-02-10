@@ -267,17 +267,14 @@ int main(void) {
             adderrbuf("insertBlocked(2): unexpected TRUE   ");
     }
     /* check if semaphore descriptors are returned to free list */
-    //addokbuf("faccio la remove blocked \n");
-    //p = removeBlocked(&sem[11]);
-    addokbuf("fatta\n");
-    /*
+    p = removeBlocked(&sem[11]);
+
     if (insertBlocked(&sem[11], p))
         adderrbuf("removeBlocked: fails to return to free list   ");
 
     if (insertBlocked(&onesem, procp[9]) == FALSE)
         adderrbuf("insertBlocked: inserted more than MAXPROC   ");
-*/
-/*
+
     addokbuf("removeBlocked test started   \n");
     for (i = 10; i < MAXPROC; i++) {
         q = removeBlocked(&sem[i]);
@@ -291,7 +288,7 @@ int main(void) {
     if (removeBlocked(&sem[11]) != NULL)
         adderrbuf("removeBlocked: removed nonexistent blocked proc   ");
     addokbuf("insertBlocked and removeBlocked ok   \n");
-*/
+
     addokbuf("fatta2\n");
     if (headBlocked(&sem[11]) != NULL)
         adderrbuf("headBlocked: nonNULL for a nonexistent queue   ");
