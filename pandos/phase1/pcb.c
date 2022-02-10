@@ -69,7 +69,7 @@ pcb_t *allocPcb() {
 */
 void mkEmptyProcQ(struct list_head * head) {
 	LIST_HEAD(procQ);
-	head = &procQ;
+	head = procQ;
 }
 
 /* 
