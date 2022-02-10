@@ -222,7 +222,7 @@ pcb_t *outChild(pcb_t *p) {
 	pcb_PTR temp = NULL; //conterrà uno ad uno i figli del padre
 	list_for_each_entry(temp, figlidelpadre, p_list) {
 		if (p == temp) {
-			list_del(temp); //non sono sicuro di questa
+			list_del(&(temp->p_list)); //non sono sicuro di questa
 			temp->p_parent = NULL;
 			return p;
 		}
