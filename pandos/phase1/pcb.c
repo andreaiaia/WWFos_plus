@@ -189,7 +189,7 @@ void insertChild(pcb_t *prnt, pcb_t *p) {
 	
 	Return: p->p_child || NULL.
 */
-/*
+
 pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
@@ -199,7 +199,8 @@ pcb_t *removeChild(pcb_t *p) {
 		list_del(temp);
 		return child;
 	}
-}*/
+}
+/*
 pcb_t *removeChild(pcb_t *p) {
   if (emptyChild(p)) return NULL;
   else {
@@ -208,7 +209,7 @@ pcb_t *removeChild(pcb_t *p) {
     child->p_parent = NULL;
     return child;
   }
-}
+}*/
 
 /*
 	13. Rimuove il PCB puntato da p dalla lista dei figli del padre.
