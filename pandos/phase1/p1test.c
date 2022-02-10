@@ -290,6 +290,7 @@ int main(void) {
         adderrbuf("removeBlocked: removed nonexistent blocked proc   ");
     addokbuf("insertBlocked and removeBlocked ok   \n");
 */
+    addokbuf("fatta2\n");
     if (headBlocked(&sem[11]) != NULL)
         adderrbuf("headBlocked: nonNULL for a nonexistent queue   ");
     if ((q = headBlocked(&sem[9])) == NULL)
