@@ -48,7 +48,7 @@ pcb_t *allocPcb() {
 		/* Inizializzo i campi riguardanti le informazioni 
 		   sullo stato del processo */
 
-		/* Campi della struct p_s di tipo state_t */
+		/* Campi della struct p_s di tipo state_t 
 		oggetto->p_s.entry_hi = 0;
 		oggetto->p_s.cause = 0;
 		oggetto->p_s.status = 0;
@@ -56,7 +56,7 @@ pcb_t *allocPcb() {
 		oggetto->p_s.gpr[STATE_GPR_LEN] = 0;
 		oggetto->p_s.hi = 0;
 		oggetto->p_s.lo = 0;
-		/* Fine campi struct p_s di tipo state_t */
+		Fine campi struct p_s di tipo state_t */
 		oggetto->p_time = 0;
 		/* Inizializzo il puntatore al semaforo bloccante */
 		oggetto->p_semAdd = NULL;
