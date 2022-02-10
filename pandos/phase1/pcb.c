@@ -100,7 +100,7 @@ int emptyProcQ(struct list_head *head) {
 */
 void insertProcQ(struct list_head *head, pcb_t *p) {
 	//list_add(&(p->p_list), head);
-	list_add(&(p->p_list), head); // Modifica da -W
+	list_add_tail(&(p->p_list), head); // Modifica da -W
 	//list_add(&p->p_list, head); //modifica da -W non funziona
 }
 
@@ -191,9 +191,11 @@ void insertChild(pcb_t *prnt, pcb_t *p) {
 pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
-		struct pcb_t * child = container_of(&(p->p_child), pcb_t, p_list); // puntatore da ritornare
-		list_del( &(p->p_child) ); // tolgo il processo dalla
-		child->p_parent = NULL;
+		struct pcb_t * child = container_of(&((p->p_child).next), pcb_t, p_list); // puntatore da ritornare
+		//outProcQ(&(p->p_child), p);
+		list_del(&(child));
+		//child->p_parent = NULL;
+		p->p_parent = NULL;
 		return child;
 	}
 }
