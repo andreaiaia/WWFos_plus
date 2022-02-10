@@ -46,9 +46,12 @@ pcb_t *allocPcb() {
 		oggetto->p_parent = NULL;
 		//INIT_LIST_HEAD(&(oggetto->p_child));
 		//INIT_LIST_HEAD(&(oggetto->p_sib));
+		LIST_HEAD(figli);
+		LIST_HEAD(fratelli);
+		oggetto->p_child = figli;
+		oggetto->p_sib = fratelli;
 		/* Inizializzo i campi riguardanti le informazioni 
 		   sullo stato del processo */
-
 		/* Campi della struct p_s di tipo state_t 
 		oggetto->p_s.entry_hi = 0;
 		oggetto->p_s.cause = 0;
