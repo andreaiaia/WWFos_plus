@@ -267,7 +267,7 @@ int main(void) {
         if (insertBlocked(&sem[i], procp[i]))
             adderrbuf("insertBlocked(2): unexpected TRUE   ");
     }*/
-
+    addokbuf("va bene bro, puoi dire ad alex che e'' un coglione? \n");
     /* check if semaphore descriptors are returned to free list */
     p = removeBlocked(&sem[11]);
     if (insertBlocked(&sem[11], p))
