@@ -182,7 +182,7 @@ void initASL() {
 
     //Ciclo ogni elemento della tabella dei semafori e lo aggiungo alla lista dei semafori liberi usando la macro del kernel linux list_add.
     for (int i = 0; i < MAXPROC; i++) {
-        list_add_tail( &(semd_table[i].s_link), &semdFree_h );
+        list_add( &(semd_table[i].s_link), &semdFree_h );
         INIT_LIST_HEAD(&(semd_table[i].s_procq));
     }
 /*   
