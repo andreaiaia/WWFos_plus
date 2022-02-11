@@ -63,7 +63,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     
     Return: Puntatore al pcb rimosso || NULL.
 */   
-/*pcb_t *removeBlocked(int *semAdd) {
+pcb_t *removeBlocked(int *semAdd) {
     semd_PTR s_iter;
     pcb_PTR res = NULL;
     list_for_each_entry(s_iter, &semd_h, s_link) {  
@@ -79,7 +79,8 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     }
     return NULL;   
 }
-*/
+
+/*
 pcb_t *removeBlocked(int *semAdd) {
     struct semd_t *s_iter;
     list_for_each_entry(s_iter, &semd_h, s_link) {   // scorro ASL
@@ -91,14 +92,14 @@ pcb_t *removeBlocked(int *semAdd) {
             list_del((s_iter->s_procq.next) );  // tolgo pcb trovato da s_procq
             if(list_empty( &(s_iter->s_procq) ) == 1){    // se s_procq diventa vuota
                 list_del( &(p->p_list) );
-                list_add( &(p->p_list), &semdFree_h );
+                list_add( &(p->p_list), &semdFree_h ); 
             }
             return p;
         }
     }
     // Non esiste il semd
     return NULL;
-}    
+}    */
 /*
     16. 
     Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato (p->p_semAdd).
