@@ -187,12 +187,12 @@ void initASL() {
     }*/
     
 	INIT_LIST_HEAD(&semdFree_h);
-	for (int i = 0; i < MAXPROC+1; i++)
+	for (int i = 0; i < MAXPROC; i++)
 	{
 		semd_t sem = semd_table[i];
 		INIT_LIST_HEAD(&(sem.s_link));
 		sem.s_key = NULL;    
 		INIT_LIST_HEAD(&(sem.s_procq));
-        list_add_tail(&(sem.s_link), &semdFree_h);
+        list_add(&(sem.s_link), &semdFree_h);
 	}
 }
