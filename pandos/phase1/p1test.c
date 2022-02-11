@@ -266,12 +266,9 @@ int main(void) {
         if (insertBlocked(&sem[i], procp[i]))
             adderrbuf("insertBlocked(2): unexpected TRUE   ");
     }
+
     /* check if semaphore descriptors are returned to free list */
-    addokbuf(" va meno bene \n");
-
     p = removeBlocked(&sem[11]);
-    addokbuf(" va benissimo \n");
-
     if (insertBlocked(&sem[11], p))
         adderrbuf("removeBlocked: fails to return to free list   ");
 
@@ -292,7 +289,6 @@ int main(void) {
         adderrbuf("removeBlocked: removed nonexistent blocked proc   ");
     addokbuf("insertBlocked and removeBlocked ok   \n");
 
-    addokbuf("fatta2\n");
     if (headBlocked(&sem[11]) != NULL)
         adderrbuf("headBlocked: nonNULL for a nonexistent queue   ");
     if ((q = headBlocked(&sem[9])) == NULL)
