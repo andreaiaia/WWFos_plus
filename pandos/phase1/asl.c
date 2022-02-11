@@ -31,7 +31,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         if ((tmp->s_key == semAdd) && (flag==0)) {
             p->p_semAdd = tmp->s_key;
             *(tmp->s_key) = *(tmp->s_key) + 1;
-            list_add_tail(&(p->p_list), &(tmp->s_procq));
+            list_add(&(p->p_list), &(tmp->s_procq));
             flag=1;
             return FALSE;
         }
