@@ -68,9 +68,9 @@ pcb_t *removeBlocked(int *semAdd) {
     pcb_PTR res = NULL;
     list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
-            //pcb_PTR tmp = container_of(&(s_iter.s_procq)->next), pcb_t, p_list);
+            pcb_PTR tmp = container_of((s_iter->s_procq).next, pcb_t, p_list);
             //res = removeProcQ(&(s_iter->s_procq));
-            res = s_iter->s_procq.next;
+            res = tmp;
             list_del(s_iter->s_procq.next);
             if (list_empty(&(s_iter->s_procq))) {
                  list_del(&(s_iter->s_link));
@@ -178,7 +178,7 @@ pcb_t *headBlocked(int *semAdd) {
     Questo metodo viene invocato una volta sola durante l'inizializzazione dei dati.
 */
 void initASL() {
-    INIT_LIST_HEAD(&semdFree_h);
+        
     // Controllo per sicurezza, se la lista dei semafori liberi non è vuota la funzione termina
     //if (!list_empty(&semdFree_h)) return;
     //Ciclo ogni elemento della tabella dei semafori e lo aggiungo alla lista dei semafori liberi usando la macro del kernel linux list_add.
