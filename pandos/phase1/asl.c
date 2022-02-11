@@ -30,7 +30,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     list_for_each_entry(tmp, &semd_h, s_link){
         if ((tmp->s_key == semAdd) && (flag==0)) {
             p->p_semAdd = tmp->s_key;
-            *(tmp->s_key) = *(tmp->s_key) + 1;
+            //*(tmp->s_key) = *(tmp->s_key) + 1;
             list_add_tail(&(p->p_list), &(tmp->s_procq));
             flag=1;
             return FALSE;
@@ -45,7 +45,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         list_del(list_next(&semdFree_h));
         //INIT_LIST_HEAD(&semallocato->s_procq); fixato in ASL
         semallocato->s_key = semAdd;
-        *(semallocato->s_key) = 1;
+        //*(semallocato->s_key) = 1;
         list_add_tail(&(semallocato->s_link), &semd_h);
         return FALSE;
     }
@@ -125,7 +125,7 @@ pcb_t *outBlocked(pcb_t *p) {
             list_for_each_entry(p_iter, &(s_iter->s_procq), p_list) {
                 if (p_iter == p) {
                     list_del(&(p_iter->p_list));
-                    (*(s_iter->s_key))--;
+                    //(*(s_iter->s_key))--;
                     /* 
                     Se il pcb rimosso era l'unico, il semd diventa libero e viene tolto dalla lista 
                     dei semd attivi e messo in quella dei semd liberi .
