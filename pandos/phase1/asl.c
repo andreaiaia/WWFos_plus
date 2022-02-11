@@ -44,7 +44,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         //allocazione nuovo semd dalla lista semdFree
         semd_PTR semallocato = container_of(list_next(&semdFree_h), semd_t, s_link);
         list_del(list_next(&semdFree_h));
-        INIT_LIST_HEAD(&semallocato->s_procq);
+        //INIT_LIST_HEAD(&semallocato->s_procq);
         semallocato->s_key = semAdd;
         //*(semallocato->s_key) = 1;
         list_add_tail(&(semallocato->s_link), &semd_h);
