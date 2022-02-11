@@ -178,7 +178,7 @@ pcb_t *headBlocked(int *semAdd) {
 void initASL() {
     INIT_LIST_HEAD(&semdFree_h);
     // Controllo per sicurezza, se la lista dei semafori liberi non è vuota la funzione termina
-    if (!list_empty(&semdFree_h)) return;
+    //if (!list_empty(&semdFree_h)) return;
 
     //Ciclo ogni elemento della tabella dei semafori e lo aggiungo alla lista dei semafori liberi usando la macro del kernel linux list_add.
     for (int i = 0; i < MAXPROC; i++) {
