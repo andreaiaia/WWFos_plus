@@ -41,7 +41,8 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         if (list_empty(&semdFree_h)) return TRUE;
         //allocazione nuovo semd dalla lista semdFree
         semd_PTR semallocato = container_of(list_next(&semdFree_h), semd_t, s_link);
-        list_del(list_next(&semdFree_h));
+        //list_del(list_next(&semdFree_h));
+        list_del(&(semallocato->s_link));
         semallocato->s_key = semAdd;
         *(semallocato->s_key) = 1;
         list_add_tail(&(semallocato->s_link), &semd_h);
@@ -78,8 +79,8 @@ pcb_t *removeBlocked(int *semAdd) {
             //list_del(&(tmp->p_list)); //risultato diverso
             if (list_empty(&(s_iter->s_procq))) {
                  list_del(&(s_iter->s_link));
-                 addokbuf("ANDREA HA STATO pure QUI\n");
                  list_add(&(s_iter->s_link), &semdFree_h);
+                 addokbuf("ANDREA HA STATO pure QUI\n");
             }
             return res;
         }  
