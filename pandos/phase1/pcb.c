@@ -2,7 +2,7 @@
 
 // Dichiarazione dell'array di pcb (allocazione in memoria dei pcb)
 //static pcb_t pcbFree_table[MAXPROC]; temporanea
-pcb_t pcbFree_table[MAXPROC];
+
 // Dichiarazione della lista dei pcb liberi
 static LIST_HEAD(pcbFree_h);
 
