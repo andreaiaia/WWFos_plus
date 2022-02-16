@@ -73,9 +73,9 @@ pcb_t *removeBlocked(int *semAdd) {
             if (list_empty(&(s_iter->s_procq))) {
                 addokbuf("il container of ritorna null\n");
             }
-            //res = removeProcQ(&(s_iter->s_procq)); //risultato diverso
+            res = removeProcQ(&(s_iter->s_procq)); //risultato diverso
             addokbuf("ANDREA HA STATO QUI\n");
-            list_del(&(tmp->p_list)); //risultato diverso
+            //list_del(&(tmp->p_list)); //risultato diverso
             if (list_empty(&(s_iter->s_procq))) {
                  list_del(&(s_iter->s_link));
                  addokbuf("ANDREA HA STATO pure QUI\n");
