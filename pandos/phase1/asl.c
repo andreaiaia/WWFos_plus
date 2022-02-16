@@ -53,8 +53,10 @@ int insertBlocked(int *semAdd, pcb_t *p) {
 
 /*
     15. 
-    Rimuove il primo PCB dalla coda dei processi bloccati (s_procq) associata al SEMD della ASL con chiave semAdd. 
-    Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descrittore corrispondente dalla ASL 
+    Rimuove il primo PCB dalla coda dei processi bloccati (s_procq) associata al 
+    SEMD della ASL con chiave semAdd. 
+    Se la coda dei processi bloccati per il semaforo diventa vuota, 
+    rimuove il descrittore corrispondente dalla ASL 
     e lo inserisce nella coda dei descrittori liberi (semdFree_h). 
     
     semAdd: chiave del semd
@@ -66,7 +68,7 @@ pcb_t *removeBlocked(int *semAdd) {
     pcb_PTR res = NULL;
     list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
-            pcb_PTR tmp = container_of(&(s_iter->s_procq), pcb_t, p_list);
+            pcb_PTR tmp = container_of(list_next(&s_iter->s_procq), pcb_t, p_list);
             res = tmp;
             if (list_empty(&(s_iter->s_procq))) {
                 addokbuf("il container of ritorna null\n");
