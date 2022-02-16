@@ -1,6 +1,5 @@
 #include "asl.h"
 #include "pcb.h"
-#include "pcb.c"
 
 // Tabella dei semafori di dimensione massima MAXPROC (allocazione in memoria dei semafori)
 static semd_t semd_table[MAXPROC];
