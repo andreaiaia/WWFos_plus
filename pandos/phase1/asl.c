@@ -68,9 +68,10 @@ pcb_t *removeBlocked(int *semAdd) {
         if (s_iter->s_key == semAdd) {
             pcb_PTR tmp = container_of(list_next(&(s_iter->s_procq)), pcb_t, p_list);
             res = tmp;
-            res = removeProcQ(&(s_iter->s_procq));
+            res = removeProcQ(&(s_iter->s_procq)); //risultato diverso
+            //list_del(&(tmp->p_list)); //risultato diverso
             addokbuf("ANDREA HA STATO QUI\n");
-            //list_del(&(tmp->p_list));
+            printf("Elemento\n");
             if (list_empty(&(s_iter->s_procq))) {
                  list_del(&(s_iter->s_link));
                  list_add(&(s_iter->s_link), &semdFree_h);
