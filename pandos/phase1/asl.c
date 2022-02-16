@@ -32,7 +32,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
             *(tmp->s_key) = *(tmp->s_key) + 1;
             list_add_tail(&(p->p_list), &(tmp->s_procq));
             flag=1;
-            addokbuf("ho inserito riga 36\n");
+            addokbuf("ho inserito riga 36\n"); //problema è qua
             if (list_empty(&(tmp->s_procq))) {
                 addokbuf("problema riga 36 non ha inserito\n");
             }
