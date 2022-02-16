@@ -76,6 +76,7 @@ pcb_t *removeBlocked(int *semAdd) {
             list_del(&(tmp->p_list)); //risultato diverso
             if (list_empty(&(s_iter->s_procq))) {
                  list_del(&(s_iter->s_link));
+                 addokbuf("ANDREA HA STATO pure QUI\n");
                  list_add(&(s_iter->s_link), &semdFree_h);
             }
             return res;
