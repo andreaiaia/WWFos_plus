@@ -32,6 +32,9 @@ int insertBlocked(int *semAdd, pcb_t *p) {
             *(tmp->s_key) = *(tmp->s_key) + 1;
             list_add_tail(&(p->p_list), &(tmp->s_procq));
             flag=1;
+            if (list_empty(&(tmp->s_procq))) {
+                addokbuf("problema riga 36 non ha inserito\n");
+            }
             return FALSE;
         }
     }
@@ -46,6 +49,9 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         semallocato->s_key = semAdd;
         *(semallocato->s_key) = 1;
         list_add_tail(&(semallocato->s_link), &semd_h);
+        if (list_empty(&(tmp->s_procq))) {
+                addokbuf("problema riga 53 non ha inserito\n");
+            }
         return FALSE;
     }
     return FALSE;
