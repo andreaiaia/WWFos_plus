@@ -68,9 +68,9 @@ pcb_t *removeBlocked(int *semAdd) {
         if (s_iter->s_key == semAdd) {
             pcb_PTR tmp = container_of(list_next(&(s_iter->s_procq)), pcb_t, p_list);
             res = tmp;
-            /*if (list_empty(&(s_iter->s_procq))) {
+            if (list_empty(&(s_iter->s_procq))) {
                 addokbuf("il container of ritorna null\n");
-            }*/
+            }
             res = removeProcQ(&(s_iter->s_procq)); //risultato diverso
             addokbuf("ANDREA HA STATO QUI\n");
             list_del(&(tmp->p_list)); //risultato diverso
