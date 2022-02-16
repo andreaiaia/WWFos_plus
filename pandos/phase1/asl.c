@@ -43,7 +43,6 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         //allocazione nuovo semd dalla lista semdFree
         semd_PTR semallocato = container_of(list_next(&semdFree_h), semd_t, s_link);
         list_del(list_next(&semdFree_h));
-        //INIT_LIST_HEAD(&semallocato->s_procq); fixato in ASL
         semallocato->s_key = semAdd;
         *(semallocato->s_key) = 1;
         list_add_tail(&(semallocato->s_link), &semd_h);
@@ -68,7 +67,7 @@ pcb_t *removeBlocked(int *semAdd) {
     pcb_PTR res = NULL;
     list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
-            pcb_PTR tmp = container_of(&(s_iter->s_procq), pcb_t, p_list);
+            pcb_PTR tmp = container_of(s_iter->s_procq.next, pcb_t, p_list);
             //res = removeProcQ(&(s_iter->s_procq));
             res = tmp;
             list_del(s_iter->s_procq.next);
