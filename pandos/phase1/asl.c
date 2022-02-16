@@ -1,6 +1,5 @@
 #include "asl.h"
 #include "pcb.h"
-#include <stdio.h>
 // Tabella dei semafori di dimensione massima MAXPROC (allocazione in memoria dei semafori)
 static semd_t semd_table[MAXPROC];
 // Lista dei semafori liberi/inutilizzati
@@ -69,14 +68,16 @@ pcb_t *removeBlocked(int *semAdd) {
         if (s_iter->s_key == semAdd) {
             pcb_PTR tmp = container_of(list_next(&(s_iter->s_procq)), pcb_t, p_list);
             res = tmp;
+            if (list_empty(&(s_iter->s_procq))) {
+                addokbuf("il container of ritorna null\n");
+            }
             res = removeProcQ(&(s_iter->s_procq)); //risultato diverso
             //list_del(&(tmp->p_list)); //risultato diverso
             addokbuf("ANDREA HA STATO QUI\n");
-            printf("Elemento\n");
-            if (list_empty(&(s_iter->s_procq))) {
+            /*if (list_empty(&(s_iter->s_procq))) {
                  list_del(&(s_iter->s_link));
                  list_add(&(s_iter->s_link), &semdFree_h);
-            }
+            }*/
             return res;
         }  
     }
