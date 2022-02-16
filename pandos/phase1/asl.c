@@ -178,24 +178,10 @@ pcb_t *headBlocked(int *semAdd) {
     Questo metodo viene invocato una volta sola durante l'inizializzazione dei dati.
 */
 void initASL() {
-        
-    // Controllo per sicurezza, se la lista dei semafori liberi non è vuota la funzione termina
-    //if (!list_empty(&semdFree_h)) return;
     //Ciclo ogni elemento della tabella dei semafori e lo aggiungo alla lista dei semafori liberi usando la macro del kernel linux list_add.
     for (int i = 0; i < MAXPROC; i++) {
         list_add(&(semd_table[i].s_link), &semdFree_h);
         semd_table[i].s_key = NULL;    
         INIT_LIST_HEAD(&(semd_table[i].s_procq));
     }
-/*   
-	INIT_LIST_HEAD(&semdFree_h);
-	for (int i = 0; i < MAXPROC; i++)
-	{
-		semd_t sem = semd_table[i];
-		INIT_LIST_HEAD(&(sem.s_link));
-		sem.s_key = NULL;    
-		INIT_LIST_HEAD(&(sem.s_procq));
-        list_add(&(sem.s_link), &semdFree_h);
-	}
-*/
 }

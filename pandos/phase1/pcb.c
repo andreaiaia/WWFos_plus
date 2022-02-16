@@ -22,7 +22,6 @@ void initPcbs() {
 	2. Questa funzione prende un processo e lo riaggiunge nella lista pcbFree_h dopo aver verificato che p non punti a NULL, fa uso della api del linux kernel per la gestione delle liste.
 */
 void freePcb(pcb_t *p) {
-	//if (p != NULL) list_add( &(p->p_list), &pcbFree_h );
 	if (p != NULL) list_add( &(p->p_list), &pcbFree_h ); //modifica da -W
 }
 
@@ -40,7 +39,6 @@ pcb_t *allocPcb() {
 		return(NULL);
 	}
 	else {
-		//struct list_head *elem = list_prev(&pcbFree_h);
 		struct list_head *elem = list_next(&pcbFree_h);
 		list_del(elem);
 		pcb_PTR oggetto = container_of(elem, pcb_t, p_list);
@@ -74,8 +72,6 @@ pcb_t *allocPcb() {
 	4. Questa funzione prende il puntatore passatogli e usa la macro del kernel linux per creare una lista di PCB vuota.
 */
 void mkEmptyProcQ(struct list_head * head) {
-	//LIST_HEAD(procQ);
-	//head = &procQ; 
 	INIT_LIST_HEAD(head);
 }
 
@@ -209,7 +205,7 @@ pcb_t *outChild(pcb_t *p) {
 	pcb_PTR temp = NULL; //conterrà uno ad uno i figli del padre
 	list_for_each_entry(temp, figlidelpadre, p_list) {
 		if (p == temp) {
-			list_del(&(temp->p_list)); //non sono sicuro di questa
+			list_del(&(temp->p_list)); 
 			temp->p_parent = NULL;
 			return p;
 		}
