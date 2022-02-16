@@ -281,7 +281,6 @@ int main(void) {
         if (q == NULL)
             adderrbuf("removeBlocked: wouldn't remove   ");
         if (q != procp[i])
-            termprint(i, 0);
             adderrbuf("removeBlocked: removed wrong element   ");
 
         if (insertBlocked(&sem[i - 10], q))

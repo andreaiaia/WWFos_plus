@@ -66,12 +66,11 @@ pcb_t *removeBlocked(int *semAdd) {
     pcb_PTR res = NULL;
     list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
-            //pcb_PTR tmp = container_of(list_next(&(s_iter->s_procq)), pcb_t, p_list);
-            pcb_PTR tmp = container_of(s_iter->s_procq.next, pcb_t, p_list);
+            pcb_PTR tmp = container_of(list_next(&(s_iter->s_procq)), pcb_t, p_list);
             //res = removeProcQ(&(s_iter->s_procq));
             res = tmp;
             addokbuf("ANDREA HA STATO QUI\n");
-            list_del(s_iter->s_procq.next);
+            list_del(list_next(&(s_iter->s_procq)));
             /*if (list_empty(&(s_iter->s_procq))) {
                  list_del(&(s_iter->s_link));
                  list_add(&(s_iter->s_link), &semdFree_h);
