@@ -169,7 +169,7 @@ int emptyChild(pcb_t *p) {
 */
 void insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt;
-	list_add(&(p->p_sib), &(prnt->p_child)); //modifica qui wifi fatta?
+	list_add(&(p->p_sib), &(prnt->p_child)); 
 }
 
 /*

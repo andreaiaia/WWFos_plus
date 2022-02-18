@@ -24,30 +24,28 @@ static LIST_HEAD(semd_h);
 */
 int insertBlocked(int *semAdd, pcb_t *p) {
     semd_PTR tmp = NULL;
-    int flag = 0;
     /* scorre la lista dei semafori attivi/utilizzati */
     list_for_each_entry(tmp, &semd_h, s_link){
-        if ((tmp->s_key == semAdd) && (flag==0)) {
-            p->p_semAdd = tmp->s_key;
-            *(tmp->s_key) = 0;
+        if ((tmp->s_key == semAdd)) {
+            //p->p_semAdd = tmp->s_key;
+            p->p_semAdd = semAdd;
+            *semAdd = 0;
             list_add_tail(&(p->p_list), &(tmp->s_procq));
-            flag=1;
+            addokbuf("trovato semaforo con semadd nella asl  \n");
             return FALSE;
         }
     }
     //Caso in cui il semaforo non è presente nella ASL
-    if (flag == 0) {
-        //return true se non ci sono semafori liberi da allocare
-        if (list_empty(&semdFree_h)) return TRUE;
-        //allocazione nuovo semd dalla lista semdFree
-        semd_PTR semallocato = container_of(list_next(&semdFree_h), semd_t, s_link);
-        list_del(&(semallocato->s_link));
-        semallocato->s_key = semAdd;
-        *(semallocato->s_key) = 0;
-        list_add_tail(&(semallocato->s_link), &semd_h);
-        list_add_tail(&(p->p_list), &(semallocato->s_procq));  //se non aggiungo in coda si rompe la headblocekd
-        return FALSE;
-    }
+    //return true se non ci sono semafori liberi da allocare
+    if (list_empty(&semdFree_h)) return TRUE;
+    //allocazione nuovo semd dalla lista semdFree
+    semd_PTR semallocato = container_of(list_next(&semdFree_h), semd_t, s_link);
+    list_del(&(semallocato->s_link));
+    semallocato->s_key = semAdd;
+    *semAdd = 0;
+    list_add_tail(&(semallocato->s_link), &semd_h); //inserisce il semaforo nella ASL
+    list_add_tail(&(p->p_list), &(semallocato->s_procq));  //se non aggiungo in coda si rompe la headblocekd
+    addokbuf("allocato semaforo con chiave semadd  \n");
     return FALSE;
 }
 
