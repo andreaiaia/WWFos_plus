@@ -124,6 +124,7 @@ pcb_t *headBlocked(int *semAdd) {
                     addokbuf("pepegalul \n");
                     return NULL; // La coda dei pcb è vuota
             }
+            addokbuf("sono passato in una headblocked lalalal \n");
             return container_of(list_next(&(sem_iteratore->s_procq)), pcb_t, p_list);
         }
     }
