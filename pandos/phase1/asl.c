@@ -44,7 +44,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     semallocato->s_key = semAdd;
     *semAdd = 0;
     list_add_tail(&(semallocato->s_link), &semd_h); //inserisce il semaforo nella ASL
-    list_add_tail(&(p->p_list), &(semallocato->s_procq));  //se non aggiungo in coda si rompe la headblocekd
+    list_add(&(p->p_list), &(semallocato->s_procq));  //se non aggiungo in coda si rompe la headblocekd
     addokbuf("allocato semaforo con chiave semadd  \n");
     return FALSE;
 }
@@ -129,12 +129,6 @@ pcb_t *headBlocked(int *semAdd) {
     }
     return NULL;
 }
-
-
-
-
-
-
 /*
 pcb_t *headBlocked(int *semAdd) {
     semd_PTR s_iter;
