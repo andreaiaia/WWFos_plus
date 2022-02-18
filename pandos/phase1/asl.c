@@ -97,20 +97,21 @@ pcb_t *outBlocked(pcb_t *p) {
     list_for_each_entry(s_iter, &semd_h, s_link) {
         // Controllo di aver trovato il semd corretto confrontando le chiavi
         if (s_iter->s_key == p->p_semAdd) {
-            struct pcb_t *p_iter;
+            pcb_PTR p_iter;
             /*
             Questo ciclo scorre nella lista dei processi bloccati per trovare il pcb_t
             che ci interessa. Ad ogni iterata p_iter punta al pcb_t corrente.
             */
             list_for_each_entry(p_iter, &(s_iter->s_procq), p_list) {
                 if (p_iter == p) {
-                    list_del(&(p_iter->p_list));
-                    (*(s_iter->s_key))--;
+                    //list_del(&(p_iter->p_list));
+                    removeProcQ(&(p_iter->p_list));
+                    s_iter->s_key=NULL;
                     /* 
                     Se il pcb rimosso era l'unico, il semd diventa libero e viene tolto dalla lista 
                     dei semd attivi e messo in quella dei semd liberi .
                     */
-                    if (*(s_iter->s_key) == 0) {
+                    if (list_empty(&(s_iter->s_procq))) {
                         list_del( &(s_iter->s_link) );
                         list_add( &(s_iter->s_link), &semdFree_h );
                     }
