@@ -178,21 +178,20 @@ void insertChild(pcb_t *prnt, pcb_t *p) {
 	
 	Return: p->p_child || NULL.
 */
-
 pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
 		//struct list_head *temp = (&(p->p_child))->next;
-		struct list_head *temp = list_next(&(p->p_child));
-		pcb_PTR child = container_of(temp, pcb_t, p_list); // puntatore da ritornare
+		struct list_head *temp = NULL;
+		//pcb_PTR child = container_of(temp, pcb_t, p_list); // chiedere al tutor perché questa non va
 		pcb_PTR childl = container_of(temp, pcb_t, p_sib); // puntatore da ritornare
-		child->p_parent = NULL;
+		childl->p_parent = NULL;
 		//list_del(&(child->p_sib)); // chiedere al tutor perché non funziona
 		list_del(&(childl->p_sib)); // chiedere al tutor perché non funziona
 		
 		//list_del(list_next(&(p->p_child))); questa funziona
 		//list_del(p->p_child.next);
-		return child;
+		return childl;
 	}
 }
 
