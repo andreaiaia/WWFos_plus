@@ -27,8 +27,8 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     /* scorre la lista dei semafori attivi/utilizzati */
     list_for_each_entry(tmp, &semd_h, s_link){
         if ((tmp->s_key == semAdd)) {
-            //p->p_semAdd = tmp->s_key;
-            p->p_semAdd = semAdd;
+            p->p_semAdd = tmp->s_key;
+            //p->p_semAdd = semAdd;
             *semAdd = 0;
             list_add_tail(&(p->p_list), &(tmp->s_procq));
             addokbuf("trovato semaforo con semadd nella asl  \n");
@@ -108,7 +108,7 @@ pcb_t *outBlocked(pcb_t *p) {
         }
         addokbuf("riga 108\n");
     }   
-    // Stato di errore
+    // Stato di errore (RUSSIA)
     return NULL;
 }
 
