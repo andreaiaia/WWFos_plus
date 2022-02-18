@@ -50,7 +50,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         semallocato->s_key = semAdd;
         *(semallocato->s_key) = 0;
         list_add_tail(&(semallocato->s_link), &semd_h);
-        list_add_tail(p, &(semallocato->s_procq));
+        list_add_tail(&(p->p_list), &(semallocato->s_procq));
         if (list_empty(&(semallocato->s_procq))) {
                 addokbuf("problema riga 53 non ha inserito\n");
             }
