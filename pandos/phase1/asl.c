@@ -43,7 +43,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         semd_PTR semallocato = container_of(list_next(&semdFree_h), semd_t, s_link);
         list_del(&(semallocato->s_link));
         semallocato->s_key = semAdd;
-        //*(semallocato->s_key) = 0;
+        *(semallocato->s_key) = 0;
         list_add_tail(&(semallocato->s_link), &semd_h);
         list_add_tail(&(p->p_list), &(semallocato->s_procq));
         return FALSE;
@@ -97,7 +97,8 @@ pcb_t *outBlocked(pcb_t *p) {
     // Questo ciclo scorre la lista dei semafori (semd_h) e ad ogni iterata s_iter punta al semd_t corrente
     list_for_each_entry(s_iter, &semd_h, s_link) {
         addokbuf("itero i semafori  \n");
-        // Controllo di aver trovato il semd corretto confrontando le chiavi
+        struct list_head *p_iter = NULL ;
+        list_for_each(p_iter, &(s_iter->s_procq)) {
         if (p->p_semAdd == s_iter->s_key) {
             addokbuf("trovo il semaforo giusto  \n");
             outProcQ(&(s_iter->s_procq), p);
@@ -108,6 +109,7 @@ pcb_t *outBlocked(pcb_t *p) {
             }
             addokbuf("returno p  \n");
             return p;
+        }
         }
     }
     // Stato di errore
