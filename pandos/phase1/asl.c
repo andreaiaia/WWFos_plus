@@ -120,11 +120,11 @@ pcb_t *headBlocked(int *semAdd) {
     semd_PTR sem_iteratore;
     list_for_each_entry(sem_iteratore, &semd_h, s_link){
         if ((sem_iteratore->s_key) == semAdd){
-            return container_of(list_prev(&(sem_iteratore->s_procq)), pcb_t, p_list);
             if (list_empty(&(sem_iteratore->s_procq))) {
                     addokbuf("pepegalul \n");
                     return NULL; // La coda dei pcb è vuota
             }
+            return container_of(list_next(&(sem_iteratore->s_procq)), pcb_t, p_list);
         }
     }
     return NULL;
