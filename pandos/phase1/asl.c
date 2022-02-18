@@ -103,12 +103,11 @@ pcb_t *outBlocked(pcb_t *p) {
             Questo ciclo scorre nella lista dei processi bloccati per trovare il pcb_t
             che ci interessa. Ad ogni iterata p_iter punta al pcb_t corrente.
             */
-            outProcQ(&(p->p_list), &(s_iter->s_procq));
+            outProcQ(&(s_iter->s_procq), &(p->p_list));
             s_iter->s_key=NULL;
             /*list_for_each_entry(p_iter, &(s_iter->s_procq), p_list) {
                 if (p_iter == p) {
                     list_del(&(p_iter->p_list));
-                    /* 
                     Se il pcb rimosso era l'unico, il semd diventa libero e viene tolto dalla lista 
                     dei semd attivi e messo in quella dei semd liberi .
                     */
