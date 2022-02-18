@@ -92,30 +92,21 @@ pcb_t *removeBlocked(int *semAdd) {
 */
 pcb_t *outBlocked(pcb_t *p) {
     semd_PTR sem_iteratore;
-    struct list_head *sem;
-    list_for_each(sem, &semd_h) {
-        semd_PTR k = container_of(&semd_h, semd_t, s_link);
-        if ((p->p_semAdd) == (k->s_key)) {
-            outProcQ(&(k->s_procq), p);
-            addokbuf("uso la outprocq \n");
-            return p;
-        }
-    }
-    /*list_for_each_entry(sem_iteratore, &semd_h, s_link){
+    list_for_each_entry(sem_iteratore, &semd_h, s_link){
         if ((p->p_semAdd) == (sem_iteratore->s_key)) {
             outProcQ(&(sem_iteratore->s_procq), p);
             addokbuf("uso la outprocq \n");
             return p;
-        }*/
+        }
         //outProcQ(&(sem_iteratore->s_procq), p);
-        /*if (list_empty(&(sem_iteratore->s_procq))) {
+        if (list_empty(&(sem_iteratore->s_procq))) {
             sem_iteratore->s_key=NULL;
             list_del(&(sem_iteratore->s_link));
             list_add_tail(&(sem_iteratore->s_link), &semdFree_h );
             addokbuf("riga 106  \n");            
         }
         addokbuf("riga 108\n");
-    //}   */
+    }   
     // Stato di errore (RUSSIA)
     return NULL;
 }
