@@ -94,10 +94,11 @@ pcb_t *outBlocked(pcb_t *p) {
     semd_PTR sem_iteratore;
     pcb_PTR pcb_iteratore;
     list_for_each_entry(sem_iteratore, &semd_h, s_link){
-        list_for_each_entry(pcb_iteratore, &sem_iteratore->s_procq, p_list) {
+        /*list_for_each_entry(pcb_iteratore, &sem_iteratore->s_procq, p_list) {
             if (p->p_semAdd == sem_iteratore->s_key) { // no passa mai qui
                 addokbuf("trovo il semaforo giusto  \n");
-                list_del(&(pcb_iteratore->p_list));
+                list_del(&(pcb_iteratore->p_list));*/
+                outProcQ(&(sem_iteratore->s_procq), p);
                 if (list_empty(&(sem_iteratore->s_procq))) {
                     sem_iteratore->s_key=NULL;
                     list_del(&(sem_iteratore->s_link));
