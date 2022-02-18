@@ -104,6 +104,7 @@ pcb_t *outBlocked(pcb_t *p) {
                 list_del(&(s_iter->s_link));
                 list_add(&(s_iter->s_link), &semdFree_h );
             }
+            addokbuf("returno p  \n");
             return p;
         }
     }
