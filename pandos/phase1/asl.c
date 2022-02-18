@@ -96,14 +96,16 @@ pcb_t *outBlocked(pcb_t *p) {
     list_for_each_entry(sem_iteratore, &semd_h, s_link){
         if (p->p_semAdd == sem_iteratore->s_key) {
             outProcQ(&(sem_iteratore->s_procq), p);
+            addokbuf("uso la outprocq \n");
         }
         //outProcQ(&(sem_iteratore->s_procq), p);
         if (list_empty(&(sem_iteratore->s_procq))) {
             sem_iteratore->s_key=NULL;
             list_del(&(sem_iteratore->s_link));
             list_add_tail(&(sem_iteratore->s_link), &semdFree_h );
+            addokbuf("riga 106  \n");
         }
-        addokbuf("returno p  \n");
+        addokbuf("riga 108\n");
         return p;
     }   
     // Stato di errore
