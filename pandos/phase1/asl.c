@@ -131,6 +131,7 @@ pcb_t *headBlocked(int *semAdd) {
         }
     }
     // Non esiste il semd
+    addokbuf("ultimo check  \n");
     return NULL;
 }
 
