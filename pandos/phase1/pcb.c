@@ -182,10 +182,10 @@ void insertChild(pcb_t *prnt, pcb_t *p) {
 pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
-		struct list_head *temp = (&(p->p_child))->next;
-		//struct list_head *temp = list_next(&(p->p_child));
+		//struct list_head *temp = (&(p->p_child))->next;
+		struct list_head *temp = list_next(&(p->p_child));
 		pcb_PTR child = container_of(temp, pcb_t, p_list); // puntatore da ritornare
-		p->p_parent = NULL;
+		child->p_parent = NULL;
 		list_del(&(child->p_sib)); //aggiunto fix per il campo p_sib
 		return child;
 	}
