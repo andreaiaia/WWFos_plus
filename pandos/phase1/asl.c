@@ -93,7 +93,7 @@ pcb_t *removeBlocked(int *semAdd) {
 pcb_t *outBlocked(pcb_t *p) {
     semd_PTR sem_iteratore;
     list_for_each_entry(sem_iteratore, &semd_h, s_link){
-        if ((p->p_semAdd) == (sem_iteratore->s_key)) {
+        if ((p->p_semAdd) == (sem_iteratore->s_key)) { //non matcha, quando dovrebbe chiedere al tutor
             outProcQ(&(sem_iteratore->s_procq), p);
             addokbuf("uso la outprocq \n");
             if (list_empty(&(sem_iteratore->s_procq))) {
