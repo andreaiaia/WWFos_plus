@@ -91,7 +91,7 @@ int emptyProcQ(struct list_head *head) {
 	@author: Alex
 */
 void insertProcQ(struct list_head *head, pcb_t *p) {
-	list_add(&(p->p_list), head);
+	list_add_tail(&(p->p_list), head); //se utilizzo list_add, non funziona chiedere al tutor
 }
 
 /*  
@@ -168,7 +168,7 @@ int emptyChild(pcb_t *p) {
 */
 void insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt;
-	list_add(&(p->p_list), &(prnt->p_child));
+	list_add(&(p->p_list), &(prnt->p_child)); //modifica qui wifi
 }
 
 /*
