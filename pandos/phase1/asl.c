@@ -93,6 +93,32 @@ pcb_t *removeBlocked(int *semAdd) {
     Return: p, puntatore al PCB rimosso || NULL se il PCB non compare nella coda (stato di errore).
 */
 pcb_t *outBlocked(pcb_t *p) {
+    semd_PTR sem_iteratore;
+    pcb_PTR pcb_iteratore;
+    list_for_each_entry(sem_iteratore, &semd_h, s_link){
+        list_for_each_entry(pcb_iteratore, &sem_iteratore->s_procq, p_list) {
+            if (p->p_semAdd == sem_iteratore->s_key) {
+                addokbuf("trovo il semaforo giusto  \n");
+                list_del(&(pcb_iteratore->p_list));
+                if (list_empty(&(sem_iteratore->s_procq))) {
+                    sem_iteratore->s_key=NULL;
+                    list_del(&(sem_iteratore->s_link));
+                    list_add(&(sem_iteratore->s_link), &semdFree_h );
+                }
+                addokbuf("returno p  \n");
+                return p;
+            }
+        }
+    }
+    // Stato di errore
+    return NULL;
+}
+
+
+
+
+
+/*pcb_t *outBlocked(pcb_t *p) {
     semd_PTR s_iter = NULL;
     // Questo ciclo scorre la lista dei semafori (semd_h) e ad ogni iterata s_iter punta al semd_t corrente
     list_for_each_entry(s_iter, &semd_h, s_link) {
@@ -116,7 +142,7 @@ pcb_t *outBlocked(pcb_t *p) {
     // Stato di errore
     return NULL;
 }
-
+*/
 /*
     17. 
     Restituisce (senza rimuoverlo) il puntatore al primo PCB della coda dei processi associata al SEMD
