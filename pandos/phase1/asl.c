@@ -117,7 +117,7 @@ pcb_t *outBlocked(pcb_t *p) {
                     }
 
                     return p;
-                }
+                //}
             }
             /*
             Return non strettamente necessario, l'ho messo solo per terminare prima l'esecuzione nel caso in cui
