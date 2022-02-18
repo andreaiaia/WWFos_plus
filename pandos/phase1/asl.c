@@ -91,22 +91,27 @@ pcb_t *removeBlocked(int *semAdd) {
     Return: p, puntatore al PCB rimosso || NULL se il PCB non compare nella coda (stato di errore).
 */
 pcb_t *outBlocked(pcb_t *p) {
-    semd_PTR sem_iteratore;
-    list_for_each_entry(sem_iteratore, &semd_h, s_link){
-        if ((p->p_semAdd) == (sem_iteratore->s_key)) {
-            outProcQ(&(sem_iteratore->s_procq), p);
-            addokbuf("uso la outprocq \n");
-            if (list_empty(&(sem_iteratore->s_procq))) {
-                sem_iteratore->s_key=NULL;
-                list_del(&(sem_iteratore->s_link));
-                list_add_tail(&(sem_iteratore->s_link), &semdFree_h );
-                addokbuf("riga 106  \n");            
+    semd_PTR sem_iteratore = NULL;
+    if (p->p_semAdd == NULL)
+        addokbuf("il semAdd è null  \n");
+        list_for_each_entry(sem_iteratore, &semd_h, s_link)
+        {
+            if ((p->p_semAdd) == (sem_iteratore->s_key))
+            {
+                outProcQ(&(sem_iteratore->s_procq), p);
+                addokbuf("uso la outprocq \n");
+                if (list_empty(&(sem_iteratore->s_procq)))
+                {
+                    sem_iteratore->s_key = NULL;
+                    list_del(&(sem_iteratore->s_link));
+                    list_add_tail(&(sem_iteratore->s_link), &semdFree_h);
+                    addokbuf("riga 106  \n");
+                }
+                return p;
             }
-            return p;
-        }
-        //outProcQ(&(sem_iteratore->s_procq), p);
-        addokbuf("riga 108\n");
-    }   
+            // outProcQ(&(sem_iteratore->s_procq), p);
+            addokbuf("riga 108\n");
+        }   
     // Stato di errore (RUSSIA)
     return NULL;
 }
