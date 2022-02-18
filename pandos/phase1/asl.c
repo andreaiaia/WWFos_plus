@@ -106,16 +106,16 @@ pcb_t *outBlocked(pcb_t *p) {
             list_for_each_entry(p_iter, &(s_iter->s_procq), p_list) {
                 if (p_iter == p) {
                     //list_del(&(p_iter->p_list));
-                    removeProcQ(&(p_iter->p_list));
+                    //removeProcQ(&(p_iter->p_list));
                     s_iter->s_key=NULL;
                     /* 
                     Se il pcb rimosso era l'unico, il semd diventa libero e viene tolto dalla lista 
                     dei semd attivi e messo in quella dei semd liberi .
                     */
-                    /*if (list_empty(&(s_iter->s_procq))) {
+                    if (list_empty(&(s_iter->s_procq))) {
                         list_del( &(s_iter->s_link) );
                         list_add_tail( &(s_iter->s_link), &semdFree_h );
-                    }*/
+                    }
 
                     return p;
                 }
