@@ -201,7 +201,7 @@ pcb_t *outChild(pcb_t *p) {
 	if(p->p_parent == NULL) return NULL;
 	struct list_head *figlidelpadre = &(p->p_parent->p_child);
 	pcb_PTR temp = NULL; //conterrà uno ad uno i figli del padre
-	list_for_each_entry(temp, figlidelpadre, p_child) {
+	list_for_each_entry(temp, figlidelpadre, p_list) {
 		if (p == temp) {
 			list_del(&(temp->p_sib)); 
 			temp->p_parent = NULL;
