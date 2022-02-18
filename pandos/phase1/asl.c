@@ -50,7 +50,8 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         semallocato->s_key = semAdd;
         *(semallocato->s_key) = 0;
         list_add_tail(&(semallocato->s_link), &semd_h);
-        if (list_empty(&(tmp->s_procq))) {
+        list_add_tail(p, &(semallocato->s_procq));
+        if (list_empty(&(semallocato->s_procq))) {
                 addokbuf("problema riga 53 non ha inserito\n");
             }
         return FALSE;
@@ -76,8 +77,7 @@ pcb_t *removeBlocked(int *semAdd) {
     pcb_PTR res = NULL;
     list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
-            //pcb_PTR tmp = container_of(list_next(&s_iter->s_procq), pcb_t, p_list);
-            pcb_PTR tmp = container_of(list_next(&s_iter->s_procq), pcb_t, s_procq);
+            pcb_PTR tmp = container_of(list_next(&s_iter->s_procq), pcb_t, p_list);
             res = tmp;
             if (list_empty(&(s_iter->s_procq))) {
                 addokbuf("il container of ritorna null\n");
