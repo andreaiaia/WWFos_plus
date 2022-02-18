@@ -182,7 +182,7 @@ pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
 		//struct list_head *temp = (&(p->p_child))->next;
-		struct list_head *temp = NULL;
+		struct list_head *temp = list_next(&(p->p_child));
 		pcb_PTR child = container_of(temp, pcb_t, p_list); // chiedere al tutor perché questa non va
 		pcb_PTR childl = container_of(temp, pcb_t, p_sib); // puntatore da ritornare
 		childl->p_parent = NULL;
