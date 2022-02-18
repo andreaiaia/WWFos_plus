@@ -169,7 +169,7 @@ int emptyChild(pcb_t *p) {
 */
 void insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt;
-	list_add(&(p->p_sib), &(prnt->p_child)); //modifica qui wifi
+	list_add(&(p->p_sib), &(prnt->p_child)); //modifica qui wifi fatta?
 }
 
 /*
@@ -182,10 +182,11 @@ void insertChild(pcb_t *prnt, pcb_t *p) {
 pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
-		struct list_head *temp = (&(p->p_child))->next;
+		//struct list_head *temp = (&(p->p_child))->next;
+		struct list_head *temp = list_next(&(p->p_child));
 		pcb_PTR child = container_of(temp, pcb_t, p_list); // puntatore da ritornare
 		p->p_parent = NULL;
-		list_del(temp);
+		list_del(&(child->p_sib)); //aggiunto fix per il campo p_sib
 		return child;
 	}
 }
@@ -200,9 +201,9 @@ pcb_t *outChild(pcb_t *p) {
 	if(p->p_parent == NULL) return NULL;
 	struct list_head *figlidelpadre = &(p->p_parent->p_child);
 	pcb_PTR temp = NULL; //conterrà uno ad uno i figli del padre
-	list_for_each_entry(temp, figlidelpadre, p_list) {
+	list_for_each_entry(temp, figlidelpadre, p_child) {
 		if (p == temp) {
-			list_del(&(temp->p_list)); 
+			list_del(&(temp->p_sib)); 
 			temp->p_parent = NULL;
 			return p;
 		}
