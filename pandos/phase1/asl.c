@@ -32,10 +32,6 @@ int insertBlocked(int *semAdd, pcb_t *p) {
             *(tmp->s_key) = 0;
             list_add_tail(&(p->p_list), &(tmp->s_procq));
             flag=1;
-            addokbuf("ho inserito riga 36\n"); //problema è qua
-            if (list_empty(&(tmp->s_procq))) {
-                addokbuf("problema riga 36 non ha inserito\n");
-            }
             return FALSE;
         }
     }
@@ -45,15 +41,11 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         if (list_empty(&semdFree_h)) return TRUE;
         //allocazione nuovo semd dalla lista semdFree
         semd_PTR semallocato = container_of(list_next(&semdFree_h), semd_t, s_link);
-        //list_del(list_next(&semdFree_h));
         list_del(&(semallocato->s_link));
         semallocato->s_key = semAdd;
         *(semallocato->s_key) = 0;
         list_add_tail(&(semallocato->s_link), &semd_h);
         list_add_tail(&(p->p_list), &(semallocato->s_procq));
-        if (list_empty(&(semallocato->s_procq))) {
-                addokbuf("problema riga 53 non ha inserito\n");
-            }
         return FALSE;
     }
     return FALSE;
@@ -82,9 +74,9 @@ pcb_t *removeBlocked(int *semAdd) {
             if (list_empty(&(s_iter->s_procq))) {
                 addokbuf("il container of ritorna null\n");
             }
-            res = removeProcQ(&(s_iter->s_procq)); //risultato diverso
+            res = removeProcQ(&(s_iter->s_procq)); //risultato diverso chiedere al tutor
             addokbuf("ANDREA HA STATO QUI\n");
-            //list_del(&(tmp->p_list)); //risultato diverso
+            //list_del(&(tmp->p_list)); //risultato diverso chiedere al tutor
             if (list_empty(&(s_iter->s_procq))) {
                  list_del(&(s_iter->s_link));
                  list_add(&(s_iter->s_link), &semdFree_h);
