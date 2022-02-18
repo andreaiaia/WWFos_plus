@@ -107,8 +107,8 @@ pcb_t *outBlocked(pcb_t *p) {
                 addokbuf("returno p  \n");
                 return p;
             }
-        }
-    }
+        //}
+    //}
     // Stato di errore
     return NULL;
 }
