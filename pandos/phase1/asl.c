@@ -30,7 +30,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         if ((tmp->s_key == semAdd) && (flag==0)) {
             p->p_semAdd = tmp->s_key;
             *(tmp->s_key) = 0;
-            list_add_tail(&(p->p_list), &(tmp->s_procq));
+            list_add(&(p->p_list), &(tmp->s_procq));
             flag=1;
             return FALSE;
         }
@@ -44,8 +44,8 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         list_del(&(semallocato->s_link));
         semallocato->s_key = semAdd;
         *(semallocato->s_key) = 0;
-        list_add_tail(&(semallocato->s_link), &semd_h);
-        list_add_tail(&(p->p_list), &(semallocato->s_procq));
+        list_add(&(semallocato->s_link), &semd_h);
+        list_add(&(p->p_list), &(semallocato->s_procq));
         return FALSE;
     }
     return FALSE;
@@ -99,17 +99,17 @@ pcb_t *outBlocked(pcb_t *p) {
         addokbuf("itero i semafori  \n");
         struct list_head *p_iter = NULL ;
         list_for_each(p_iter, &(s_iter->s_procq)) {
-        if (p->p_semAdd == s_iter->s_key) {
-            addokbuf("trovo il semaforo giusto  \n");
-            outProcQ(&(s_iter->s_procq), p);
-            if (list_empty(&(s_iter->s_procq))) {
-                s_iter->s_key=NULL;
-                list_del(&(s_iter->s_link));
-                list_add(&(s_iter->s_link), &semdFree_h );
+            if (p->p_semAdd == s_iter->s_key) {
+                addokbuf("trovo il semaforo giusto  \n");
+                outProcQ(&(s_iter->s_procq), p);
+                if (list_empty(&(s_iter->s_procq))) {
+                    s_iter->s_key=NULL;
+                    list_del(&(s_iter->s_link));
+                    list_add(&(s_iter->s_link), &semdFree_h );
+                }
+                addokbuf("returno p  \n");
+                return p;
             }
-            addokbuf("returno p  \n");
-            return p;
-        }
         }
     }
     // Stato di errore
