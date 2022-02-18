@@ -85,7 +85,8 @@ pcb_t *removeBlocked(int *semAdd) {
 /*
     16. 
     Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato (p->p_semAdd).
-    Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il semd corrispondente da semd_h e lo inserisce in semdFree_h (lo rimette nella coda dei semafori liberi).
+    Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il semd corrispondente da semd_h e 
+    lo inserisce in semdFree_h (lo rimette nella coda dei semafori liberi).
     
     p: puntatore a PCB da rimuovere.
     
@@ -113,7 +114,7 @@ pcb_t *outBlocked(pcb_t *p) {
                     */
                     if (list_empty(&(s_iter->s_procq))) {
                         list_del( &(s_iter->s_link) );
-                        list_add( &(s_iter->s_link), &semdFree_h );
+                        list_add_tail( &(s_iter->s_link), &semdFree_h );
                     }
 
                     return p;
