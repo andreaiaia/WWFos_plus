@@ -187,6 +187,7 @@ pcb_t *removeChild(pcb_t *p) {
 		pcb_PTR child = container_of(temp, pcb_t, p_list); // puntatore da ritornare
 		child->p_parent = NULL;
 		//list_del(&(child->p_sib)); //aggiunto fix per il campo p_sib
+		list_del(list_next(&(p->p_child)));
 		return child;
 	}
 }
