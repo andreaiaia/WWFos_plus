@@ -98,7 +98,7 @@ pcb_t *outBlocked(pcb_t *p) {
         if (list_empty(&(sem_iteratore->s_procq))) {
             sem_iteratore->s_key=NULL;
             list_del(&(sem_iteratore->s_link));
-            list_add(&(sem_iteratore->s_link), &semdFree_h );
+            list_add_tail(&(sem_iteratore->s_link), &semdFree_h );
         }
         addokbuf("returno p  \n");
         return p;
@@ -121,37 +121,15 @@ pcb_t *headBlocked(int *semAdd) {
     list_for_each_entry(sem_iteratore, &semd_h, s_link){
         if ((sem_iteratore->s_key) == semAdd){
             if (list_empty(&(sem_iteratore->s_procq))) {
-                    addokbuf("pepegalul \n");
+                    addokbuf("riga 124\n");
                     return NULL; // La coda dei pcb è vuota
             }
-            addokbuf("sono passato in una headblocked lalalal \n");
+            addokbuf("sono passato in una headblocked\n");
             return container_of(list_next(&(sem_iteratore->s_procq)), pcb_t, p_list);
         }
     }
     return NULL;
 }
-/*
-pcb_t *headBlocked(int *semAdd) {
-    semd_PTR s_iter;
-    list_for_each_entry(s_iter, &semd_h, s_link) {
-        if (s_iter->s_key == semAdd) {
-            addokbuf("dio porco p  \n");
-            if (list_empty(&(s_iter->s_procq))) {
-                addokbuf("pepegalul \n");
-                return NULL; // La coda dei pcb è 
-            }
-            // Uso la macro container_of per prendere il primo pcb della coda e restituirlo
-            //pcb_PTR p = container_of( &(s_iter->s_procq), pcb_t, p_list );
-            //struct list_head *temp = list_next(&(s_iter->s_procq));
-            pcb_PTR p = container_of(list_next(&(s_iter->s_procq)), pcb_t, p_list );
-            //pcb_PTR p = container_of(temp, pcb_t, p_list );
-            return p;
-        }
-    }
-    // Non esiste il semd
-    addokbuf("ultimo check  \n");
-    return NULL;
-}*/
 
 /*
     18. 
