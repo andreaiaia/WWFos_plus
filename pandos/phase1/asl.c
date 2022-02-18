@@ -98,12 +98,12 @@ pcb_t *outBlocked(pcb_t *p) {
     list_for_each_entry(s_iter, &semd_h, s_link) {
         // Controllo di aver trovato il semd corretto confrontando le chiavi
         if (p->p_semAdd == s_iter->s_key) {
-            pcb_PTR p_iter;
+            //pcb_PTR p_iter;
             /*
             Questo ciclo scorre nella lista dei processi bloccati per trovare il pcb_t
             che ci interessa. Ad ogni iterata p_iter punta al pcb_t corrente.
             */
-            outProcQ(&(s_iter->s_procq), &(p->p_list));
+            outProcQ(&(s_iter->s_procq), p);
             s_iter->s_key=NULL;
             /*list_for_each_entry(p_iter, &(s_iter->s_procq), p_list) {
                 if (p_iter == p) {
@@ -116,14 +116,13 @@ pcb_t *outBlocked(pcb_t *p) {
                         list_add_tail( &(s_iter->s_link), &semdFree_h );
                     }
 
-                    return p;
+            return p;
                 //}
-            }
+            //}
             /*
             Return non strettamente necessario, l'ho messo solo per terminare prima l'esecuzione nel caso in cui
             il semaforo non contenga un p_iter == p, in tal caso non ha senso continuare il ciclo.
             */
-            return NULL; 
         }
     }
     // Stato di errore
