@@ -97,8 +97,8 @@ pcb_t *outBlocked(pcb_t *p) {
     // Questo ciclo scorre la lista dei semafori (semd_h) e ad ogni iterata s_iter punta al semd_t corrente
     list_for_each_entry(s_iter, &semd_h, s_link) {
         addokbuf("itero i semafori  \n");
-        struct list_head *p_iter = NULL ;
-        list_for_each(p_iter, &(s_iter->s_procq)) {
+        pcb_PTR p_iter = NULL ;
+        list_for_each_entry(p_iter, &(s_iter->s_procq), p_list) {
             if (p->p_semAdd == s_iter->s_key) {
                 addokbuf("trovo il semaforo giusto  \n");
                 outProcQ(&(s_iter->s_procq), p);
@@ -149,7 +149,7 @@ void initASL() {
     //Ciclo ogni elemento della tabella dei semafori e lo aggiungo alla lista dei semafori liberi usando la macro del kernel linux list_add.
     for (int i = 0; i < MAXPROC; i++) {
         list_add(&(semd_table[i].s_link), &semdFree_h);
-        //semd_table[i].s_key = NULL;    
+        semd_table[i].s_key = NULL;    
         INIT_LIST_HEAD(&(semd_table[i].s_procq));
     }
 }
