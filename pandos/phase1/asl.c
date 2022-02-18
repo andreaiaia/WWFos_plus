@@ -93,11 +93,13 @@ pcb_t *removeBlocked(int *semAdd) {
     Return: p, puntatore al PCB rimosso || NULL se il PCB non compare nella coda (stato di errore).
 */
 pcb_t *outBlocked(pcb_t *p) {
-    semd_PTR s_iter;
+    semd_PTR s_iter = NULL;
     // Questo ciclo scorre la lista dei semafori (semd_h) e ad ogni iterata s_iter punta al semd_t corrente
     list_for_each_entry(s_iter, &semd_h, s_link) {
+        addokbuf("itero i semafori  \n");
         // Controllo di aver trovato il semd corretto confrontando le chiavi
         if (p->p_semAdd == s_iter->s_key) {
+            addokbuf("trovo il semaforo giusto  \n");
             outProcQ(&(s_iter->s_procq), p);
             if (list_empty(&(s_iter->s_procq))) {
                 s_iter->s_key=NULL;
