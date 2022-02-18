@@ -96,7 +96,7 @@ pcb_t *outBlocked(pcb_t *p) {
     list_for_each_entry(sem_iteratore, &semd_h, s_link){
         outProcQ(&(sem_iteratore->s_procq), p);
         if (list_empty(&(sem_iteratore->s_procq))) {
-            sem_iteratore->s_key=NULL;
+            //sem_iteratore->s_key=NULL;
             list_del(&(sem_iteratore->s_link));
             list_add(&(sem_iteratore->s_link), &semdFree_h );
         }
