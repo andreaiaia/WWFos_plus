@@ -101,8 +101,8 @@ pcb_t *outBlocked(pcb_t *p) {
             outProcQ(&(s_iter->s_procq), p);
             if (list_empty(&(s_iter->s_procq))) {
                 s_iter->s_key=NULL;
-                list_del( &(s_iter->s_link) );
-                list_add_tail( &(s_iter->s_link), &semdFree_h );
+                list_del(&(s_iter->s_link));
+                list_add(&(s_iter->s_link), &semdFree_h );
             }
             return p;
         }
