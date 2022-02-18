@@ -124,8 +124,9 @@ pcb_t *headBlocked(int *semAdd) {
             if (list_empty(&(s_iter->s_procq))) return NULL; // La coda dei pcb è vuota
             // Uso la macro container_of per prendere il primo pcb della coda e restituirlo
             //pcb_PTR p = container_of( &(s_iter->s_procq), pcb_t, p_list );
-            // list_head *temp = list_next(&s_iter->s_procq);
-            pcb_PTR p = container_of(list_next(&(s_iter->s_procq)), pcb_t, p_list );
+            struct list_head *temp = list_next(&(s_iter->s_procq));
+            //pcb_PTR p = container_of(list_next(&(s_iter->s_procq)), pcb_t, p_list );
+            pcb_PTR p = container_of(temp, pcb_t, p_list );
             return p;
         }
     }
