@@ -96,7 +96,7 @@ pcb_t *outBlocked(pcb_t *p) {
     list_for_each_entry(sem_iteratore, &semd_h, s_link){
         outProcQ(&(sem_iteratore->s_procq), p);
         if (list_empty(&(sem_iteratore->s_procq))) {
-            //sem_iteratore->s_key=NULL;
+            sem_iteratore->s_key=NULL;
             list_del(&(sem_iteratore->s_link));
             list_add(&(sem_iteratore->s_link), &semdFree_h );
         }
@@ -117,6 +117,22 @@ pcb_t *outBlocked(pcb_t *p) {
     Return: puntatore al primo pcb_t nella coda dei processi || NULL se non c'è il SEMD o se la sua coda è vuota.
 */
 pcb_t *headBlocked(int *semAdd) {
+    semd_PTR sem_iteratore;
+    list_for_each_entry(sem_iteratore, &semd_h, s_link){
+        if ((sem_iteratore->s_key) == semAdd){
+            return container_of(list_next(&(sem_iteratore->s_procq)), pcb_t, p_list);
+        }
+    }
+    return NULL;
+}
+
+
+
+
+
+
+/*
+pcb_t *headBlocked(int *semAdd) {
     semd_PTR s_iter;
     list_for_each_entry(s_iter, &semd_h, s_link) {
         if (s_iter->s_key == semAdd) {
@@ -136,7 +152,7 @@ pcb_t *headBlocked(int *semAdd) {
     // Non esiste il semd
     addokbuf("ultimo check  \n");
     return NULL;
-}
+}*/
 
 /*
     18. 
