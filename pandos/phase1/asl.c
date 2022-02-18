@@ -99,6 +99,7 @@ pcb_t *outBlocked(pcb_t *p) {
         addokbuf("itero i semafori  \n");
         pcb_PTR p_iter = NULL ;
         list_for_each_entry(p_iter, &(s_iter->s_procq), p_list) {
+            addokbuf("cerco il semaforo  \n");
             if (p->p_semAdd == s_iter->s_key) {
                 addokbuf("trovo il semaforo giusto  \n");
                 outProcQ(&(s_iter->s_procq), p);
