@@ -112,10 +112,10 @@ pcb_t *outBlocked(pcb_t *p) {
                     Se il pcb rimosso era l'unico, il semd diventa libero e viene tolto dalla lista 
                     dei semd attivi e messo in quella dei semd liberi .
                     */
-                    if (list_empty(&(s_iter->s_procq))) {
+                    /*if (list_empty(&(s_iter->s_procq))) {
                         list_del( &(s_iter->s_link) );
                         list_add_tail( &(s_iter->s_link), &semdFree_h );
-                    }
+                    }*/
 
                     return p;
                 }
