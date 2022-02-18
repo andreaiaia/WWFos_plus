@@ -18,10 +18,11 @@ void initPcbs() {
 }
 
 /*
-	2. Questa funzione prende un processo e lo riaggiunge nella lista pcbFree_h dopo aver verificato che p non punti a NULL, fa uso della api del linux kernel per la gestione delle liste.
+	2. Questa funzione prende un processo e lo riaggiunge nella lista pcbFree_h dopo aver verificato che p
+	 non punti a NULL, fa uso della api del linux kernel per la gestione delle liste.
 */
 void freePcb(pcb_t *p) {
-	if (p != NULL) list_add( &(p->p_list), &pcbFree_h ); //modifica da -W
+	if (p != NULL) list_add( &(p->p_list), &pcbFree_h );
 }
 
 /*
@@ -168,7 +169,7 @@ int emptyChild(pcb_t *p) {
 */
 void insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt;
-	list_add(&(p->p_list), &(prnt->p_child)); //modifica qui wifi
+	list_add(&(p->p_sib), &(prnt->p_child)); //modifica qui wifi
 }
 
 /*
