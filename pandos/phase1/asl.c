@@ -91,12 +91,18 @@ pcb_t *removeBlocked(int *semAdd) {
     Return: p, puntatore al PCB rimosso || NULL se il PCB non compare nella coda (stato di errore).
 */
 pcb_t *outBlocked(pcb_t *p) {
+<<<<<<< HEAD
     semd_PTR sem_iteratore = NULL;
     list_for_each_entry(sem_iteratore, &semd_h, s_link) {
         if (sem_iteratore->s_key == NULL)
             addokbuf("il semAdd è null  \n");
         if ((p->p_semAdd) == (sem_iteratore->s_key))
         {
+=======
+    semd_PTR sem_iteratore;
+    list_for_each_entry(sem_iteratore, &semd_h, s_link){
+        if ((p->p_semAdd) == (sem_iteratore->s_key)) { //non matcha, quando dovrebbe chiedere al tutor
+>>>>>>> 4d465615162ffff335bba21cde1ae67ae5706027
             outProcQ(&(sem_iteratore->s_procq), p);
             addokbuf("uso la outprocq \n");
             if (list_empty(&(sem_iteratore->s_procq)))
