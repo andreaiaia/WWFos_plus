@@ -29,7 +29,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     list_for_each_entry(tmp, &semd_h, s_link){
         if ((tmp->s_key == semAdd) && (flag==0)) {
             p->p_semAdd = tmp->s_key;
-            *(tmp->s_key) = *(tmp->s_key) + 1;
+            *(tmp->s_key) = 0;
             list_add_tail(&(p->p_list), &(tmp->s_procq));
             flag=1;
             addokbuf("ho inserito riga 36\n"); //problema è qua
@@ -48,7 +48,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         //list_del(list_next(&semdFree_h));
         list_del(&(semallocato->s_link));
         semallocato->s_key = semAdd;
-        *(semallocato->s_key) = 1;
+        *(semallocato->s_key) = 0;
         list_add_tail(&(semallocato->s_link), &semd_h);
         if (list_empty(&(tmp->s_procq))) {
                 addokbuf("problema riga 53 non ha inserito\n");
