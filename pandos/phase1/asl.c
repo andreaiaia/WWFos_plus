@@ -30,7 +30,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         if ((tmp->s_key == semAdd) && (flag==0)) {
             p->p_semAdd = tmp->s_key;
             *(tmp->s_key) = 0;
-            list_add(&(p->p_list), &(tmp->s_procq));
+            list_add_tail(&(p->p_list), &(tmp->s_procq));
             flag=1;
             return FALSE;
         }
@@ -44,8 +44,8 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         list_del(&(semallocato->s_link));
         semallocato->s_key = semAdd;
         *(semallocato->s_key) = 0;
-        list_add(&(semallocato->s_link), &semd_h);
-        list_add(&(p->p_list), &(semallocato->s_procq));
+        list_add_tail(&(semallocato->s_link), &semd_h);
+        list_add_tail(&(p->p_list), &(semallocato->s_procq));  //se non aggiungo in coda si rompe la headblocekd
         return FALSE;
     }
     return FALSE;
@@ -149,7 +149,7 @@ void initASL() {
     //Ciclo ogni elemento della tabella dei semafori e lo aggiungo alla lista dei semafori liberi usando la macro del kernel linux list_add.
     for (int i = 0; i < MAXPROC; i++) {
         list_add(&(semd_table[i].s_link), &semdFree_h);
-        semd_table[i].s_key = NULL;    
+        //semd_table[i].s_key = NULL;    
         INIT_LIST_HEAD(&(semd_table[i].s_procq));
     }
 }
