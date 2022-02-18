@@ -94,7 +94,7 @@ pcb_t *outBlocked(pcb_t *p) {
     semd_PTR sem_iteratore;
     struct list_head *sem;
     list_for_each(sem, &semd_h) {
-        semd_PTR k = container_of(sem_iteratore, semd_t, s_link);
+        semd_PTR k = container_of(&semd_h, semd_t, s_link);
         if ((p->p_semAdd) == (k->s_key)) {
             outProcQ(&(k->s_procq), p);
             addokbuf("uso la outprocq \n");
