@@ -43,7 +43,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         semd_PTR semallocato = container_of(list_next(&semdFree_h), semd_t, s_link);
         list_del(&(semallocato->s_link));
         semallocato->s_key = semAdd;
-        *(semallocato->s_key) = 0;
+        //*(semallocato->s_key) = 0;
         list_add_tail(&(semallocato->s_link), &semd_h);
         list_add_tail(&(p->p_list), &(semallocato->s_procq));
         return FALSE;
