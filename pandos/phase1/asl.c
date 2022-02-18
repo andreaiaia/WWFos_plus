@@ -92,7 +92,7 @@ pcb_t *removeBlocked(int *semAdd) {
     Return: p, puntatore al PCB rimosso || NULL se il PCB non compare nella coda (stato di errore).
 */
 pcb_t *outBlocked(pcb_t *p) {
-    struct semd_t *s_iter;
+    semd_PTR s_iter;
     // Questo ciclo scorre la lista dei semafori (semd_h) e ad ogni iterata s_iter punta al semd_t corrente
     list_for_each_entry(s_iter, &semd_h, s_link) {
         // Controllo di aver trovato il semd corretto confrontando le chiavi
@@ -131,20 +131,21 @@ pcb_t *outBlocked(pcb_t *p) {
 
 /*
     17. 
-    Restituisce (senza rimuoverlo) il puntatore al primo PCB della coda dei processi associata al SEMD con chiave semAdd.
+    Restituisce (senza rimuoverlo) il puntatore al primo PCB della coda dei processi associata al SEMD
+    con chiave semAdd.
     
     semAdd: chiave del SEMD.
     
     Return: puntatore al primo pcb_t nella coda dei processi || NULL se non c'è il SEMD o se la sua coda è vuota.
 */
 pcb_t *headBlocked(int *semAdd) {
-    struct semd_t *s_iter;
+    semd_PTR s_iter;
     list_for_each_entry(s_iter, &semd_h, s_link) {
         if (s_iter->s_key == semAdd) {
-            if (list_empty( &(s_iter->s_procq) )) return NULL; // La coda dei pcb è vuota
-
+            if (list_empty(&(s_iter->s_procq))) return NULL; // La coda dei pcb è vuota
             // Uso la macro container_of per prendere il primo pcb della coda e restituirlo
-            struct pcb_t *p = container_of( &(s_iter->s_procq), pcb_t, p_list );
+            //pcb_PTR p = container_of( &(s_iter->s_procq), pcb_t, p_list );
+            pcb_PTR p = container_of(list_next(&s_iter->s_procq), pcb_t, p_list );
             return p;
         }
     }
