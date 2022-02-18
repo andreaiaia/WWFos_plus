@@ -44,11 +44,7 @@ pcb_t *allocPcb() {
 		/* Inizializzo i campi dell'albero dei processi */
 		oggetto->p_parent = NULL;
 		INIT_LIST_HEAD(&(oggetto->p_child));
-		INIT_LIST_HEAD(&(oggetto->p_sib));
-		/*LIST_HEAD(figli);
-		LIST_HEAD(fratelli);
-		oggetto->p_child = figli;
-		oggetto->p_sib = fratelli;*/
+		INIT_LIST_HEAD(&(oggetto->p_sib)); //chiedere conferma al Tutor
 		/* Inizializzo i campi riguardanti le informazioni 
 		   sullo stato del processo */
 		/* Campi della struct p_s di tipo state_t 
@@ -68,7 +64,8 @@ pcb_t *allocPcb() {
 }
 
 /*
-	4. Questa funzione prende il puntatore passatogli e usa la macro del kernel linux per creare una lista di PCB vuota.
+	4. Questa funzione prende il puntatore passatogli e usa 
+	la macro del kernel linux per creare una lista di PCB vuota.
 */
 void mkEmptyProcQ(struct list_head * head) {
 	INIT_LIST_HEAD(head);
@@ -94,7 +91,7 @@ int emptyProcQ(struct list_head *head) {
 	@author: Alex
 */
 void insertProcQ(struct list_head *head, pcb_t *p) {
-	list_add_tail(&(p->p_list), head);
+	list_add(&(p->p_list), head);
 }
 
 /*  
