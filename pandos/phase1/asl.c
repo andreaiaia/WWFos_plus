@@ -29,7 +29,6 @@ int insertBlocked(int *semAdd, pcb_t *p) {
         if ((tmp->s_key == semAdd)) {
             p->p_semAdd = semAdd;
             list_add_tail(&(p->p_list), &(tmp->s_procq));   //forse specifica errata come ci ha detto il tutor
-            addokbuf("trovato semaforo con semadd nella asl  \n");
             return FALSE;
         }
     }
@@ -43,7 +42,6 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     p->p_semAdd = semAdd;
     list_add(&(semallocato->s_link), &semd_h); //inserisce il semaforo nella ASL se non in coda si arrabbia
     list_add(&(p->p_list), &(semallocato->s_procq));  //se non aggiungo in coda si rompe la headblocekd
-    addokbuf("allocato semaforo con chiave semadd  \n");
     return FALSE;
 }
 
