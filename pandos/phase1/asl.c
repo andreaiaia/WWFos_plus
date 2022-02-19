@@ -80,6 +80,11 @@ pcb_t *removeBlocked(int *semAdd) {
     }
     return NULL;   
 }
+
+int* semaddr1, *semaddr2;
+void bp(){
+
+}
 /*
     16. 
     Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato (p->p_semAdd).
@@ -94,6 +99,9 @@ pcb_t *outBlocked(pcb_t *p) {
     semd_PTR sem_iteratore = NULL;
     list_for_each_entry(sem_iteratore, &semd_h, s_link) {
         if (sem_iteratore->s_key == NULL) addokbuf("il semAdd è NULL  \n");
+        semaddr1 = p->p_semAdd;
+        semaddr2 = sem_iteratore->s_key;
+        bp();
         if ((p->p_semAdd) == (sem_iteratore->s_key))
         {
             outProcQ(&(sem_iteratore->s_procq), p);
