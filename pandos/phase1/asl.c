@@ -1,5 +1,5 @@
 #include "asl.h"
-
+#include "pcb.h"
 // Tabella dei semafori di dimensione massima MAXPROC (allocazione in memoria dei semafori)
 static semd_t semd_table[MAXPROC];
 // Lista dei semafori liberi/inutilizzati
@@ -23,135 +23,101 @@ static LIST_HEAD(semd_h);
     author: -W
 */
 int insertBlocked(int *semAdd, pcb_t *p) {
-    struct list_head *s_iteratore = NULL;
-    struct list_head *l_iteratore = NULL;
-    int flag = 0;
+    semd_PTR tmp = NULL;
     /* scorre la lista dei semafori attivi/utilizzati */
-    list_for_each(l_iteratore, &semd_h){
-        semd_PTR elem = container_of(s_iteratore, semd_t, s_link); 
-        /* se trova il semaforo con chiave semAdd inserisce il pcb p
-        all'interno della lista dei processi bloccati dal semaforo */
-        if ((elem->s_key == semAdd) && (flag==0)) {
-            p->p_semAdd = elem->s_key;
-            *(elem->s_key) = *(elem->s_key) + 1;
-            list_add(l_iteratore, &(elem->s_procq));
-            flag=1;
+    list_for_each_entry(tmp, &semd_h, s_link){
+        if ((tmp->s_key == semAdd)) {
+            p->p_semAdd = semAdd;
+            list_add_tail(&(p->p_list), &(tmp->s_procq));   //forse specifica errata come ci ha detto il tutor, se aggiungiamo in testa non funziona
             return FALSE;
         }
     }
-    /* caso in cui il semaforo non è presente nella ASL */
-    if (flag == 0) {
-        /* return TRUE se non ci sono semafori liberi da allocare */
-        if (list_empty(&semdFree_h)) return TRUE;
-        /* allocazione nuovo semd dalla lista semdFree */
-        struct list_head *newsem = list_next(&(semdFree_h));
-        list_del(newsem);
-        semd_PTR sem = container_of(newsem, semd_t, s_link);
-        sem->s_key = semAdd;
-        *(sem->s_key) = 1;
-        list_add(newsem, &(semd_h));
-        list_add(&(p->p_list), &(sem->s_procq));
-        return FALSE;
-    }
+    //Caso in cui il semaforo non è presente nella ASL
+    //return true se non ci sono semafori liberi da allocare
+    if (list_empty(&semdFree_h)) return TRUE;
+    //allocazione nuovo semd dalla lista semdFree
+    semd_PTR semallocato = container_of(list_next(&semdFree_h), semd_t, s_link);
+    list_del(&(semallocato->s_link));
+    semallocato->s_key = semAdd;
+    p->p_semAdd = semAdd;
+    list_add(&(semallocato->s_link), &semd_h); //inserisce il semaforo nella ASL se non in coda si arrabbia
+    list_add(&(p->p_list), &(semallocato->s_procq));  //se non aggiungo in coda si rompe la headblocekd
     return FALSE;
 }
 
 
 /*
     15. 
-    Rimuove il primo PCB dalla coda dei processi bloccati (s_procq) associata al SEMD della ASL con chiave semAdd. Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descrittore corrispondente dalla ASL e lo inserisce nella coda dei descrittori liberi (semdFree_h). 
+    Rimuove il primo PCB dalla coda dei processi bloccati (s_procq) associata al 
+    SEMD della ASL con chiave semAdd. 
+    Se la coda dei processi bloccati per il semaforo diventa vuota, 
+    rimuove il descrittore corrispondente dalla ASL 
+    e lo inserisce nella coda dei descrittori liberi (semdFree_h). 
     
     semAdd: chiave del semd
     
     Return: Puntatore al pcb rimosso || NULL.
 */   
 pcb_t *removeBlocked(int *semAdd) {
-    struct semd_t *s_iter;
-    list_for_each_entry(s_iter, &semd_h, s_link) {   // scorro ASL
+    semd_PTR s_iter;
+    pcb_PTR res = NULL;
+    list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
-            if (list_empty( &(s_iter->s_procq) )) return NULL; // La coda dei pcb è vuota
-    
-            struct pcb_t *p = container_of( &(s_iter->s_procq), pcb_t, p_list);
-
-            list_del((s_iter->s_procq.next) );  // tolgo pcb trovato da s_procq
-            if(list_empty( &(s_iter->s_procq) ) == 1){    // se s_procq diventa vuota
-                list_del( &(p->p_list) );
-                list_add( &(p->p_list), &semdFree_h );
+            res = removeProcQ(&(s_iter->s_procq)); //risultato diverso chiedere al tutor
+            if (list_empty(&(s_iter->s_procq))) {
+                 list_del(&(s_iter->s_link));
+                 list_add(&(s_iter->s_link), &semdFree_h);
             }
-            return p;
-        }
+            return res;
+        }  
     }
-    // Non esiste il semd
-    return NULL;
-}    
+    return NULL;   
+}
 
 /*
     16. 
     Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato (p->p_semAdd).
-    Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il semd corrispondente da semd_h e lo inserisce in semdFree_h (lo rimette nella coda dei semafori liberi).
+    Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il semd corrispondente da semd_h e 
+    lo inserisce in semdFree_h (lo rimette nella coda dei semafori liberi).
     
     p: puntatore a PCB da rimuovere.
     
     Return: p, puntatore al PCB rimosso || NULL se il PCB non compare nella coda (stato di errore).
 */
 pcb_t *outBlocked(pcb_t *p) {
-    struct semd_t *s_iter;
-    // Questo ciclo scorre la lista dei semafori (semd_h) e ad ogni iterata s_iter punta al semd_t corrente
-    list_for_each_entry(s_iter, &semd_h, s_link) {
-        // Controllo di aver trovato il semd corretto confrontando le chiavi
-        if (s_iter->s_key == p->p_semAdd) {
-            struct pcb_t *p_iter;
-            /*
-            Questo ciclo scorre nella lista dei processi bloccati per trovare il pcb_t
-            che ci interessa. Ad ogni iterata p_iter punta al pcb_t corrente.
-            */
-            list_for_each_entry(p_iter, &(s_iter->s_procq), p_list) {
-                if (p_iter == p) {
-                    list_del(&(p_iter->p_list));
-                    (*(s_iter->s_key))--;
-                    /* 
-                    Se il pcb rimosso era l'unico, il semd diventa libero e viene tolto dalla lista 
-                    dei semd attivi e messo in quella dei semd liberi .
-                    */
-                    if (*(s_iter->s_key) == 0) {
-                        list_del( &(s_iter->s_link) );
-                        list_add( &(s_iter->s_link), &semdFree_h );
-                    }
-
-                    return p;
-                }
+    semd_PTR sem_iteratore = NULL;
+    list_for_each_entry(sem_iteratore, &semd_h, s_link) {
+        if ((p->p_semAdd) == (sem_iteratore->s_key)) {
+            outProcQ(&(sem_iteratore->s_procq), p);
+            if (list_empty(&(sem_iteratore->s_procq))) {
+                sem_iteratore->s_key = NULL;
+                list_del(&(sem_iteratore->s_link));
+                list_add_tail(&(sem_iteratore->s_link), &semdFree_h);
             }
-            /*
-            Return non strettamente necessario, l'ho messo solo per terminare prima l'esecuzione nel caso in cui
-            il semaforo non contenga un p_iter == p, in tal caso non ha senso continuare il ciclo.
-            */
-            return NULL; 
+            return p;
         }
-    }
+    }   
     // Stato di errore
     return NULL;
 }
 
 /*
     17. 
-    Restituisce (senza rimuoverlo) il puntatore al primo PCB della coda dei processi associata al SEMD con chiave semAdd.
+    Restituisce (senza rimuoverlo) il puntatore al primo PCB della coda dei processi associata al SEMD
+    con chiave semAdd.
     
     semAdd: chiave del SEMD.
     
     Return: puntatore al primo pcb_t nella coda dei processi || NULL se non c'è il SEMD o se la sua coda è vuota.
 */
 pcb_t *headBlocked(int *semAdd) {
-    struct semd_t *s_iter;
-    list_for_each_entry(s_iter, &semd_h, s_link) {
-        if (s_iter->s_key == semAdd) {
-            if (list_empty( &(s_iter->s_procq) )) return NULL; // La coda dei pcb è vuota
-
-            // Uso la macro container_of per prendere il primo pcb della coda e restituirlo
-            struct pcb_t *p = container_of( &(s_iter->s_procq), pcb_t, p_list );
-            return p;
+    semd_PTR sem_iteratore;
+    list_for_each_entry(sem_iteratore, &semd_h, s_link){
+        if ((sem_iteratore->s_key) == semAdd){
+            if (list_empty(&(sem_iteratore->s_procq))) return NULL; // La coda dei pcb è vuota
+            return container_of(list_next(&(sem_iteratore->s_procq)), pcb_t, p_list);
         }
     }
-    // Non esiste il semd
     return NULL;
 }
 
@@ -161,13 +127,11 @@ pcb_t *headBlocked(int *semAdd) {
     Questo metodo viene invocato una volta sola durante l'inizializzazione dei dati.
 */
 void initASL() {
-    // Controllo per sicurezza, se la lista dei semafori liberi non è vuota la funzione termina
-    if (!list_empty(&semdFree_h)) return;
-
-    /* 
-    Ciclo ogni elemento della tabella dei semafori e lo aggiungo alla lista dei semafori liberi usando la macro del kernel linux list_add.
-    */
+    /*Ciclo ogni elemento della tabella dei semafori e lo aggiungo 
+    alla lista dei semafori liberi usando la macro del kernel linux list_add.*/
     for (int i = 0; i < MAXPROC; i++) {
-        list_add( &(semd_table[i].s_procq), &semdFree_h );
+        list_add(&(semd_table[i].s_link), &semdFree_h);
+        semd_table[i].s_key = NULL;    
+        INIT_LIST_HEAD(&(semd_table[i].s_procq));
     }
 }

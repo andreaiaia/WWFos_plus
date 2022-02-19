@@ -59,4 +59,8 @@ kernel
 kernel.core.umps
 kernel.stab.umps
 P1
+<<<<<<< HEAD
 term0.umps
+=======
+term0.umps
+>>>>>>> laViaWifinica

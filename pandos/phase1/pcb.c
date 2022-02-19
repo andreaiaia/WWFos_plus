@@ -2,6 +2,7 @@
 
 // Dichiarazione dell'array di pcb (allocazione in memoria dei pcb)
 static pcb_t pcbFree_table[MAXPROC];
+
 // Dichiarazione della lista dei pcb liberi
 static LIST_HEAD(pcbFree_h);
 
@@ -10,20 +11,18 @@ static LIST_HEAD(pcbFree_h);
 	@author: Alex
 */
 void initPcbs() {
-	//INIT_LIST_HEAD(&pcbFree_h); //aggiunta da -W secondo me ci va
-	if (list_empty(&pcbFree_h)) {
+	INIT_LIST_HEAD(&pcbFree_h); 
 		for (int i = 0; i < MAXPROC; i++) {
-			list_add( &(pcbFree_table[i].p_list), &pcbFree_h );
+			list_add(&(pcbFree_table[i].p_list), &pcbFree_h );
 		}
-	}
 }
 
 /*
-	2. Questa funzione prende un processo e lo riaggiunge nella lista pcbFree_h dopo aver verificato che p non punti a NULL, fa uso della api del linux kernel per la gestione delle liste.
+	2. Questa funzione prende un processo e lo riaggiunge nella lista pcbFree_h dopo aver verificato che p
+	 non punti a NULL, fa uso della api del linux kernel per la gestione delle liste.
 */
 void freePcb(pcb_t *p) {
-	//if (p != NULL) list_add( &(p->p_list), &pcbFree_h );
-	if (p != NULL) list_add( &p->p_list, &pcbFree_h ); //modifica da -W
+	if (p != NULL) list_add(&(p->p_list), &pcbFree_h );
 }
 
 /*
@@ -36,25 +35,18 @@ void freePcb(pcb_t *p) {
 	author: -W
 */
 pcb_t *allocPcb() {
-	if (list_empty(&pcbFree_h)) {
-		return(NULL);
-	}
+	if (list_empty(&pcbFree_h)) return(NULL);
 	else {
-		//struct list_head *elem = list_prev(&pcbFree_h);
 		struct list_head *elem = list_next(&pcbFree_h);
 		list_del(elem);
 		pcb_PTR oggetto = container_of(elem, pcb_t, p_list);
 		/* Inizializzo i campi dell'albero dei processi */
 		oggetto->p_parent = NULL;
-		//INIT_LIST_HEAD(&(oggetto->p_child));
-		//INIT_LIST_HEAD(&(oggetto->p_sib));
-		LIST_HEAD(figli);
-		LIST_HEAD(fratelli);
-		oggetto->p_child = figli;
-		oggetto->p_sib = fratelli;
+		INIT_LIST_HEAD(&(oggetto->p_child));
+		INIT_LIST_HEAD(&(oggetto->p_sib)); 
 		/* Inizializzo i campi riguardanti le informazioni 
 		   sullo stato del processo */
-		/* Campi della struct p_s di tipo state_t 
+		//Campi della struct p_s di tipo state_t 
 		oggetto->p_s.entry_hi = 0;
 		oggetto->p_s.cause = 0;
 		oggetto->p_s.status = 0;
@@ -62,7 +54,7 @@ pcb_t *allocPcb() {
 		oggetto->p_s.gpr[STATE_GPR_LEN] = 0;
 		oggetto->p_s.hi = 0;
 		oggetto->p_s.lo = 0;
-		Fine campi struct p_s di tipo state_t */
+		//Fine campi struct p_s di tipo state_t 
 		oggetto->p_time = 0;
 		/* Inizializzo il puntatore al semaforo bloccante */
 		oggetto->p_semAdd = NULL;
@@ -71,11 +63,10 @@ pcb_t *allocPcb() {
 }
 
 /*
-	4. Questa funzione prende il puntatore passatogli e usa la macro del kernel linux per creare una lista di PCB vuota.
+	4. Questa funzione prende il puntatore passatogli e usa 
+	la macro del kernel linux per creare una lista di PCB vuota.
 */
 void mkEmptyProcQ(struct list_head * head) {
-	//LIST_HEAD(procQ);
-	//head = &procQ; modifica -W
 	INIT_LIST_HEAD(head);
 }
 
@@ -99,9 +90,7 @@ int emptyProcQ(struct list_head *head) {
 	@author: Alex
 */
 void insertProcQ(struct list_head *head, pcb_t *p) {
-	//list_add(&(p->p_list), head);
-	list_add_tail(&p->p_list, head); // Modifica da -W
-	//list_add(&p->p_list, head); //modifica da -W non funziona
+	list_add_tail(&(p->p_list), head); //se utilizzo list_add, non funziona chiedere al tutor
 }
 
 /*  
@@ -113,6 +102,7 @@ pcb_t *headProcQ(struct list_head *head) {
 		return NULL;
   	}	
 	return container_of(head->next, pcb_t, p_list); 
+	
 }
 
 /*
@@ -124,10 +114,8 @@ pcb_t *headProcQ(struct list_head *head) {
 pcb_t *removeProcQ(struct list_head *head) {
 	if (list_empty(head)) return NULL;
 	else {
-		//struct pcb_t *p = container_of(head, pcb_t, p_list); modifica -W
 		pcb_PTR p = container_of(head->next, pcb_t, p_list);
-		//list_del(head); modifica da W-
-		list_del(&p->p_list);
+		list_del(&(p->p_list));
 		return p;
 	}
 }
@@ -148,7 +136,7 @@ pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 	pcb_PTR oggetto;
 	list_for_each_entry(oggetto, head, p_list){
 		if (oggetto==p) {
-			list_del(&oggetto->p_list);
+			list_del(&(oggetto->p_list));
 			return oggetto;
 		}		
 	}
@@ -165,7 +153,7 @@ pcb_t* outProcQ(struct list_head* head, pcb_t *p) {
 	author: -W
 */
 int emptyChild(pcb_t *p) {
-	return list_empty(&p->p_child);
+	return list_empty(&(p->p_child));
 }
 
 /*
@@ -179,7 +167,7 @@ int emptyChild(pcb_t *p) {
 */
 void insertChild(pcb_t *prnt, pcb_t *p) {
 	p->p_parent = prnt;
-	list_add_tail(&p->p_list, &prnt->p_child);
+	list_add(&(p->p_sib), &(prnt->p_child)); 
 }
 
 /*
@@ -191,9 +179,10 @@ void insertChild(pcb_t *prnt, pcb_t *p) {
 pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
-		struct pcb_t * child = container_of(&(p->p_child), pcb_t, p_list); // puntatore da ritornare
-		list_del( &(p->p_child) ); // tolgo il processo dalla
+		struct list_head *temp = list_next(&(p->p_child));
+		pcb_PTR child = container_of(temp, pcb_t, p_sib); 
 		child->p_parent = NULL;
+		list_del(&(child->p_sib)); 
 		return child;
 	}
 }
@@ -205,19 +194,15 @@ pcb_t *removeChild(pcb_t *p) {
 	@author: Alex
 */
 pcb_t *outChild(pcb_t *p) {
-	if(p->p_parent == NULL) {
-		return NULL;
+	if(p->p_parent == NULL) return NULL;
+	struct list_head *figlidelpadre = &(p->p_parent->p_child);
+	pcb_PTR temp = NULL; 	//conterrà uno ad uno i figli del padre
+	list_for_each_entry(temp, figlidelpadre, p_sib) {
+		if (p == temp) {
+			list_del(&(temp->p_sib)); 
+			temp->p_parent = NULL;
+			return p;
+		}
 	}
-	struct list_head *tmp = &( (p->p_parent)->p_child );    // elemento sentinella della lista dei figli del padre di p 
-	struct list_head *tmp_head = tmp;				 	    // copia della sentinella da usare per funzione "list_is_last"
-
-	while(tmp->next != &(p->p_list) && list_is_last(tmp->next, tmp_head) == 0 ) {
-		tmp = tmp->next;
-	} // quando esco dal while, tmp->next conterrà il pcb da togliere
-
-	if(list_is_last(tmp->next, tmp_head) == 1) {   // non c'é elemento che corrisponda a p 
-		return NULL;
-	}
-	list_del(tmp->next);
-	return container_of(tmp->next, pcb_t, p_list);
+	return NULL;
 }

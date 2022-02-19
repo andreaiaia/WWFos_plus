@@ -63,9 +63,8 @@ pcb_t *headProcQ(struct list_head *head);
 
 /*
 	8. 
-	Rimuove il primo elemento il cui puntatore a coda è puntato da tp dalla process queue.
-	Se necessario aggiorna il puntatore di coda della process queue.
-	
+	Rimuove il primo elemento dalla coda dei processi puntata da head
+
 	head: puntatore alla sentinella della coda procQ.
 	
 	Return: puntatore al PCB rimosso || NULL se la coda è vuota.

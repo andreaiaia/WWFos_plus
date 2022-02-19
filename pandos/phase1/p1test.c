@@ -282,6 +282,7 @@ int main(void) {
             adderrbuf("removeBlocked: wouldn't remove   ");
         if (q != procp[i])
             adderrbuf("removeBlocked: removed wrong element   ");
+
         if (insertBlocked(&sem[i - 10], q))
             adderrbuf("insertBlocked(3): unexpected TRUE   ");
     }
