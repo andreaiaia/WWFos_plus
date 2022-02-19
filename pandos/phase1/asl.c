@@ -43,7 +43,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     list_del(&(semallocato->s_link));
     semallocato->s_key = semAdd;
     //*semAdd = 0;
-    list_add_tail(&(semallocato->s_link), &semd_h); //inserisce il semaforo nella ASL se non in coda si arrabbia
+    list_add(&(semallocato->s_link), &semd_h); //inserisce il semaforo nella ASL se non in coda si arrabbia
     list_add(&(p->p_list), &(semallocato->s_procq));  //se non aggiungo in coda si rompe la headblocekd
     addokbuf("allocato semaforo con chiave semadd  \n");
     return FALSE;
