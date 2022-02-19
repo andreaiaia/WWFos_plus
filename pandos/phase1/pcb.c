@@ -48,7 +48,7 @@ pcb_t *allocPcb() {
 		INIT_LIST_HEAD(&(oggetto->p_sib)); //chiedere conferma al Tutor
 		/* Inizializzo i campi riguardanti le informazioni 
 		   sullo stato del processo */
-		/* Campi della struct p_s di tipo state_t 
+		//Campi della struct p_s di tipo state_t 
 		oggetto->p_s.entry_hi = 0;
 		oggetto->p_s.cause = 0;
 		oggetto->p_s.status = 0;
@@ -56,7 +56,7 @@ pcb_t *allocPcb() {
 		oggetto->p_s.gpr[STATE_GPR_LEN] = 0;
 		oggetto->p_s.hi = 0;
 		oggetto->p_s.lo = 0;
-		Fine campi struct p_s di tipo state_t */
+		//Fine campi struct p_s di tipo state_t 
 		oggetto->p_time = 0;
 		/* Inizializzo il puntatore al semaforo bloccante */
 		oggetto->p_semAdd = NULL;
@@ -188,18 +188,7 @@ pcb_t *removeChild(pcb_t *p) {
 		return child;
 	}
 }
-/*  chiedere al tutor quali sono i problemi di questa versione
-pcb_t *removeChild(pcb_t *p) {
-	if (emptyChild(p)) return NULL;
-	else {
-		struct list_head *temp = list_next(&(p->p_child));
-		pcb_PTR child = container_of(temp, pcb_t, p_list); // chiedere al tutor perché questa non va
-		child->p_parent = NULL;
-		list_del(&(child->p_sib)); // chiedere al tutor perché non funziona
-		return child;
-	}
-}
-*/
+
 /*
 	13. Rimuove il PCB puntato da p dalla lista dei figli del padre.
 	Se il PCB puntato da p non ha un padre, restituisce NULL, altrimenti restituisce l’elemento rimosso (cioè p).

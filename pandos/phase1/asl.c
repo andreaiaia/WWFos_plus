@@ -30,7 +30,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
             p->p_semAdd = tmp->s_key;
             //p->p_semAdd = semAdd;
             //*semAdd = 0;
-            list_add_tail(&(p->p_list), &(tmp->s_procq));
+            list_add_tail(&(p->p_list), &(tmp->s_procq)); //forse specifica errata come ci ha detto il tutor
             addokbuf("trovato semaforo con semadd nella asl  \n");
             return FALSE;
         }
@@ -42,7 +42,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     semd_PTR semallocato = container_of(list_next(&semdFree_h), semd_t, s_link);
     list_del(&(semallocato->s_link));
     semallocato->s_key = semAdd;
-    //p->p_semAdd = semAdd;
+    p->p_semAdd = semAdd;
     //*semAdd = 0;
     list_add(&(semallocato->s_link), &semd_h); //inserisce il semaforo nella ASL se non in coda si arrabbia
     list_add(&(p->p_list), &(semallocato->s_procq));  //se non aggiungo in coda si rompe la headblocekd
@@ -103,12 +103,10 @@ pcb_t *outBlocked(pcb_t *p) {
         semaddr1 = p->p_semAdd;
         semaddr2 = sem_iteratore->s_key;
         bp();
-        if ((p->p_semAdd) == (sem_iteratore->s_key))
-        {
+        if ((p->p_semAdd) == (sem_iteratore->s_key)) {
             outProcQ(&(sem_iteratore->s_procq), p);
             addokbuf("uso la outprocq \n");
-            if (list_empty(&(sem_iteratore->s_procq)))
-            {
+            if (list_empty(&(sem_iteratore->s_procq))) {
                 sem_iteratore->s_key = NULL;
                 list_del(&(sem_iteratore->s_link));
                 list_add_tail(&(sem_iteratore->s_link), &semdFree_h);
