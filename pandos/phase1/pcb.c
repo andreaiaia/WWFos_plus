@@ -13,7 +13,7 @@ static LIST_HEAD(pcbFree_h);
 void initPcbs() {
 	INIT_LIST_HEAD(&pcbFree_h); 
 		for (int i = 0; i < MAXPROC; i++) {
-			list_add( &(pcbFree_table[i].p_list), &pcbFree_h );
+			list_add(&(pcbFree_table[i].p_list), &pcbFree_h );
 		}
 }
 
@@ -22,7 +22,7 @@ void initPcbs() {
 	 non punti a NULL, fa uso della api del linux kernel per la gestione delle liste.
 */
 void freePcb(pcb_t *p) {
-	if (p != NULL) list_add( &(p->p_list), &pcbFree_h );
+	if (p != NULL) list_add(&(p->p_list), &pcbFree_h );
 }
 
 /*
@@ -35,9 +35,7 @@ void freePcb(pcb_t *p) {
 	author: -W
 */
 pcb_t *allocPcb() {
-	if (list_empty(&pcbFree_h)) {
-		return(NULL);
-	}
+	if (list_empty(&pcbFree_h)) return(NULL);
 	else {
 		struct list_head *elem = list_next(&pcbFree_h);
 		list_del(elem);
@@ -45,7 +43,7 @@ pcb_t *allocPcb() {
 		/* Inizializzo i campi dell'albero dei processi */
 		oggetto->p_parent = NULL;
 		INIT_LIST_HEAD(&(oggetto->p_child));
-		INIT_LIST_HEAD(&(oggetto->p_sib)); //chiedere conferma al Tutor
+		INIT_LIST_HEAD(&(oggetto->p_sib)); 
 		/* Inizializzo i campi riguardanti le informazioni 
 		   sullo stato del processo */
 		//Campi della struct p_s di tipo state_t 
@@ -182,7 +180,7 @@ pcb_t *removeChild(pcb_t *p) {
 	if (emptyChild(p)) return NULL;
 	else {
 		struct list_head *temp = list_next(&(p->p_child));
-		pcb_PTR child = container_of(temp, pcb_t, p_sib); // puntatore da ritornare
+		pcb_PTR child = container_of(temp, pcb_t, p_sib); 
 		child->p_parent = NULL;
 		list_del(&(child->p_sib)); 
 		return child;
@@ -198,10 +196,10 @@ pcb_t *removeChild(pcb_t *p) {
 pcb_t *outChild(pcb_t *p) {
 	if(p->p_parent == NULL) return NULL;
 	struct list_head *figlidelpadre = &(p->p_parent->p_child);
-	pcb_PTR temp = NULL; //conterrà uno ad uno i figli del padre
+	pcb_PTR temp = NULL; 	//conterrà uno ad uno i figli del padre
 	list_for_each_entry(temp, figlidelpadre, p_sib) {
 		if (p == temp) {
-			list_del(&(temp->p_sib)); //modifica fatta per nuove spec scoperte su telegram
+			list_del(&(temp->p_sib)); 
 			temp->p_parent = NULL;
 			return p;
 		}
