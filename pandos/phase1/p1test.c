@@ -12,12 +12,12 @@
  *      Modified by Michael Goldweber on May 15, 2004
  */
 
-#include <../h/pandos_const.h>
-#include <../h/pandos_types.h>
+#include "../h/pandos_const.h"
+#include "../h/pandos_types.h"
 
 #include <umps3/umps/libumps.h>
-#include <pcb.h>
-#include <asl.h>
+#include "pcb.h"
+#include "asl.h"
 
 #define MAXPROC	20
 #define	MAXSEM	MAXPROC
