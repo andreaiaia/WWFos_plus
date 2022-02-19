@@ -30,7 +30,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
             p->p_semAdd = tmp->s_key;
             //p->p_semAdd = semAdd;
             //*semAdd = 0;
-            list_add(&(p->p_list), &(tmp->s_procq));
+            list_add_tail(&(p->p_list), &(tmp->s_procq));
             addokbuf("trovato semaforo con semadd nella asl  \n");
             return FALSE;
         }
