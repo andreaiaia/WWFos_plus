@@ -16,8 +16,6 @@
     ASL, settando I campi in maniera opportuna. 
     
     Return: 1 se semdFree_h è vuota, 0 altrimenti.
-
-    author: -W
 */
 int insertBlocked(int *semAdd, pcb_t *p);
 
