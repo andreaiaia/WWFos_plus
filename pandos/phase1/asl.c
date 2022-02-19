@@ -28,7 +28,7 @@ int insertBlocked(int *semAdd, pcb_t *p) {
     list_for_each_entry(tmp, &semd_h, s_link){
         if ((tmp->s_key == semAdd)) {
             p->p_semAdd = semAdd;
-            list_add_tail(&(p->p_list), &(tmp->s_procq));   //forse specifica errata come ci ha detto il tutor
+            list_add(&(p->p_list), &(tmp->s_procq));   //forse specifica errata come ci ha detto il tutor
             return FALSE;
         }
     }
@@ -92,7 +92,7 @@ pcb_t *outBlocked(pcb_t *p) {
             if (list_empty(&(sem_iteratore->s_procq))) {
                 sem_iteratore->s_key = NULL;
                 list_del(&(sem_iteratore->s_link));
-                list_add(&(sem_iteratore->s_link), &semdFree_h); // check
+                list_add_tail(&(sem_iteratore->s_link), &semdFree_h); // check
             }
             return p;
         }
