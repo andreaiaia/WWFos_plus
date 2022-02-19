@@ -63,10 +63,7 @@ pcb_t *removeBlocked(int *semAdd) {
     pcb_PTR res = NULL;
     list_for_each_entry(s_iter, &semd_h, s_link) {  
         if (s_iter->s_key == semAdd) {
-            pcb_PTR tmp = container_of(list_next(&s_iter->s_procq), pcb_t, p_list);
-            res = tmp;
-            //res = removeProcQ(&(s_iter->s_procq)); //risultato diverso chiedere al tutor
-            list_del(&(tmp->p_list)); //risultato diverso chiedere al tutor
+            res = removeProcQ(&(s_iter->s_procq)); //risultato diverso chiedere al tutor
             if (list_empty(&(s_iter->s_procq))) {
                  list_del(&(s_iter->s_link));
                  list_add(&(s_iter->s_link), &semdFree_h);
@@ -77,10 +74,6 @@ pcb_t *removeBlocked(int *semAdd) {
     return NULL;   
 }
 
-int* semaddr1, *semaddr2;
-void bp(){
-
-}
 /*
     16. 
     Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato (p->p_semAdd).
@@ -99,7 +92,7 @@ pcb_t *outBlocked(pcb_t *p) {
             if (list_empty(&(sem_iteratore->s_procq))) {
                 sem_iteratore->s_key = NULL;
                 list_del(&(sem_iteratore->s_link));
-                list_add_tail(&(sem_iteratore->s_link), &semdFree_h);
+                list_add(&(sem_iteratore->s_link), &semdFree_h); // check
             }
             return p;
         }
