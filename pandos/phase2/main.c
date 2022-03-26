@@ -1,24 +1,23 @@
+#include "../h/listx.h"
+#include "../h/pandos_types.h"
+#include "../h/pandos_const.h"
 #include "../phase1/asl.h"
 #include "../phase1/asl.c"
+#include "scheduler.h"
 
-// Variabili Globali
-/*
-    - Puntatore a processo correntemente attivo
-    - Un semaforo (una variabile int) per ogni (sub) dispositivo, non sono tutti sempre attivi insieme
-    - Strutture dati già create in fase 1
-*/
-
+/* Variabili Globali */
 // Process Count - Contatore processi vivi (started but not yet finished)
-#define ProcCount 0
+int proc_count = 0;
 // Soft-Block Count - Contatore dei processi avviati ma non ancora terminati (e quindi bloccati)
-#define SoftCount 0
+int soft_count = 0;
 // Ready Queue - Puntatore a Tail della coda dei pcb che sono in stato "Ready"
-#define pcb_t *ReadyQ
+pcb_PTR ready_q;
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
-#define pcb_t *Current
-// Device Semaphores -
+pcb_PTR current_p;
+// Device Semaphores - we need 49 sem in total
+int device_sem[49]; // forse è meglio non hard codarlo, vedrem
 
-// TODO: Inizializzare il kernel (Usando initpcb e initsemd)
+// TODO: Inizializzare il kernel
 
 int main()
 {
