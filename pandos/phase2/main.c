@@ -23,6 +23,8 @@ int device_sem[SEM_NUM];
 // Passup Vector
 passupvector_t *pu_vector;
 
+/* Dichiarazioni di funzioni */
+
 // Funzione fornita dalle specifiche, la riscriveremo nella prossima fase
 void uTLB_RefillHandler()
 {
@@ -31,8 +33,10 @@ void uTLB_RefillHandler()
     TLBWR();
     LDST((state_PTR)0x0FFFF000);
 }
+// La funzione test si trova nel file di test fornito
+extern void test();
 
-// TODO: Inizializzare il kernel
+//* A LONG TIME AGO, IN A MAIN FUNCTION FAR FAR AWAY */
 int main()
 {
     // Inizializzo le variabili globali e inizializzo la coda dei processi
@@ -56,34 +60,48 @@ int main()
     pu_vector->exception_handler = (memaddr)fooBar;
     pu_vector->exception_stackPtr = KERNELSTACK;
 
-    // Inizializzo il system-wide clock
-    // Uso la macro fornita in const.h (che prende argomenti in microsecondi)
+    /**
+     * Inizializzo il system-wide clock a 100ms usando la macro
+     * fornita in const.h (che prende argomenti in microsecondi)
+     */
     LDIT(100000);
 
     // Creo un processo (a bassa priorità) da inserire nella Ready queue
     pcb_PTR kernel_mode_proc = allocPcb();
 
-    // Inizializzo il processor state del pcb
-    state_t proc_state;
-    STST(&proc_state);
-    /*
-     * Imposto lo state su kernel mode, interrupt abilitati e Processor Local Time abilitato
+    /**
+     * Imposto lo state_t su kernel mode, interrupt abilitati e Processor Local Time abilitato.
      * Uso l'or | per sommare i bit del registro e accenderli dove serve con le macro da pandos_const.h
-     * IECON = Interrupt enable current ON
+     * IEPON = Interrupt Enable Previous ON
      * IMON = Interrupt Mask ON
-     * TEBITON = Time enable bit ON
+     * TEBITON = Time Enable BIT ON
+     * Bisogna usare i Previous bit invece dei current quando si inizializza
+     * un nuovo processor state
      */
-    proc_state.status = ALLOFF | IECON | IMON | TEBITON;
+    kernel_mode_proc->p_s.status = ALLOFF | IEPON | IMON | TEBITON;
 
     // Imposto lo Stack Pointer su RAMTOP
-    RAMTOP(gpr); // ! non sono sicuro di niente
+    /**
+     * Lo Stack Pointer è la 26esima entry del gpr, che grazie
+     * alle macro definite in types.h può essere richiamata
+     * semplicemente con notazione puntata sotto al nome di reg_sp
+     */
+    RAMTOP(kernel_mode_proc->p_s.reg_sp);
+    /**
+     * Come indicato sul manuale, per ragioni tecniche va
+     * inizializzato allo steso modo anche il registro t9 del gpr
+     */
+    RAMTOP(kernel_mode_proc->p_s.reg_t9);
 
     // Imposto il PC sull'indirizzo della funzione test
-    proc_state.pc_epc = (memaddr)test;
+    kernel_mode_proc->p_s.pc_epc = (memaddr)test;
 
     // Finalmente inserisco il processo impostato nella ready queue
     insertProcQ(ready_q, kernel_mode_proc);
     proc_count++;
+
+    // Chiamo lo Scheduler
+    scheduler();
 
     return 0;
 }
