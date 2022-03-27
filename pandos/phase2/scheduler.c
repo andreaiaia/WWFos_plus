@@ -24,7 +24,7 @@ void scheduler()
     else if (!emptyProcQ(low_ready_q))
     {
         current_p = removeProcQ(low_ready_q);
-        // TODO load 5 millisecond on the PLT
+        setTimer(50000);
         LDST(&(current_p->p_s));
     }
     // Se le code sono entrambe vuote
@@ -35,12 +35,16 @@ void scheduler()
         else if (soft_count > 0)
         {
             // Imposto lo stato corrente per accettare interrupt
+            // E disabilito il tutto il resto (quindi anche il PLT)
             // ? non sono sicuro vada usato lo state del processo corrente
-            current_p->p_s.status = current_p->p_s.status | IECON | IMON;
-            // TODO Disabilito il PLT
+            current_p->p_s.status = ALLOFF | IECON | IMON;
 
             WAIT(); // Aspettando un interrupt
         }
         else
+        {
+            // Siamo in deadlock
+            PANIC();
+        }
     }
 }
