@@ -2,11 +2,13 @@
 #include "../h/pandos_types.h"
 #include "../h/pandos_const.h"
 #include "../phase1/asl.h"
-#include "../phase1/asl.c"
+#include "../phase1/pcb.h"
+#include "main.h"
 #include "scheduler.h"
 
 /* Costanti */
-#define SEM_NUM 49;
+// Numero di semafori dei dispositivi
+#define DEVSEM_NUM 49;
 
 /* Variabili Globali */
 
@@ -14,12 +16,15 @@
 int proc_count;
 // Soft-Block Count - Contatore dei processi avviati ma non ancora terminati (e quindi bloccati)
 int soft_count;
-// Ready Queue - Puntatore a Tail della coda dei pcb che sono in stato "Ready"
-list_head *ready_q;
+
+// Le code dei processi ready sono dichiarate in scheduler.h
+extern list_head *high_ready_q;
+extern list_head *low_ready_q;
+
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
 pcb_PTR current_p;
 // Device Semaphores - we need 49 sem in total
-int device_sem[SEM_NUM];
+int device_sem[DEVSEM_NUM];
 // Passup Vector
 passupvector_t *pu_vector;
 
@@ -39,14 +44,15 @@ extern void test();
 //* A LONG TIME AGO, IN A MAIN FUNCTION FAR FAR AWAY */
 int main()
 {
-    // Inizializzo le variabili globali e inizializzo la coda dei processi
+    // Inizializzo le variabili globali e la coda dei processi
     initPcbs();
     initASL();
     proc_count = 0;
     soft_count = 0;
-    mkEmptyProcQ(ready_q);
+    mkEmptyProcQ(high_ready_q);
+    mkEmptyProcQ(low_ready_q);
     current_p = NULL;
-    for (int i = 0; i < SEM_NUM; i++)
+    for (int i = 0; i < DEVSEM_NUM; i++)
     {
         device_sem[i] = 0;
     }
@@ -63,8 +69,9 @@ int main()
     /**
      * Inizializzo il system-wide clock a 100ms usando la macro
      * fornita in const.h (che prende argomenti in microsecondi)
+     * Come argomento uso la costante PSECOND (100000micros)
      */
-    LDIT(100000);
+    LDIT(PSECOND);
 
     // Creo un processo (a bassa priorità) da inserire nella Ready queue
     pcb_PTR kernel_mode_proc = allocPcb();
@@ -97,7 +104,7 @@ int main()
     kernel_mode_proc->p_s.pc_epc = (memaddr)test;
 
     // Finalmente inserisco il processo impostato nella ready queue
-    insertProcQ(ready_q, kernel_mode_proc);
+    insertProcQ(low_ready_q, kernel_mode_proc);
     proc_count++;
 
     // Chiamo lo Scheduler
