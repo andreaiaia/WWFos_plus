@@ -38,12 +38,12 @@
  */
 #define STATUS_IEc       0x00000001
 #define STATUS_IEc_BIT   0
-#define STATUS_KUc       0x00000002
+#define STATUS_KUc       0x00000002    // bit che indica se processo Corrente è in Kernel o User mode
 #define STATUS_KUc_BIT   1
 
-#define STATUS_IEp       0x00000004
+#define STATUS_IEp       0x00000004    
 #define STATUS_IEp_BIT   2
-#define STATUS_KUp       0x00000008
+#define STATUS_KUp       0x00000008    // stato precedente del bit KU
 #define STATUS_KUp_BIT   3
 
 #define STATUS_IEo       0x00000010
@@ -77,20 +77,36 @@
 #define CAUSE_EXCCODE_BIT      2
 #define CAUSE_GET_EXCCODE(x)   (((x) & CAUSE_EXCCODE_MASK) >> CAUSE_EXCCODE_BIT)
 
+/* External Device Interrupt Table (pg. 19 del manuale umps3)
+
+Number  Code   Description
+1       Mod    TLB-Modification Exception
+2       TLBL   TLB Invalid Exception: on a Load instr. or instruction fetch
+3       TLBS   TLB Invalid Exception: on a Store instr.
+4       AdEL   Address Error Exception: on a Load or instruction fetch
+5       AdES   Address Error Exception: on a Store instr.
+6       IBE    Bus Error Exception: on an instruction fetch
+7       DBE    Bus Error Exception: on a Load/Store data access
+8       Sys    Syscall Exception
+9       Bp     Breakpoint Exception
+10      RI     Reserved Instruction Exception
+11      CpU    Coprocessor Unusable Exception
+12      OV     Arithmetic Overflow Exception*/
+
 /* Exception codes - naming follows standard MIPS mnemonics */
-#define EXC_INT                0
-#define EXC_MOD                1
-#define EXC_TLBL               2
-#define EXC_TLBS               3
-#define EXC_ADEL               4
-#define EXC_ADES               5
-#define EXC_IBE                6
-#define EXC_DBE                7
-#define EXC_SYS                8
-#define EXC_BP                 9
-#define EXC_RI                 10
-#define EXC_CPU                11
-#define EXC_OV                 12
+#define EXC_INT                0    
+#define EXC_MOD                1           
+#define EXC_TLBL               2    
+#define EXC_TLBS               3    
+#define EXC_ADEL               4    
+#define EXC_ADES               5    
+#define EXC_IBE                6    
+#define EXC_DBE                7    
+#define EXC_SYS                8    
+#define EXC_BP                 9    
+#define EXC_RI                 10   
+#define EXC_CPU                11   
+#define EXC_OV                 12   
 
 #define CAUSE_IP_MASK          0x0000ff00
 #define CAUSE_IP(line)         (1U << (8 + (line)))

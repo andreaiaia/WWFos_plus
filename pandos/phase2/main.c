@@ -6,20 +6,21 @@
 #include "main.h"
 #include "scheduler.h"
 
-/* Costanti */
+//* Costanti */
 // Numero di semafori dei dispositivi
 #define DEVSEM_NUM 49;
 
-/* Variabili Globali */
+//* Variabili Globali */
 
 // Process Count - Contatore processi vivi (started but not yet finished)
 int proc_count;
 // Soft-Block Count - Contatore dei processi avviati ma non ancora terminati (e quindi bloccati)
 int soft_count;
 
-// Le code dei processi ready sono dichiarate in scheduler.h
-extern list_head *high_ready_q;
-extern list_head *low_ready_q;
+// tail-pointer dei processi in "ready"; alta e bassa priorità
+// (Le code dei processi ready sono dichiarate in scheduler.h)
+extern list_head *high_ready_q; 
+extern list_head *low_ready_q;  
 
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
 pcb_PTR current_p;
@@ -28,7 +29,7 @@ int device_sem[DEVSEM_NUM];
 // Passup Vector
 passupvector_t *pu_vector;
 
-/* Dichiarazioni di funzioni */
+//* Dichiarazioni di funzioni */
 
 // Funzione fornita dalle specifiche, la riscriveremo nella prossima fase
 void uTLB_RefillHandler()
@@ -48,7 +49,7 @@ int main()
     initPcbs();
     initASL();
     proc_count = 0;
-    soft_count = 0;
+    soft_count = 0; 
     mkEmptyProcQ(high_ready_q);
     mkEmptyProcQ(low_ready_q);
     current_p = NULL;
@@ -62,14 +63,14 @@ int main()
     // Popolo il Passup Vector
     pu_vector->tlb_refill_handler = (memaddr)uTLB_RefillHandler;
     pu_vector->tlb_refill_stackPtr = KERNELSTACK;
-    // ! Dare nome appropriato al posto di fooBar
+    // ! Dare nome appropriato al posto di fooBar, Alex propone kernelExcHandler
     pu_vector->exception_handler = (memaddr)fooBar;
     pu_vector->exception_stackPtr = KERNELSTACK;
 
     /**
      * Inizializzo il system-wide clock a 100ms usando la macro
      * fornita in const.h (che prende argomenti in microsecondi)
-     * Come argomento uso la costante PSECOND (100000micros)
+     * Come argomento uso la costante PSECOND (100000 microsec = 100 millisec)
      */
     LDIT(PSECOND);
 
@@ -79,6 +80,7 @@ int main()
     /**
      * Imposto lo state_t su kernel mode, interrupt abilitati e Processor Local Time abilitato.
      * Uso l'or | per sommare i bit del registro e accenderli dove serve con le macro da pandos_const.h
+     * ALLOFF = serie di 0
      * IEPON = Interrupt Enable Previous ON
      * IMON = Interrupt Mask ON
      * TEBITON = Time Enable BIT ON
@@ -111,4 +113,9 @@ int main()
     scheduler();
 
     return 0;
+}
+
+fooBar()
+{
+    int exc_code = CAUSE_GET_EXCCODE()
 }
