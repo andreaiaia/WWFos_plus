@@ -13,6 +13,7 @@ static LIST_HEAD(pcbFree_h);
 void initPcbs()
 {
 	INIT_LIST_HEAD(&pcbFree_h);
+	// ? inizializza la pcbFree_table
 	for (int i = 0; i < MAXPROC; i++)
 	{
 		list_add(&(pcbFree_table[i].p_list), &pcbFree_h);

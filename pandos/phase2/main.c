@@ -19,8 +19,8 @@ int soft_count;
 
 // tail-pointer dei processi in "ready"; alta e bassa priorità
 // (Le code dei processi ready sono dichiarate in scheduler.h)
-extern list_head *high_ready_q; 
-extern list_head *low_ready_q;  
+extern list_head *high_ready_q;
+extern list_head *low_ready_q;
 
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
 pcb_PTR current_p;
@@ -49,7 +49,7 @@ int main()
     initPcbs();
     initASL();
     proc_count = 0;
-    soft_count = 0; 
+    soft_count = 0;
     mkEmptyProcQ(high_ready_q);
     mkEmptyProcQ(low_ready_q);
     current_p = NULL;
