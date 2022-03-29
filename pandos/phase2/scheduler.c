@@ -37,7 +37,7 @@ void scheduler()
             // Imposto lo stato corrente per accettare interrupt
             // E disabilito il tutto il resto (quindi anche il PLT)
             // ? non sono sicuro vada usato lo state del processo corrente
-            current_p->p_s.status = ALLOFF | IECON | IMON;
+            current_p->p_s.status = IECON | IMON;
 
             WAIT(); // Aspettando un interrupt
         }
