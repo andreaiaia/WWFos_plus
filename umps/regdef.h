@@ -20,7 +20,7 @@
 #define REGDEF_H
 
 /*
- * General purpose registers
+ * GPR (General Purpose Registers)
  */
 
 #define v0 2
@@ -52,11 +52,11 @@
 #define t8 24
 #define t9 25
 
-#define k0 26
-#define k1 27
+#define k0 26  // for Kernel use
+#define k1 27  // for Kernel use
 
 #define gp 28
-#define sp 29
+#define sp 29  //  Stack Pointer
 #define fp 30
 #define s8 30  /* s8 == fp */
 
