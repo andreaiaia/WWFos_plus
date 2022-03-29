@@ -24,7 +24,7 @@ void scheduler()
     else if (!emptyProcQ(low_ready_q))
     {
         current_p = removeProcQ(low_ready_q);
-        setTimer(50000);
+        setTIMER(5000);
         LDST(&(current_p->p_s));
     }
     // Se le code sono entrambe vuote
