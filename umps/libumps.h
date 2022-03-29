@@ -19,7 +19,9 @@
 /*
  * External declarations for uMPS library module.
  */
-
+// !
+// ! Capitolo 7 del manuale umps contiene spiegazioni di questa libreria
+// !
 #ifndef UMPS_LIBUMPS_H
 #define UMPS_LIBUMPS_H
 
