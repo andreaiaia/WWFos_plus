@@ -105,6 +105,8 @@ int main()
     // Imposto il PC sull'indirizzo della funzione test
     kernel_mode_proc->p_s.pc_epc = (memaddr)test;
 
+    // ? imposta p_prio a 0
+
     // Finalmente inserisco il processo impostato nella ready queue
     insertProcQ(low_ready_q, kernel_mode_proc);
     proc_count++;
@@ -113,19 +115,4 @@ int main()
     scheduler();
 
     return 0;
-}
-
-fooBar()
-{
-    // riferimenti a capitolo 3.4 della guida Pandos
-    // fooBar dovrebbe essere il Kernel exception handler
-    // e viene chiamato ad ogni exception tranne per le TLB-refill
-    // il processor_state al momento dell'eccezione viene memorizzato all'inizio
-    // del BIOS Data Page (0x0FFF.F000)
-    // la causa dell'eccezione invece è memorizzata nei bit 2..6 
-    // del registro Cause (il campo ExcCode sono i bit 2..6)
-    // ? l'idea qui era di estrarre quei bit per avere la causa dell'eccezione
-    // ? visto che a seconda del codice d'eccezione bisogna affidare a uno specifico
-    // ? handler la situazione
-    int exc_code = CAUSE_GET_EXCCODE(CP0_Cause)  // vedi cp0 file
 }
