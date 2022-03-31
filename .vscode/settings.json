@@ -7,7 +7,7 @@
         "pcb.h": "c",
         "asl.h": "c"
     },
-    "peacock.color": "#ff3d00",
+    "peacock.color": "#1857a4",
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#1f6fd0",
         "activityBar.activeBorder": "#ee90bb",
