@@ -74,6 +74,8 @@ int main()
      * Inizializzo il system-wide clock a 100ms usando la macro
      * fornita in const.h (che prende argomenti in microsecondi)
      * Come argomento uso la costante PSECOND (100000 microsec = 100 millisec)
+     * Moltiplicando per TIMESCALEADDR mi assicuro che il timer sia tarato con le
+     * impostazioni dell'emulatore di umps
      */
     LDIT(PSECOND * *((memaddr *)TIMESCALEADDR));
 
