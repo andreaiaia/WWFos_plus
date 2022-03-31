@@ -1,7 +1,11 @@
 {
     "files.associations": {
         "typeinfo": "c",
-        "pandos_const.h": "c"
+        "pandos_const.h": "c",
+        "listx.h": "c",
+        "pandos_types.h": "c",
+        "pcb.h": "c",
+        "asl.h": "c"
     },
     "peacock.color": "#ff3d00",
     "workbench.colorCustomizations": {
