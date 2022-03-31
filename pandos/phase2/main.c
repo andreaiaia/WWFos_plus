@@ -65,6 +65,8 @@ int main()
     pu_vector->tlb_refill_handler = (memaddr)uTLB_RefillHandler;
     pu_vector->tlb_refill_stackPtr = KERNELSTACK;
     // ! Dare nome appropriato al posto di fooBar, Alex propone kernelExcHandler, fanculo Alex (anche da Sofia), il mio nome è migliore..
+    // ? Ma chiamarla tipo exception()? o exceptionHandler()? -AB
+    // * Tanto con l'autocomplete di VS code si typa poco, meglio avere un nome chiaro -AB
     pu_vector->exception_handler = (memaddr)kerExHand;
     pu_vector->exception_stackPtr = KERNELSTACK;
 
