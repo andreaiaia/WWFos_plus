@@ -14,6 +14,10 @@ extern passupvector_t *pu_vector;
 
 void scheduler()
 {
+    if (current_p != NULL)
+    {
+        // TODO aggiungi tempo al processo corrente
+    }
     // Se la coda dei processi ad ALTA priorità è non-vuota
     if (!emptyProcQ(high_ready_q))
     {
@@ -24,7 +28,7 @@ void scheduler()
     else if (!emptyProcQ(low_ready_q))
     {
         current_p = removeProcQ(low_ready_q);
-        setTIMER(5000);
+        setTIMER(TIMESLICE);
         LDST(&(current_p->p_s));
     }
     // Se le code sono entrambe vuote
@@ -36,8 +40,8 @@ void scheduler()
         {
             // Imposto lo stato corrente per accettare interrupt
             // E disabilito il tutto il resto (quindi anche il PLT)
-            // ? non sono sicuro vada usato lo state del processo corrente
-            current_p->p_s.status = IECON | IMON;
+            unsigned int waitingStatus = IECON | IMON;
+            setSTATUS(waitingStatus); // from libumps.h
 
             WAIT(); // Aspettando un interrupt
         }
