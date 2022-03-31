@@ -12,24 +12,32 @@ extern pcb_PTR current_p;
 extern int device_sem[DEVSEM_NUM];
 extern passupvector_t *pu_vector;
 
+cpu_t start;
+cpu_t finish;
+
+void load_new_proc(list_head *);
+
 void scheduler()
 {
+    // Se un processo è in corso
     if (current_p != NULL)
     {
-        // TODO aggiungi tempo al processo corrente
+        // Leggo il time of day
+        STCK(finish);
+        // Aggiungo il tempo trascorso al tempo impiegato dal processo
+        current_p->p_time += (finish - start);
     }
     // Se la coda dei processi ad ALTA priorità è non-vuota
     if (!emptyProcQ(high_ready_q))
     {
-        current_p = removeProcQ(high_ready_q);
-        LDST(&(current_p->p_s));
+        load_new_proc(high_ready_q);
     }
     // Se la coda dei processi a BASSA priorità è non-vuota
     else if (!emptyProcQ(low_ready_q))
     {
-        current_p = removeProcQ(low_ready_q);
-        setTIMER(TIMESLICE);
-        LDST(&(current_p->p_s));
+        load_new_proc(low_ready_q);
+        // Imposto il PLT su 5ms
+        setTIMER(TIMESLICE * *((memaddr *)TIMESCALEADDR));
     }
     // Se le code sono entrambe vuote
     else
@@ -41,7 +49,7 @@ void scheduler()
             // Imposto lo stato corrente per accettare interrupt
             // E disabilito il tutto il resto (quindi anche il PLT)
             unsigned int waitingStatus = IECON | IMON;
-            setSTATUS(waitingStatus); // from libumps.h
+            setSTATUS(waitingStatus);
 
             WAIT(); // Aspettando un interrupt
         }
@@ -51,4 +59,15 @@ void scheduler()
             PANIC();
         }
     }
+}
+
+// Funzione per prendere un processo dalla coda passata e avviarne l'esecuzione
+void load_new_proc(list_head *queue)
+{
+    // Prendo il processo da avviare
+    current_p = removeProcQ(queue);
+    // Faccio partire il timer leggendo il Time of Day
+    STCK(start);
+    // Carico lo stato del processo sulla CPU
+    LDST(&(current_p->p_s));
 }
