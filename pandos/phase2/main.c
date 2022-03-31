@@ -75,7 +75,7 @@ int main()
      * fornita in const.h (che prende argomenti in microsecondi)
      * Come argomento uso la costante PSECOND (100000 microsec = 100 millisec)
      */
-    LDIT(PSECOND);
+    LDIT(PSECOND * *((memaddr *)TIMESCALEADDR));
 
     // Creo un processo (a bassa priorità) da inserire nella Ready queue
     pcb_PTR kernel_mode_proc = allocPcb();
