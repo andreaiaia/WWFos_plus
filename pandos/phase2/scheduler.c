@@ -1,9 +1,9 @@
 #include "scheduler.h"
 
 // Queue dei processi ad alta priorità
-list_head *high_ready_q;
+struct list_head *high_ready_q;
 // Queue dei processi a bassa priorità
-list_head *low_ready_q;
+struct list_head *low_ready_q;
 
 // Richiamo le variabili globali dal main
 extern int proc_count;
@@ -15,7 +15,7 @@ extern passupvector_t *pu_vector;
 cpu_t start;
 cpu_t finish;
 
-void load_new_proc(list_head *);
+void load_new_proc(struct list_head *);
 
 void scheduler()
 {
@@ -62,7 +62,7 @@ void scheduler()
 }
 
 // Funzione per prendere un processo dalla coda passata e avviarne l'esecuzione
-void load_new_proc(list_head *queue)
+void load_new_proc(struct list_head *queue)
 {
     // Prendo il processo da avviare
     current_p = removeProcQ(queue);
