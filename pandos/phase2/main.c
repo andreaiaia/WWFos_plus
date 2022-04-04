@@ -62,7 +62,7 @@ int main()
     // ? Ma chiamarla tipo exception()? o exceptionHandler()? -AB
 
     // * Tanto con l'autocomplete di VS code si typa poco, meglio avere un nome chiaro -AB
-    pu_vector->exception_handler = (memaddr)kerExHand;
+    //pu_vector->exception_handler = (memaddr)kerExHand; commentato per test purposeessss
     pu_vector->exception_stackPtr = KERNELSTACK;
 
     /**
