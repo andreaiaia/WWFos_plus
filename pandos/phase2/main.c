@@ -9,7 +9,8 @@
 
 //* Costanti */
 // Numero di semafori dei dispositivi
-#define DEVSEM_NUM 49;
+#define DEVSEM_NUM 49
+
 
 //* Variabili Globali */
 
