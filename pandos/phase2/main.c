@@ -25,7 +25,7 @@ struct list_head *high_ready_q, *low_ready_q;
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
 pcb_PTR current_p;
 // Device Semaphores - we need 49 sem in total
-// * ultimo semaforo è il pseudo-clock semaphore
+//* Ultimo semaforo è il pseudo-clock semaphore
 int device_sem[DEVSEM_NUM];
 // Passup Vector
 passupvector_t *pu_vector;
