@@ -44,4 +44,4 @@ WU = phase1/
 WD = phase2/
 # Pattern rule for assembly modules
 %.o : %.S
-	$(WD) $(CC) $(CFLAGS) -c -o $@ $<
+	$(WD)$(CC) $(CFLAGS) -c -o $@ $<
