@@ -36,7 +36,7 @@ kernel.core.umps : kernel
 	umps3-elf2umps -k $<
 
 kernel : p2test.o p1test.o main.o scheduler.o exception.o interrupt.o SYSCALL.o asl.o pcb.o crtso.o libumps.o
-	$(LD) -o $@ $^ $(LDFLAGS)
+	$(WD)$(LD) -o $@ $^ $(LDFLAGS)
 
 clean :
 	-rm -f *.o kernel kernel.*.umps
@@ -44,4 +44,4 @@ WU = phase1/
 WD = phase2/
 # Pattern rule for assembly modules
 %.o : %.S
-	$(WD)$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
