@@ -1,10 +1,10 @@
 #include "../umps/cp0.h"
 #include "../umps/libumps.h"
-#include "../h/pandos_const.h"  
+#include "../h/pandos_const.h"
 #include "main.c"
 #include "scheduler.h"
 
-/* 
+/*
   ! NOTE
   - occhio alle linee 3-7, per quelle c'é Mappa che indica i pending interrupt
   - nella stessa linea posso avere 2 tipi di richiesta:
@@ -24,7 +24,7 @@
 
   ! DEPRECATE
   int cause_reg = getCAUSE(); // accedo a registro Cause
-  cause_reg = cause_reg && CAUSE_IP_MASK;  // estraggo campo IP tramite AND bit a bit 
+  cause_reg = cause_reg && CAUSE_IP_MASK;  // estraggo campo IP tramite AND bit a bit
 
   ! USEFUL INFO
   (4.1.3 pops)
@@ -36,20 +36,20 @@
   A PLT is the only device attached to the interrupt line 1
 */
 
-extern list_head *high_ready_q;
-extern list_head *low_ready_q;
+extern struct list_head *high_ready_q;
+extern struct list_head *low_ready_q;
 extern device_sem[DEVSEM_NUM];
 
 void interruptHandler()
 {
   int line = 1; // interrupt line, linea 0 da ignorare
-  for(line = 1; line < 8; line++)  
+  for (line = 1; line < 8; line++)
   {
-    if(CAUSE_IP_BIT(line) == 1)  // bit di i-esima linea = 1 c'è interrupt pending
+    if (CAUSE_IP_BIT(line) == 1) // bit di i-esima linea = 1 c'è interrupt pending
     {
-      if(line == 1)
+      if (line == 1)
         PLTTimerInterrupt(line);
-      else if(line == 2)
+      else if (line == 2)
         intervalTimerInterrupt(line);
       else
         nonTimerInterrupt(line);
@@ -57,30 +57,28 @@ void interruptHandler()
   }
 }
 
-
 // * linea 1   (3.6.2 pandos)
 void PLTTimerInterrupt(int line)
 {
   // acknowledgement del PLT interrupt (4.1.4-pops)
-  setTIMER(100);  // ! che valore caricare?  100 è placeholder, sul git caricano __INT32_MAX__
+  setTIMER(100); // ! che valore caricare?  100 è placeholder, sul git caricano __INT32_MAX__
   // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
-  state_t processor_state = *((state_t*) 0x0FFFF000)  // ! questo casting l'ho scopiazzato, mi è chiaro cosa fa
-  current_p->p_s = processor_state;
+  state_t processor_state = *((state_t *)0x0FFFF000) // ! questo casting l'ho scopiazzato, mi è chiaro cosa fa
+                             current_p->p_s = processor_state;
   // metto current process in Ready Queue e da "running" lo metto in "ready"
-  insertProcQ(low_ready_q ,current_p); // ! messa in low queue, forse va in high, o forse da fare if else per distinguere
-  
+  insertProcQ(low_ready_q, current_p); // ! messa in low queue, forse va in high, o forse da fare if else per distinguere
+
   current_p->p_s->status = 1; // ! valore 1 è placeholder, da capire come mettere in "ready"
   // ? actually la riga qui sopra non credo serva, perché il "transitioning" da running a ready
   // ? viene fatto appunto mettendo il processo nella coda dei ready
   scheduler();
 }
 
-
 // * linea 2   (3.6.3 pandos)
 void intervalTimerInterrupt(int line)
 {
   // acknowledgement dell'interrupt (4.1.3-pops)
-  LDIT(PSECOND);  // carico Interval Timer con 100millisec
+  LDIT(PSECOND); // carico Interval Timer con 100millisec
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
   // TODO
   // resetto il Pseudo-clock semaphore a 0
@@ -94,17 +92,17 @@ void intervalTimerInterrupt(int line)
 // * linee 3-7    (3.6.1 pandos)
 void nonTimerInterrupt(int line)
 {
-  int device_num = 0; 
+  int device_num = 0;
   // calcolo il n° del device che ha generato l'interrupt nella line
-  for(int dev = 0; dev < DEVPERINT; dev++)  // scorro gli 8 device della linea 
+  for (int dev = 0; dev < DEVPERINT; dev++) // scorro gli 8 device della linea
   {
     // TODO: scorrere IDBM (5.2.2-pops) alla ricerca di bit a 1 per vedere device con interrupt pending
     // TODO: scorro la line+3 esima word e l'i-esimo bit sarà il DevNo che mi serviva
     // TODO: quindi accedo al bit i-esimo della line-3 esima word e ho l'indirizzo del device
   }
-  
-  // 1. calcolare indirizzo del device's device register 
-  int dev_addr_base = 0x1000.0054 + ((line - 3) * 0x80) + (device_num * 0x10);  // pag. 28 manuale pops
+
+  // 1. calcolare indirizzo del device's device register
+  int dev_addr_base = 0x1000.0054 + ((line - 3) * 0x80) + (device_num * 0x10); // pag. 28 manuale pops
   // 2. salvare lo status code
 
   // 3. acknowledgement dell'interrupt
@@ -112,17 +110,17 @@ void nonTimerInterrupt(int line)
   // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
 
   // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
-  
+
   // 6. inserisco il pcb sbloccato nella ready queue, processo passa da "blocked" a "ready"
 
   // 7. ritorno controllo al processo corrente
-  LDST(0x0FFFF000);  
+  LDST(0x0FFFF000);
   // ? bisogna incrementare PC qui?
 }
 
-// TODO: 
+// TODO:
 /*
-- tenere traccia del momento di inizio dell'interrupt 
+- tenere traccia del momento di inizio dell'interrupt
 - trovare interrupt con priorità piu' alta (in teoria va bene quello che ho fatto)
   - ottengo numero linea con cui farò uno switch
     - linea 0 non fa nulla

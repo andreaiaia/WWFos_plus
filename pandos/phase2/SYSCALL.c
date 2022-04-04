@@ -2,7 +2,7 @@
 
 extern int proc_count;
 
-extern list_head *high_ready_q, *low_ready_q;
+extern struct list_head *high_ready_q, *low_ready_q;
 
 extern pcb_PTR current_p;
 

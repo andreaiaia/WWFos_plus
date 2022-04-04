@@ -11,7 +11,6 @@
 // Numero di semafori dei dispositivi
 #define DEVSEM_NUM 49
 
-
 //* Variabili Globali */
 
 // Process Count - Contatore processi vivi (started but not yet finished)
@@ -39,7 +38,7 @@ void uTLB_RefillHandler()
     setENTRYHI(0x80000000);
     setENTRYLO(0x00000000);
     TLBWR();
-    LDST((state_PTR)0x0FFFF000);
+    LDST((state_t *)0x0FFFF000);
 }
 // La funzione test si trova nel file di test fornito
 extern void test();

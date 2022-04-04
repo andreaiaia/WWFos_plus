@@ -6,5 +6,4 @@
 #include "../phase1/pcb.h"
 #include "main.h"
 
-
 void scheduler();
