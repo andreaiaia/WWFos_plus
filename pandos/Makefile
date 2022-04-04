@@ -19,7 +19,7 @@ UMPS3_INCLUDE_DIR = $(UMPS3_DIR_PREFIX)/include/umps3
 
 # Compiler options
 CFLAGS_LANG = -ffreestanding
-CFLAGS_MIPS = -mips1 -mabi=32 -mno-gpopt -EL -G 0 -mno-abicalls -fno-pic -mfp32 -I/h -I/phase1 -I/phase2
+CFLAGS_MIPS = -mips1 -mabi=32 -mno-gpopt -EL -G 0 -mno-abicalls -fno-pic -mfp32 -I/h 
 CFLAGS = $(CFLAGS_LANG) $(CFLAGS_MIPS) -I$(UMPS3_INCLUDE_DIR) -Wall -O0
 
 # Linker options
@@ -40,7 +40,8 @@ kernel : p2test.o p1test.o main.o scheduler.o exception.o interrupt.o SYSCALL.o 
 
 clean :
 	-rm -f *.o kernel kernel.*.umps
-
+WU = phase1/
+WD = phase2/
 # Pattern rule for assembly modules
 %.o : %.S
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(WD) $(CC) $(CFLAGS) -c -o $@ $<
