@@ -20,7 +20,7 @@ int soft_count;
 
 // tail-pointer dei processi in "ready"; alta e bassa priorità
 // (Le code dei processi ready sono dichiarate in scheduler.h)
-struct list_head *high_ready_q, *low_ready_q;
+extern struct list_head *high_ready_q, *low_ready_q;
 
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
 pcb_PTR current_p;
@@ -58,11 +58,8 @@ int main()
     // Popolo il Passup Vector
     pu_vector->tlb_refill_handler = (memaddr)uTLB_RefillHandler;
     pu_vector->tlb_refill_stackPtr = KERNELSTACK;
-    // ! Dare nome appropriato al posto di fooBar, Alex propone kernelExcHandler, fanculo Alex (anche da Sofia), il mio nome è migliore..
-    // ? Ma chiamarla tipo exception()? o exceptionHandler()? -AB
 
-    // * Tanto con l'autocomplete di VS code si typa poco, meglio avere un nome chiaro -AB
-    //pu_vector->exception_handler = (memaddr)kerExHand; commentato per test purposeessss
+    pu_vector->exception_handler = (memaddr)kerExHand;
     pu_vector->exception_stackPtr = KERNELSTACK;
 
     /**
@@ -112,7 +109,7 @@ int main()
     proc_count++;
 
     // Chiamo lo Scheduler
-    // scheduler();
+    scheduler();
 
     return 0;
 }
