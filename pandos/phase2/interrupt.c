@@ -38,19 +38,21 @@
 
 extern list_head *high_ready_q;
 extern list_head *low_ready_q;
+extern device_sem[DEVSEM_NUM];
 
 void interruptHandler()
 {
-  for(int i=1; i<8; i++)  // scorro le 7 linee (linea 0 è da ignorare)
+  int line = 1; // interrupt line, linea 0 da ignorare
+  for(line = 1; line < 8; line++)  
   {
-    if(CAUSE_IP_BIT(i) == 1)  // bit di i-esima linea = 1 c'è interrupt pending
+    if(CAUSE_IP_BIT(line) == 1)  // bit di i-esima linea = 1 c'è interrupt pending
     {
-      if(i == 1)
-        PLTTimerInterrupt(i);
-      else if(i == 2)
-        intervalTimerInterrupt(i);
+      if(line == 1)
+        PLTTimerInterrupt(line);
+      else if(line == 2)
+        intervalTimerInterrupt(line);
       else
-        nonTimerInterrupt(i);
+        nonTimerInterrupt(line);
     }
   }
 }
@@ -80,17 +82,42 @@ void intervalTimerInterrupt(int line)
   // acknowledgement dell'interrupt (4.1.3-pops)
   LDIT(PSECOND);  // carico Interval Timer con 100millisec
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
-  ...
+  // TODO
   // resetto il Pseudo-clock semaphore a 0
-  ... 
-  //ritorno controllo a processo corrente e faccio LDST nell'exception state salvato
+  device_sem[48] = 0;
+  // ritorno controllo a processo corrente e faccio LDST nell'exception state salvato
   // ritornare controllo  -> fare load_state e caricare stato nel processore
+  LDST(0x0FFFF000);
+  // ? bisogna incrementare PC qui?
 }
 
-// linee 3-7
+// * linee 3-7    (3.6.1 pandos)
 void nonTimerInterrupt(int line)
 {
+  int device_num = 0; 
+  // calcolo il n° del device che ha generato l'interrupt nella line
+  for(int dev = 0; dev < DEVPERINT; dev++)  // scorro gli 8 device della linea 
+  {
+    // TODO: scorrere IDBM (5.2.2-pops) alla ricerca di bit a 1 per vedere device con interrupt pending
+    // TODO: scorro la line+3 esima word e l'i-esimo bit sarà il DevNo che mi serviva
+    // TODO: quindi accedo al bit i-esimo della line-3 esima word e ho l'indirizzo del device
+  }
   
+  // 1. calcolare indirizzo del device's device register 
+  int dev_addr_base = 0x1000.0054 + ((line - 3) * 0x80) + (device_num * 0x10);  // pag. 28 manuale pops
+  // 2. salvare lo status code
+
+  // 3. acknowledgement dell'interrupt
+
+  // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
+
+  // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
+  
+  // 6. inserisco il pcb sbloccato nella ready queue, processo passa da "blocked" a "ready"
+
+  // 7. ritorno controllo al processo corrente
+  LDST(0x0FFFF000);  
+  // ? bisogna incrementare PC qui?
 }
 
 // TODO: 
