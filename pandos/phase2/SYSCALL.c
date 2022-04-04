@@ -6,7 +6,7 @@ extern struct list_head *high_ready_q, *low_ready_q;
 
 extern pcb_PTR current_p;
 
-int Create_Process(CREATEPROCESS, state_t *statep, int prio, support_t *supportp)
+int Create_Process(state_t *statep, int prio, support_t *supportp)
 {
     // Creo il processo figlio
     pcb_PTR child = allocPcb();
@@ -57,7 +57,7 @@ int Create_Process(CREATEPROCESS, state_t *statep, int prio, support_t *supportp
 }
 
 // Se il secondo parametro e’ 0 il bersaglio e’ il processo invocante
-void Terminate_Process(TERMPROCESS, int pid, 0, 0)
+void Terminate_Process(int pid, 0, 0)
 {
     if (pid == 0) // Termina il current_p
     {
