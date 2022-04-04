@@ -4,8 +4,8 @@
 #include "../phase1/asl.h"
 #include "../phase1/pcb.h"
 #include "main.h"
-#include "scheduler.h"
-#include "exception.h"
+//#include "scheduler.h"
+//#include "exception.h"
 
 //* Costanti */
 // Numero di semafori dei dispositivi
@@ -118,7 +118,7 @@ int main()
     proc_count++;
 
     // Chiamo lo Scheduler
-    scheduler();
+    // scheduler();
 
     return 0;
 }
