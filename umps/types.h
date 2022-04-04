@@ -28,6 +28,8 @@
 #ifndef UMPS_TYPES_H
 #define UMPS_TYPES_H
 
+// * IDBM = Interrupting / Installed Devices Bit Map
+
 /* Device register type for disks, flash devices and printers (dtp) */
 typedef struct dtpreg {
 	unsigned int status;
