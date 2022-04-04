@@ -40,6 +40,8 @@ extern struct list_head *high_ready_q;
 extern struct list_head *low_ready_q;
 extern device_sem[DEVSEM_NUM];
 
+#define UNSIGNED_32_INT 4294967295
+
 void interruptHandler()
 {
   int line = 1; // interrupt line, linea 0 da ignorare
@@ -57,14 +59,26 @@ void interruptHandler()
   }
 }
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 // * linea 1   (3.6.2 pandos)
 void PLTTimerInterrupt(int line)
 {
   // acknowledgement del PLT interrupt (4.1.4-pops)
+<<<<<<< Updated upstream
   setTIMER(100); // ! che valore caricare?  100 è placeholder, sul git caricano __INT32_MAX__
   // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
   state_t processor_state = *((state_t *)0x0FFFF000) // ! questo casting l'ho scopiazzato, mi è chiaro cosa fa
                              current_p->p_s = processor_state;
+=======
+  setTIMER(UNSIGNED_32_INT);  // ricarico valore 0xFFFF.FFFF
+  // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
+  state_t processor_state = *((state_t*) 0x0FFFF000);  
+  current_p->p_s = processor_state;
+>>>>>>> Stashed changes
   // metto current process in Ready Queue e da "running" lo metto in "ready"
   insertProcQ(low_ready_q, current_p); // ! messa in low queue, forse va in high, o forse da fare if else per distinguere
 
