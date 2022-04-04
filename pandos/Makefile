@@ -4,6 +4,9 @@ XT_PRG_PREFIX = mipsel-linux-gnu-
 CC = $(XT_PRG_PREFIX)gcc
 LD = $(XT_PRG_PREFIX)ld
 
+WU = phase1/
+WD = phase2/
+
 # uMPS3-related paths
 
 # Simplistic search for the umps3 installation prefix.
@@ -40,8 +43,7 @@ kernel : p2test.o p1test.o main.o scheduler.o exception.o interrupt.o SYSCALL.o 
 
 clean :
 	-rm -f *.o kernel kernel.*.umps
-WU = phase1/
-WD = phase2/
+
 # Pattern rule for assembly modules
 %.o : %.S
 	$(CC) $(CFLAGS) -c -o $@ $<
