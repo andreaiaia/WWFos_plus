@@ -33,13 +33,7 @@ passupvector_t *pu_vector;
 //* Dichiarazioni di funzioni */
 
 // Funzione fornita dalle specifiche, la riscriveremo nella prossima fase
-void uTLB_RefillHandler()
-{
-    setENTRYHI(0x80000000);
-    setENTRYLO(0x00000000);
-    TLBWR();
-    LDST((state_t *)0x0FFFF000);
-}
+extern void uTLB_RefillHandler();
 // La funzione test si trova nel file di test fornito
 extern void test();
 
