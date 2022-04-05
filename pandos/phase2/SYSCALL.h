@@ -6,6 +6,7 @@
 #include "../phase1/pcb.h"
 #include "main.h"
 #include "scheduler.h"
+#include "SYSCALL_helpers.h"
 
 // Questa system call crea un nuovo processo come figlio del chiamante.
 int Create_Process(state_t *statep, int prio, support_t *supportp);
