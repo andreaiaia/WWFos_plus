@@ -60,10 +60,25 @@ int Create_Process(state_t *statep, int prio, support_t *supportp)
 void Terminate_Process(int pid, 0, 0)
 {
     if (pid == 0)
-        Exterminate(current_p); // Termina il current_p
+        exterminate(current_p); // Termina il current_p
     else
-        Exterminate(FindProcess(pid)); // Termina il proc con il corrispondente pid
+        exterminate(find_process(pid)); // Termina il proc con il corrispondente pid
 
     // Rimando il controllo allo scheduler per attivare altri processi
     scheduler();
+}
+
+void Passeren(int *semaddr, 0, 0)
+{
+    if (*semaddr > 0)
+        *semaddr -= 1;
+    else
+    {
+        // Copio lo stato attuale nello stato del processo
+        // ! trova modo di recuperare lo stato attuale
+        copy_state(stato_attuale, &(current_p->p_s));
+        // Blocco il processo e chiamo lo scheduler
+        insertBlocked(semaddr, current_p);
+        scheduler();
+    }
 }

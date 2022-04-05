@@ -16,5 +16,5 @@ int Create_Process(state_t *statep, int prio, support_t *supportp);
  */
 void Terminate_Process(int pid, 0, 0);
 // Helper collegati alla Terminate_Process
-void Exterminate(pcb_PTR process);
-pcb_PTR FindProcess(int pid);
+void exterminate(pcb_PTR process);
+pcb_PTR find_process(int pid);
