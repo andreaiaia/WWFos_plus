@@ -1,4 +1,4 @@
-void kerExHand() {
+void exceptionHandler() {
 
 
 

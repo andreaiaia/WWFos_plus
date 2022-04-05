@@ -59,7 +59,7 @@ int main()
     pu_vector->tlb_refill_handler = (memaddr)uTLB_RefillHandler;
     pu_vector->tlb_refill_stackPtr = KERNELSTACK;
 
-    pu_vector->exception_handler = (memaddr)kerExHand;
+    pu_vector->exception_handler = (memaddr)exceptionHandler();
     pu_vector->exception_stackPtr = KERNELSTACK;
 
     /**

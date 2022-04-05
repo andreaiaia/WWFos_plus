@@ -1,1 +1,1 @@
-void kerExHand();
+void exceptionHandler();
