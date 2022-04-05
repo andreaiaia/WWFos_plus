@@ -8,6 +8,9 @@
 #include "scheduler.h"
 #include "SYSCALL.h"
 
-// Helper collegati alla Terminate_Process
+// Helpers generici
+void copy_state(state_t *original, state_t *dest);
+
+// Helpers collegati alla Terminate_Process
 void Exterminate(pcb_PTR process);
 pcb_PTR FindProcess(int pid);

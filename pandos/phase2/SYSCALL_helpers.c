@@ -1,7 +1,7 @@
 #include "SYSCALL_helpers.h"
 
 // Funzioni Helper della SYSCALL Terminate_Process
-void Exterminate(pcb_PTR process)
+void exterminate(pcb_PTR process)
 {
     // Controlla se il processo ha figli
     if (emptyChild(process))
@@ -28,7 +28,7 @@ void Exterminate(pcb_PTR process)
     }
 }
 
-pcb_PTR FindProcess(int pid)
+pcb_PTR find_process(int pid)
 {
     pcb_PTR iter = NULL;
     // Cerco nella lista dei processi ad alta prio
@@ -45,4 +45,18 @@ pcb_PTR FindProcess(int pid)
     }
     // Ricerca infruttuosa
     return NULL;
+}
+
+void copy_state(state_t *original, state_t *dest)
+{
+    dest->entry_hi = original->entry_hi;
+    dest->cause = original->cause;
+    dest->status = original->status;
+    dest->pc_epc = original->pc_epc;
+    dest->hi = original->hi;
+    dest->lo = original->lo;
+    for (int i = 0; i < STATE_GPR_LEN; i++)
+    {
+        dest->gpr[i] = original->gpr[i];
+    }
 }
