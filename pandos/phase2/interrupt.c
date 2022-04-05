@@ -42,14 +42,19 @@ extern device_sem[DEVSEM_NUM];
 
 #define UNSIGNED_32_INT 4294967295
 
+devregarea_t *device_regs = (devregarea_t)RAMBASEADDR;
+// nel campo deviceRegs->interrupt_dev trovate la interrupt device bitmap
+
 void interruptHandler()
 {
-  int line = 1; // interrupt line, linea 0 da ignorare
-  for (line = 1; line < 8; line++)
+  int line = 0; // interrupt line
+  for (line = 0; line < 8; line++)
   {
-    if (CAUSE_IP_BIT(line) == 1) // bit di i-esima linea = 1 c'è interrupt pending
+    if (CAUSE_IP_BIT(line)) // bit di i-esima linea = 1 c'è interrupt pending
     {
-      if (line == 1)
+      if(line == 0)
+        PANIC();
+      else if (line == 1)
         PLTTimerInterrupt(line);
       else if (line == 2)
         intervalTimerInterrupt(line);
@@ -59,31 +64,20 @@ void interruptHandler()
   }
 }
 
-<<<<<<< Updated upstream
-=======
 
-
->>>>>>> Stashed changes
 // * linea 1   (3.6.2 pandos)
 void PLTTimerInterrupt(int line)
 {
   // acknowledgement del PLT interrupt (4.1.4-pops)
-<<<<<<< Updated upstream
-  setTIMER(100); // ! che valore caricare?  100 è placeholder, sul git caricano __INT32_MAX__
-  // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
-  state_t processor_state = *((state_t *)0x0FFFF000) // ! questo casting l'ho scopiazzato, mi è chiaro cosa fa
-                             current_p->p_s = processor_state;
-=======
   setTIMER(UNSIGNED_32_INT);  // ricarico valore 0xFFFF.FFFF
   // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
   state_t processor_state = *((state_t*) 0x0FFFF000);  
   current_p->p_s = processor_state;
->>>>>>> Stashed changes
   // metto current process in Ready Queue e da "running" lo metto in "ready"
   insertProcQ(low_ready_q, current_p); // ! messa in low queue, forse va in high, o forse da fare if else per distinguere
 
   current_p->p_s->status = 1; // ! valore 1 è placeholder, da capire come mettere in "ready"
-  // ? actually la riga qui sopra non credo serva, perché il "transitioning" da running a ready
+  // ? actually la riga qui sopra forse non serve, perché il "transitioning" da running a ready
   // ? viene fatto appunto mettendo il processo nella coda dei ready
   scheduler();
 }
@@ -98,7 +92,7 @@ void intervalTimerInterrupt(int line)
   // resetto il Pseudo-clock semaphore a 0
   device_sem[48] = 0;
   // ritorno controllo a processo corrente e faccio LDST nell'exception state salvato
-  // ritornare controllo  -> fare load_state e caricare stato nel processore
+  // ritornare controllo -> fare load_state e caricare stato nel processore
   LDST(0x0FFFF000);
   // ? bisogna incrementare PC qui?
 }
@@ -106,17 +100,23 @@ void intervalTimerInterrupt(int line)
 // * linee 3-7    (3.6.1 pandos)
 void nonTimerInterrupt(int line)
 {
-  int device_num = 0;
+  int device_num = 0; 
+ 
+  //* 1. calcolare indirizzo del device's device register
+
   // calcolo il n° del device che ha generato l'interrupt nella line
+  
+  int mask = 1;   
   for (int dev = 0; dev < DEVPERINT; dev++) // scorro gli 8 device della linea
   {
-    // TODO: scorrere IDBM (5.2.2-pops) alla ricerca di bit a 1 per vedere device con interrupt pending
-    // TODO: scorro la line+3 esima word e l'i-esimo bit sarà il DevNo che mi serviva
-    // TODO: quindi accedo al bit i-esimo della line-3 esima word e ho l'indirizzo del device
+    if(*device_regs[dev] & mask) // ho trovato il device con l'interrupt pending
+    {
+      device_num = dev;  // salvo il numero del device
+    }
+    mask = mask * 2;
   }
-
-  // 1. calcolare indirizzo del device's device register
-  int dev_addr_base = 0x1000.0054 + ((line - 3) * 0x80) + (device_num * 0x10); // pag. 28 manuale pops
+  
+  unsigned int dev_addr_base = (memaddr) 0x1000.0054 + ((line - 3) * 0x80) + (device_num * 0x10); // pag. 28 manuale pops
   // 2. salvare lo status code
 
   // 3. acknowledgement dell'interrupt
@@ -131,17 +131,3 @@ void nonTimerInterrupt(int line)
   LDST(0x0FFFF000);
   // ? bisogna incrementare PC qui?
 }
-
-// TODO:
-/*
-- tenere traccia del momento di inizio dell'interrupt
-- trovare interrupt con priorità piu' alta (in teoria va bene quello che ho fatto)
-  - ottengo numero linea con cui farò uno switch
-    - linea 0 non fa nulla
-    - linea 1 -> PLT timer interrupt line         (3.6.2)
-    - linea 2 -> Interval Timer Interrupt Line    (3.6.1)
-    - linee 3-7 -> Non-Timer interrupt lines      (3.6.3)
-      - una volta individuata la linea, bisogna ciclare sui device di quella linea (DEVPERINT)
-        - una volta individuato il device
-
-*/
