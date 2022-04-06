@@ -1,5 +1,12 @@
 #include "SYSCALL.h";
 
+/**
+ * ! in tutte le funzioni seguenti aggiorno il PC del processo corrente
+ * ! ma a pagina 33 del capitolo 3 parla di usare invece lo stato del processore
+ * ! e performare una LDST modificando suddetto stato
+ * ! Devo capire meglio questa parte
+ */
+
 int Create_Process(state_t *statep, int prio, support_t *supportp)
 {
     // Creo il processo figlio
@@ -51,7 +58,7 @@ int Create_Process(state_t *statep, int prio, support_t *supportp)
 }
 
 // Se il secondo parametro e’ 0 il bersaglio e’ il processo invocante
-void Terminate_Process(int pid, 0, 0)
+void Terminate_Process(int pid)
 {
     if (pid == 0)
     {
@@ -71,8 +78,10 @@ void Terminate_Process(int pid, 0, 0)
     scheduler();
 }
 
-void Passeren(int *semaddr, 0, 0)
+void Passeren(int *semaddr)
 {
+    if (*semaddr == NULL)
+        return;
     if (*semaddr > 0)
         (*semaddr)--;
     else
@@ -86,7 +95,7 @@ void Passeren(int *semaddr, 0, 0)
     }
 }
 
-void Verhogen(int *semaddr, 0, 0)
+void Verhogen(int *semaddr)
 {
     pcb_PTR first = headBlocked(semaddr);
 
@@ -108,18 +117,54 @@ void Verhogen(int *semaddr, 0, 0)
 }
 
 // TODO Capire come trovare il processo chiamante delle SYSCALL
-int Do_IO_Device(int *commandAddr, int commandValue, 0)
+int Do_IO_Device(int *commandAddr, int commandValue)
 {
-    // 1. Cerco il range di indirizzi in cui si trova il commandAddr
+    // Cerco il semaforo associato al processo corrente
+    int *semaddr = NULL;
+    int dev_position;
+    /**
+     * Parto da 32 poiché ci interessano solo i semafori dei terminal
+     * devices, che sono gli ultimi 16 (non contando il 49esimo)
+     */
+    for (int i = 32; i < DEVSEM_NUM - 1; i++)
+    {
+        if (&device_sem[i] == current_p->p_semAdd)
+        {
+            semaddr = &device_sem[i];
+            dev_position = i;
+            break;
+        }
+    }
+    /**
+     * Una volta trovato il semaforo, blocco il processo che ha chiamato
+     * la SYSCALL, aka il current_p
+     */
+    Passeren(semaddr);
+    // Sapendo chi sia il semaforo che mi serve, possiamo trovare il terminale...
+    devregarea_t *dev_regs = (devregarea_t *)RAMBASEADDR;
+    // (Trovo il numero del terminale dividendo per 2 il dev_position salvato prima)
+    int term_num = (dev_position - 32) / 2 + (dev_position - 32) % 2;
+    termreg_t term = dev_regs->devreg[4][term_num].term; // perché 4?
+    /**
+     * ...E ricavare il campo status del terminale trovato
+     * discriminando se era un semaforo di recv o uno di transm
+     */
+    int return_value;
+    if (dev_position % 2 == 1)
+        return_value = term.transm_status;
+    else
+        return_value = term.recv_status;
 
-    // 2. In base a ciò conosco l'interrupt line e il device Number da cui trovare il semaforo del device
+    *commandAddr = commandValue;
+    /**
+     * A questo punto non sono sicuro ma io chiamerei la Verhogen sul processo
+     * bloccato prima e, così facendo chiamerei contestualmente lo scheduler
+     */
+    Verhogen(semaddr);
 
-    // 3. Sapendo il range di indirizzi del device register, possiamo ricavare il campo status
+    // TODO: Avanza il PC (ma quale, quello del term?)
+    // scheduler(); Se chiamo la Verhogen mi sembra ridondante chiamare lo scheduler
 
-    // 4. Restituisco lo status
-
-    // commandAddr = indirizzo dove mettere il commandValue alla fine
-
-    // TODO: Avanza il PC
-    scheduler();
+    // Restituisco lo status
+    return return_value;
 }

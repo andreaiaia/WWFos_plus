@@ -19,11 +19,11 @@ int Create_Process(state_t *statep, int prio, support_t *supportp);
 /** Quando invocata, la SYS2 termina il processo indicato
  * dal secondo parametro insieme a tutta la sua progenie.
  */
-void Terminate_Process(int pid, 0, 0);
+void Terminate_Process(int pid);
 
 // SYSCALL sui semafori
-void Passeren(int *semaddr, 0, 0);
-void Verhogen(int *semaddr, 0, 0);
+void Passeren(int *semaddr);
+void Verhogen(int *semaddr);
 
 // DOIO
-int Do_IO_Device(int *cmdAddr, int cmdValue, 0);
+int Do_IO_Device(int *cmdAddr, int cmdValue);
