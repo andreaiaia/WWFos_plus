@@ -1,6 +1,7 @@
 #include "SYSCALL_helpers.h"
 
 // Funzioni Helper della SYSCALL Terminate_Process
+//* "Do you know how you make someone into a Dalek? Subtract Love, add Anger." ~ Steven Moffat
 void exterminate(pcb_PTR process)
 {
     // Controlla se il processo ha figli
