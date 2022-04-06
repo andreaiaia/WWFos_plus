@@ -18,3 +18,7 @@ void Terminate_Process(int pid, 0, 0);
 // Helper collegati alla Terminate_Process
 void exterminate(pcb_PTR process);
 pcb_PTR find_process(int pid);
+
+// SYSCALL sui semafori
+void Passeren(int *semaddr, 0, 0);
+void Verhogen(int *semaddr, 0, 0);

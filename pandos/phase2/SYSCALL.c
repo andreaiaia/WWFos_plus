@@ -71,14 +71,27 @@ void Terminate_Process(int pid, 0, 0)
 void Passeren(int *semaddr, 0, 0)
 {
     if (*semaddr > 0)
-        *semaddr -= 1;
+        (*semaddr)--;
     else
     {
-        // Copio lo stato attuale nello stato del processo
-        // ! trova modo di recuperare lo stato attuale
-        copy_state(stato_attuale, &(current_p->p_s));
         // Blocco il processo e chiamo lo scheduler
         insertBlocked(semaddr, current_p);
         scheduler();
+    }
+}
+
+void Verhogen(int *semaddr, 0, 0)
+{
+    pcb_PTR first = headBlocked(semaddr);
+
+    if (first == NULL)
+        (*semaddr)++;
+    else
+    {
+        outBlocked(first);
+        if (first->p_prio == 1)
+            insertProcQ(high_ready_q, first);
+        else
+            insertProcQ(low_ready_q, first);
     }
 }
