@@ -115,16 +115,17 @@ void nonTimerInterrupt(int line)
     }
     mask = mask * 2;
   }
-  
+  // ottengo il device's device register
   unsigned int dev_addr_base = (memaddr) 0x1000.0054 + ((line - 3) * 0x80) + (device_num * 0x10); // pag. 28 manuale pops
-  // 2. salvare lo status code
-
+  struct dtpreg_t device = (dtpreg_t) dev_addr_base);
+  //* 2. salvare lo status code
+  unsigned int tmp_status = device.status; 
   // 3. acknowledgement dell'interrupt
-
+  device.command = acknowledgement; // TODO: trovare cosa scrivere come acknowledgement
   // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
 
   // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
-
+  
   // 6. inserisco il pcb sbloccato nella ready queue, processo passa da "blocked" a "ready"
 
   // 7. ritorno controllo al processo corrente
