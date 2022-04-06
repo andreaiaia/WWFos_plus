@@ -8,6 +8,11 @@
 #include "scheduler.h"
 #include "SYSCALL_helpers.h"
 
+// Richiamo alle variabili esterne
+extern int proc_count;
+extern struct list_head *high_ready_q, *low_ready_q;
+extern pcb_PTR current_p;
+
 // Questa system call crea un nuovo processo come figlio del chiamante.
 int Create_Process(state_t *statep, int prio, support_t *supportp);
 
@@ -15,10 +20,10 @@ int Create_Process(state_t *statep, int prio, support_t *supportp);
  * dal secondo parametro insieme a tutta la sua progenie.
  */
 void Terminate_Process(int pid, 0, 0);
-// Helper collegati alla Terminate_Process
-void exterminate(pcb_PTR process);
-pcb_PTR find_process(int pid);
 
 // SYSCALL sui semafori
 void Passeren(int *semaddr, 0, 0);
 void Verhogen(int *semaddr, 0, 0);
+
+// DOIO
+int Do_IO_Device(int *cmdAddr, int cmdValue, 0);

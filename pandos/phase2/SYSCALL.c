@@ -1,11 +1,5 @@
 #include "SYSCALL.h";
 
-extern int proc_count;
-
-extern struct list_head *high_ready_q, *low_ready_q;
-
-extern pcb_PTR current_p;
-
 int Create_Process(state_t *statep, int prio, support_t *supportp)
 {
     // Creo il processo figlio
@@ -93,5 +87,11 @@ void Verhogen(int *semaddr, 0, 0)
             insertProcQ(high_ready_q, first);
         else
             insertProcQ(low_ready_q, first);
+
+        scheduler();
     }
+}
+
+int Do_IO_Device(int *cmdAddr, int cmdValue, 0)
+{
 }
