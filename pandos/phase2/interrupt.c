@@ -30,13 +30,13 @@
 
   (4.1.4)
   A PLT is the only device attached to the interrupt line 1
+
+  ! COMANDI COMPILAZIONE
+  git add .
+  git commit -m "nome_commit"
+  git push
 */
 
-/*
-git add .
-git commit -m "nome_commit"
-git push
-*/
 extern struct list_head *high_ready_q;
 extern struct list_head *low_ready_q;
 extern device_sem[DEVSEM_NUM];
@@ -118,7 +118,7 @@ void nonTimerInterrupt(int line)
   }
   // ottengo il device's device register
   unsigned int dev_addr_base = (memaddr) 0x10000054 + ((line - 3) * 0x80) + (device_num * 0x10); // pag. 28 manuale pops
-  struct dtpreg_t *device_ptr = (dtpreg_t*) dev_addr_base;
+  dtpreg_t *device_ptr = (dtpreg_t*) dev_addr_base;
   //* 2. salvare lo status code
   unsigned int tmp_status = device_ptr->status; 
   // 3. acknowledgement dell'interrupt
