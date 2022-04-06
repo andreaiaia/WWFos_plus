@@ -109,7 +109,7 @@ Number  Code   Description
 #define EXC_OV                 12   
 
 #define CAUSE_IP_MASK          0x0000ff00
-#define CAUSE_IP(line)         (1U << (8 + (line)))
+#define CAUSE_IP(line)         (1U << (8 + (line)))  //1U significa il numero 1 ma unsigned
 #define CAUSE_IP_BIT(line)     (8 + (line))
 
 #define CAUSE_CE_MASK          0x30000000
