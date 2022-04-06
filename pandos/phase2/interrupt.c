@@ -74,7 +74,8 @@ void interruptHandler()
 }
 
 
-// * linea 1   (3.6.2 pandos)
+
+//* linea 1   (3.6.2 pandos)
 void PLTTimerInterrupt(int line)
 {
   // acknowledgement del PLT interrupt (4.1.4-pops)
@@ -91,7 +92,9 @@ void PLTTimerInterrupt(int line)
   scheduler();
 }
 
-// * linea 2   (3.6.3 pandos)
+
+
+//* linea 2   (3.6.3 pandos)
 void intervalTimerInterrupt(int line)
 {
   // acknowledgement dell'interrupt (4.1.3-pops)
@@ -103,16 +106,17 @@ void intervalTimerInterrupt(int line)
   LDST(0x0FFFF000);
 }
 
-// * linee 3-7    (3.6.1 pandos)
+
+
+//* linee 3-7    (3.6.1 pandos)
 void nonTimerInterrupt(int line)
 {
   int device_num = 0; 
  
   //* 1. calcolare indirizzo del device's device register
-
   // calcolo il n° del device che ha generato l'interrupt nella line
   
-  int mask = 1;   
+  unsigned int mask = 1;   
   for (int dev = 0; dev < DEVPERINT; dev++) // scorro gli 8 device della linea
   {
     if(device_regs->interrupt_dev[dev] & mask) // ho trovato il device con l'interrupt pending
