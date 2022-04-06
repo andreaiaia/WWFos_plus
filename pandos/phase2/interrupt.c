@@ -43,7 +43,7 @@
 ***************************************************************************************************************************************/
 
 
-#define UNSIGNED_32_INT 4294967295
+#define UNSIGNED_MAX_32_INT 4294967295
 
 extern struct list_head *high_ready_q;
 extern struct list_head *low_ready_q;
@@ -54,12 +54,13 @@ devregarea_t *device_regs = (devregarea_t*)RAMBASEADDR; // tutor: nel campo devi
 
 void interruptHandler()
 {
-  unsigned int cause_reg = current_proc->p_s.cause;
+  state_t processor_state = *((state_t*) 0x0FFFF000);
+  unsigned int cause_reg = processor_state.cause;
   unsigned int mask = 1;  // mask per & bit-a-bit
 
   for (int line = 1; line < 8; line++) // linea 0 da ignorare
   {
-    if ((cause_reg & mask) == mask) // bit di i-esima linea = 1 c'è interrupt pending
+    if ((cause_reg & mask) == mask) 
     {
       if (line == 1)
         PLTTimerInterrupt(line);
@@ -77,7 +78,7 @@ void interruptHandler()
 void PLTTimerInterrupt(int line)
 {
   // acknowledgement del PLT interrupt (4.1.4-pops)
-  setTIMER(UNSIGNED_32_INT);  // ricarico valore 0xFFFF.FFFF
+  setTIMER(UNSIGNED_MAX_32_INT);  // ricarico valore 0xFFFF.FFFF
   // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
   state_t processor_state = *((state_t*) 0x0FFFF000);  
   current_proc->p_s = processor_state;
@@ -96,13 +97,10 @@ void intervalTimerInterrupt(int line)
   // acknowledgement dell'interrupt (4.1.3-pops)
   LDIT(PSECOND); // carico Interval Timer con 100millisec
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
-  // TODO
+  // TODO 
   // resetto il Pseudo-clock semaphore a 0
-  device_sem[48] = 0;
-  // ritorno controllo a processo corrente e faccio LDST nell'exception state salvato
-  // ritornare controllo -> fare load_state e caricare stato nel processore
+  device_sem[48] = 0; //* Andrea ha detto che il Pseudo-clock semaphore è questo
   LDST(0x0FFFF000);
-  // ? bisogna incrementare PC qui?
 }
 
 // * linee 3-7    (3.6.1 pandos)
