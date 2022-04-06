@@ -49,7 +49,6 @@ extern struct list_head *high_ready_q;
 extern struct list_head *low_ready_q;
 extern device_sem[DEVSEM_NUM];
 extern pcb_PTR current_proc;
-devregarea_t *device_regs = (devregarea_t*)RAMBASEADDR; // tutor: nel campo deviceRegs->interrupt_dev trovate la interrupt device bitmap
 
 
 void interruptHandler()
@@ -112,16 +111,22 @@ void intervalTimerInterrupt(int line)
 void nonTimerInterrupt(int line)
 {
   int device_num = 0; 
+  devregarea_t *device_regs = (devregarea_t*)RAMBASEADDR; // tutor: nel campo deviceRegs->interrupt_dev trovate la interrupt device bitmap
+  unsigned int bitmap_word = device_regs->interrupt_dev[line-3];
  
   //* 1. calcolare indirizzo del device's device register
   // calcolo il n° del device che ha generato l'interrupt nella line
   
-  unsigned int mask = 1;   
-  for (int dev = 0; dev < DEVPERINT; dev++) // scorro gli 8 device della linea
+  unsigned int mask = 1; 
+  int i = 0;
+  int flag = 0;
+
+  while((i < 8) & (flag == 0)) // scorro device
   {
-    if(device_regs->interrupt_dev[dev] & mask) // ho trovato il device con l'interrupt pending
+    if(bitmap_word & mask) // device con interrupt pending trovato
     {
-      device_num = dev;  // salvo il numero del device
+      device_num = i;  // salvo n° device
+      flag = 1;
     }
     mask = mask * 2;
   }
@@ -129,7 +134,7 @@ void nonTimerInterrupt(int line)
   unsigned int dev_addr_base = (memaddr) 0x10000054 + ((line - 3) * 0x80) + (device_num * 0x10); // pag. 28 manuale pops
   dtpreg_t *device_ptr = (dtpreg_t*) dev_addr_base;
   //* 2. salvare lo status code
-  unsigned int tmp_status = device_ptr->status; 
+  unsigned int device_status = device_ptr->status; 
   // 3. acknowledgement dell'interrupt
   device_ptr->command = 0; // TODO: trovare cosa scrivere come acknowledgement, 0 è placeholder
   // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
@@ -140,5 +145,4 @@ void nonTimerInterrupt(int line)
 
   // 7. ritorno controllo al processo corrente
   LDST(0x0FFFF000);
-  // ? bisogna incrementare PC qui?
 }
