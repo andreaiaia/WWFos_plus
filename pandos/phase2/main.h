@@ -27,12 +27,12 @@ extern struct list_head *high_ready_q, *low_ready_q;
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
 pcb_PTR current_p;
 // Device Semaphores - we need 49 sem in total
-//* Ultimo semaforo è il pseudo-clock semaphore
+// Ultimo semaforo è il pseudo-clock semaphore
 int device_sem[DEVSEM_NUM];
 // Passup Vector
 passupvector_t *pu_vector;
 
-//* Dichiarazioni di funzioni */
+//* Dichiarazioni di funzioni esterne */
 
 // Funzione fornita dalle specifiche, la riscriveremo nella prossima fase
 extern void uTLB_RefillHandler();
