@@ -1,8 +1,4 @@
-#include "../umps/cp0.h"
-#include "../umps/libumps.h"
-#include "../h/pandos_const.h"
-#include "main.c"
-#include "scheduler.h"
+#include "interrupt.h"
 
 /*
   ! NOTE
@@ -36,13 +32,18 @@
   A PLT is the only device attached to the interrupt line 1
 */
 
+/*
+git add .
+git commit -m "nome_commit"
+git push
+*/
 extern struct list_head *high_ready_q;
 extern struct list_head *low_ready_q;
 extern device_sem[DEVSEM_NUM];
 
 #define UNSIGNED_32_INT 4294967295
 
-devregarea_t *device_regs = (devregarea_t)RAMBASEADDR;
+devregarea_t *device_regs = (devregarea_t*)RAMBASEADDR; // suggerita dal tutor
 // nel campo deviceRegs->interrupt_dev trovate la interrupt device bitmap
 
 void interruptHandler()
@@ -125,7 +126,7 @@ void nonTimerInterrupt(int line)
   // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
 
   // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
-  
+
   // 6. inserisco il pcb sbloccato nella ready queue, processo passa da "blocked" a "ready"
 
   // 7. ritorno controllo al processo corrente
