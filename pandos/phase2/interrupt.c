@@ -35,33 +35,40 @@
   git add .
   git commit -m "nome_commit"
   git push
-*/
+
+  ? DOMANDE 
+  ? quali sono i device di tipo "terminal"? inoltre nei terminal bisogna distinguere i 2 casi sub-device
+    ? la trasmissione ha priorità su ricezione
+  * la linea terminal dovrebbe essere la 7 da quanto scritto su 3.6
+***************************************************************************************************************************************/
+
+
+#define UNSIGNED_32_INT 4294967295
 
 extern struct list_head *high_ready_q;
 extern struct list_head *low_ready_q;
 extern device_sem[DEVSEM_NUM];
+extern pcb_PTR current_proc;
+devregarea_t *device_regs = (devregarea_t*)RAMBASEADDR; // tutor: nel campo deviceRegs->interrupt_dev trovate la interrupt device bitmap
 
-#define UNSIGNED_32_INT 4294967295
-
-devregarea_t *device_regs = (devregarea_t*)RAMBASEADDR; // suggerita dal tutor
-// nel campo deviceRegs->interrupt_dev trovate la interrupt device bitmap
 
 void interruptHandler()
 {
-  int line = 0; // interrupt line
-  for (line = 0; line < 8; line++)
+  unsigned int cause_reg = current_proc->p_s.cause;
+  unsigned int mask = 1;  // mask per & bit-a-bit
+
+  for (int line = 1; line < 8; line++) // linea 0 da ignorare
   {
-    if (CAUSE_IP_BIT(line)) // bit di i-esima linea = 1 c'è interrupt pending
+    if ((cause_reg & mask) == mask) // bit di i-esima linea = 1 c'è interrupt pending
     {
-      if(line == 0)
-        PANIC();
-      else if (line == 1)
+      if (line == 1)
         PLTTimerInterrupt(line);
       else if (line == 2)
         intervalTimerInterrupt(line);
       else
         nonTimerInterrupt(line);
     }
+    mask = mask*2;
   }
 }
 
@@ -73,11 +80,11 @@ void PLTTimerInterrupt(int line)
   setTIMER(UNSIGNED_32_INT);  // ricarico valore 0xFFFF.FFFF
   // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
   state_t processor_state = *((state_t*) 0x0FFFF000);  
-  current_p->p_s = processor_state;
+  current_proc->p_s = processor_state;
   // metto current process in Ready Queue e da "running" lo metto in "ready"
-  insertProcQ(low_ready_q, current_p); // ! messa in low queue, forse va in high, o forse da fare if else per distinguere
+  insertProcQ(low_ready_q, current_proc); // ! messa in low queue, forse va in high, o forse da fare if else per distinguere
 
-  current_p->p_s.status = 1; // ! valore 1 è placeholder, da capire come mettere in "ready"
+  current_proc->p_s.status = 1; // ! valore 1 è placeholder, da capire come mettere in "ready"
   // ? actually la riga qui sopra forse non serve, perché il "transitioning" da running a ready
   // ? viene fatto appunto mettendo il processo nella coda dei ready
   scheduler();
