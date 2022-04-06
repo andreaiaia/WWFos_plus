@@ -54,9 +54,18 @@ int Create_Process(state_t *statep, int prio, support_t *supportp)
 void Terminate_Process(int pid, 0, 0)
 {
     if (pid == 0)
+    {
         exterminate(current_p); // Termina il current_p
+        // Avanzo il PC
+        current_p->p_s.pc_epc += WORDLEN;
+    }
     else
-        exterminate(find_process(pid)); // Termina il proc con il corrispondente pid
+    {
+        pcb_PTR to_terminate = find_process(pid);
+        exterminate(to_terminate); // Termina il proc con il corrispondente pid
+        // Avanzo il PC
+        to_terminate->p_s.pc_epc += WORDLEN;
+    }
 
     // Rimando il controllo allo scheduler per attivare altri processi
     scheduler();
@@ -70,6 +79,9 @@ void Passeren(int *semaddr, 0, 0)
     {
         // Blocco il processo e chiamo lo scheduler
         insertBlocked(semaddr, current_p);
+        // Avanzo il PC
+        current_p->p_s.pc_epc += WORDLEN;
+
         scheduler();
     }
 }
@@ -88,10 +100,26 @@ void Verhogen(int *semaddr, 0, 0)
         else
             insertProcQ(low_ready_q, first);
 
+        // Avanzo il PC del processo che ha chiamato la SYSCALL
+        current_p->p_s.pc_epc += WORDLEN;
+
         scheduler();
     }
 }
 
-int Do_IO_Device(int *cmdAddr, int cmdValue, 0)
+// TODO Capire come trovare il processo chiamante delle SYSCALL
+int Do_IO_Device(int *commandAddr, int commandValue, 0)
 {
+    // 1. Cerco il range di indirizzi in cui si trova il commandAddr
+
+    // 2. In base a ciò conosco l'interrupt line e il device Number da cui trovare il semaforo del device
+
+    // 3. Sapendo il range di indirizzi del device register, possiamo ricavare il campo status
+
+    // 4. Restituisco lo status
+
+    // commandAddr = indirizzo dove mettere il commandValue alla fine
+
+    // TODO: Avanza il PC
+    scheduler();
 }
