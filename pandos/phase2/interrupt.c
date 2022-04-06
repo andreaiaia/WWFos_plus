@@ -77,7 +77,7 @@ void PLTTimerInterrupt(int line)
   // metto current process in Ready Queue e da "running" lo metto in "ready"
   insertProcQ(low_ready_q, current_p); // ! messa in low queue, forse va in high, o forse da fare if else per distinguere
 
-  current_p->p_s->status = 1; // ! valore 1 è placeholder, da capire come mettere in "ready"
+  current_p->p_s.status = 1; // ! valore 1 è placeholder, da capire come mettere in "ready"
   // ? actually la riga qui sopra forse non serve, perché il "transitioning" da running a ready
   // ? viene fatto appunto mettendo il processo nella coda dei ready
   scheduler();
@@ -110,19 +110,19 @@ void nonTimerInterrupt(int line)
   int mask = 1;   
   for (int dev = 0; dev < DEVPERINT; dev++) // scorro gli 8 device della linea
   {
-    if(*device_regs[dev] & mask) // ho trovato il device con l'interrupt pending
+    if(device_regs->interrupt_dev[dev] & mask) // ho trovato il device con l'interrupt pending
     {
       device_num = dev;  // salvo il numero del device
     }
     mask = mask * 2;
   }
   // ottengo il device's device register
-  unsigned int dev_addr_base = (memaddr) 0x1000.0054 + ((line - 3) * 0x80) + (device_num * 0x10); // pag. 28 manuale pops
-  struct dtpreg_t device = (dtpreg_t) dev_addr_base);
+  unsigned int dev_addr_base = (memaddr) 0x10000054 + ((line - 3) * 0x80) + (device_num * 0x10); // pag. 28 manuale pops
+  struct dtpreg_t *device_ptr = (dtpreg_t*) dev_addr_base;
   //* 2. salvare lo status code
-  unsigned int tmp_status = device.status; 
+  unsigned int tmp_status = device_ptr->status; 
   // 3. acknowledgement dell'interrupt
-  device.command = acknowledgement; // TODO: trovare cosa scrivere come acknowledgement
+  device_ptr->command = 0; // TODO: trovare cosa scrivere come acknowledgement, 0 è placeholder
   // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
 
   // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
