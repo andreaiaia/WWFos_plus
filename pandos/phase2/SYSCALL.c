@@ -68,9 +68,6 @@ void Terminate_Process(int pid)
         // Avanzo il PC
         current_p->p_s.pc_epc += WORDLEN;
     }
-
-    // Rimando il controllo allo scheduler per attivare altri processi
-    scheduler();
 }
 
 void Passeren(int *semaddr)
@@ -81,12 +78,12 @@ void Passeren(int *semaddr)
         (*semaddr)--;
     else
     {
-        // Blocco il processo e chiamo lo scheduler
+        // Blocco il processo corrente e chiamo lo scheduler
         insertBlocked(semaddr, current_p);
         // Avanzo il PC
         current_p->p_s.pc_epc += WORDLEN;
 
-        scheduler();
+        scheduler(); // ! qui credo che lo scheduler ci vada comunque
     }
 }
 
@@ -104,10 +101,8 @@ void Verhogen(int *semaddr)
         else
             insertProcQ(low_ready_q, first);
 
-        // Avanzo il PC del processo che ha chiamato la SYSCALL
+        // Avanzo il PC del processo corrente
         current_p->p_s.pc_epc += WORDLEN;
-
-        scheduler();
     }
 }
 
@@ -115,21 +110,31 @@ void Do_IO_Device(int *commandAddr, int commandValue)
 {
     // Cerco il semaforo associato al processo corrente
     int *semaddr = NULL;
-    //* Cerco il dispositivo a cui sorrisponde il commandAddr
-    // Faccio DEV_REG_START - commandAddr per eliminare l'offset
-    memaddr *withoutOffset = (memaddr *)commandAddr - (memaddr *)DEV_REG_START;
-    // Dopodiché faccio la divisione intera per la dimensione del registro
+    /**
+     * Per trovare il dispositivo a cui è associato il
+     * commandAddr ricevuto uso una maccro che ho definito
+     * in SYSCALL.h
+     */
     int dev_position = DEV_POSITION(commandAddr);
 
-    // Trovo il dispositivo
+    // Identifico line e dispositivo
     int line = 0;
     int dev = 0;
+    if (dev_position > 31)
+        line = 4;
+    else
+        line = dev_position / 8;
 
-    // Faccio PASSEREN su dispositivo
+    dev = dev_position - 8 * line;
 
+    // Faccio PASSEREN su dispositivo trovato
+    Passeren(&(device_sem[dev_position]));
+
+    // Scrivo nel commandAddr il valore ricevuto
     *commandAddr = commandValue;
 
-    // Abilita gli Interrupt nel currentproc
+    // Abilito gli Interrupt nel processo corrente
+    current_p->p_s.status = (current_p->p_s.status) | IEPON | IMON;
 
     // Avanzo il PC per evitare il SYSCALL loop
     current_p->p_s.pc_epc += WORDLEN;
