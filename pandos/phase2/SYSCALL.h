@@ -26,4 +26,4 @@ void Passeren(int *semaddr);
 void Verhogen(int *semaddr);
 
 // DOIO
-int Do_IO_Device(int *cmdAddr, int cmdValue);
+int Do_IO_Device(int *commandAddr, int commandValue);
