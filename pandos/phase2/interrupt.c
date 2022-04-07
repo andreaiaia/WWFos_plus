@@ -127,9 +127,21 @@ void nonTimerInterrupt(int line)
     {
       device_num = i;  // salvo n° device
       flag = 1;
+
+      if(device_num == 7)  // se è un terminale
+      {
+        unsigned int tmp_addr = (memaddr) 0x10000054 + ((line - 3) * 0x80) + (device_num * 0x10);
+
+        if( ((termreg_t*) tmp_addr)->transm_status == 1 )  // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
+        {
+          // ? al momento non so come usare questa info, per ora ho capito come distinguere la priorità
+        }  
+      }
     }
     mask = mask * 2;
   }
+
+
   // ottengo il device's device register
   unsigned int dev_addr_base = (memaddr) 0x10000054 + ((line - 3) * 0x80) + (device_num * 0x10); // pag. 28 manuale pops
   dtpreg_t *device_ptr = (dtpreg_t*) dev_addr_base;
