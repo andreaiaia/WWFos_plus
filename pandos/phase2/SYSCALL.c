@@ -112,7 +112,7 @@ void Do_IO_Device(int *commandAddr, int commandValue)
     int *semaddr = NULL;
     /**
      * Per trovare il dispositivo a cui è associato il
-     * commandAddr ricevuto uso una maccro che ho definito
+     * commandAddr ricevuto uso una macro che ho definito
      * in SYSCALL.h
      */
     int dev_position = DEV_POSITION(commandAddr);
@@ -121,11 +121,15 @@ void Do_IO_Device(int *commandAddr, int commandValue)
     int line = 0;
     int dev = 0;
     if (dev_position > 31)
+    {
         line = 4;
+        // TODO come faccio a capire se transm o recv?
+    }
     else
+    {
         line = dev_position / 8;
-
-    dev = dev_position - 8 * line;
+        dev = dev_position - 8 * line;
+    }
 
     // Faccio PASSEREN su dispositivo trovato
     Passeren(&(device_sem[dev_position]));
