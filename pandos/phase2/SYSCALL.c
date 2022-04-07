@@ -1,11 +1,6 @@
 #include "SYSCALL.h";
 
-/**
- * ! in tutte le funzioni seguenti aggiorno il PC del processo corrente
- * ! ma a pagina 33 del capitolo 3 parla di usare invece lo stato del processore
- * ! e performare una LDST modificando suddetto stato
- * ! Devo capire meglio questa parte
- */
+// TODO Rimuovere le chiamate allo scheduler e metterle nello switch case del SYSCALL Handler
 
 int Create_Process(state_t *statep, int prio, support_t *supportp)
 {
@@ -71,7 +66,7 @@ void Terminate_Process(int pid)
         pcb_PTR to_terminate = find_process(pid);
         exterminate(to_terminate); // Termina il proc con il corrispondente pid
         // Avanzo il PC
-        to_terminate->p_s.pc_epc += WORDLEN;
+        current_p->p_s.pc_epc += WORDLEN;
     }
 
     // Rimando il controllo allo scheduler per attivare altri processi
@@ -116,7 +111,6 @@ void Verhogen(int *semaddr)
     }
 }
 
-// TODO Capire come trovare il processo chiamante delle SYSCALL
 int Do_IO_Device(int *commandAddr, int commandValue)
 {
     // Cerco il semaforo associato al processo corrente
@@ -156,6 +150,9 @@ int Do_IO_Device(int *commandAddr, int commandValue)
         return_value = term.recv_status;
 
     *commandAddr = commandValue;
+
+    // Avanzo il PC per evitare il SYSCALL loop
+    current_p->p_s.pc_epc += WORDLEN;
 
     // Restituisco lo status
     return return_value;
