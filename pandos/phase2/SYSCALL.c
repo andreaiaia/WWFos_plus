@@ -116,38 +116,41 @@ int Do_IO_Device(int *commandAddr, int commandValue)
     // Cerco il semaforo associato al processo corrente
     int *semaddr = NULL;
     int dev_position;
-    /**
-     * Parto da 32 poiché ci interessano solo i semafori dei terminal
-     * devices, che sono gli ultimi 16 (non contando il 49esimo)
-     */
-    for (int i = 32; i < DEVSEM_NUM - 1; i++)
+    // Cerco il dispositivo a cui sorrisponde il commandAddr
+    devregarea_t *devregs = (devregarea_t *)RAMBASEADDR;
+    int line = 0;
+    int dev = 0;
+    for (int i = 0; i < DEVSEM_NUM - 1; i++)
     {
-        if (&device_sem[i] == current_p->p_semAdd)
+        if (line != 4)
         {
-            semaddr = &device_sem[i];
-            dev_position = i;
-            break;
+            if (&(devregs->devreg[line][dev].dtp.command) == commandAddr)
+            {
+                dev_position = i;
+                break;
+            }
+        }
+        else
+        {
+            if (&(devregs->devreg[line][dev].term.recv_command) == commandAddr)
+            {
+                dev_position = i;
+                break;
+            }
+            else if (&(devregs->devreg[line][dev].term.transm_command) == commandAddr)
+            {
+                dev_position = i;
+                break;
+            }
+        }
+
+        dev++;
+        if (dev > 8)
+        {
+            dev = 0;
+            line++;
         }
     }
-    /**
-     * Una volta trovato il semaforo, blocco il processo che ha chiamato
-     * la SYSCALL, aka il current_p
-     */
-    Passeren(semaddr);
-    // Sapendo chi sia il semaforo che mi serve, possiamo trovare il terminale...
-    devregarea_t *dev_regs = (devregarea_t *)RAMBASEADDR;
-    // (Trovo il numero del terminale dividendo per 2 il dev_position salvato prima)
-    int term_num = (dev_position - 32) / 2 + (dev_position - 32) % 2;
-    termreg_t term = dev_regs->devreg[4][term_num].term; // perché 4?
-    /**
-     * ...E ricavare il campo status del terminale trovato
-     * discriminando se era un semaforo di recv o uno di transm
-     */
-    int return_value;
-    if (dev_position % 2 == 1)
-        return_value = term.transm_status;
-    else
-        return_value = term.recv_status;
 
     *commandAddr = commandValue;
 
