@@ -111,52 +111,26 @@ void Verhogen(int *semaddr)
     }
 }
 
-int Do_IO_Device(int *commandAddr, int commandValue)
+void Do_IO_Device(int *commandAddr, int commandValue)
 {
     // Cerco il semaforo associato al processo corrente
     int *semaddr = NULL;
-    int dev_position;
-    // Cerco il dispositivo a cui sorrisponde il commandAddr
-    devregarea_t *devregs = (devregarea_t *)RAMBASEADDR;
+    //* Cerco il dispositivo a cui sorrisponde il commandAddr
+    // Faccio DEV_REG_START - commandAddr per eliminare l'offset
+    memaddr *withoutOffset = (memaddr *)commandAddr - (memaddr *)DEV_REG_START;
+    // Dopodiché faccio la divisione intera per la dimensione del registro
+    int dev_position = DEV_POSITION(commandAddr);
+
+    // Trovo il dispositivo
     int line = 0;
     int dev = 0;
-    for (int i = 0; i < DEVSEM_NUM - 1; i++)
-    {
-        if (line != 4)
-        {
-            if (&(devregs->devreg[line][dev].dtp.command) == commandAddr)
-            {
-                dev_position = i;
-                break;
-            }
-        }
-        else
-        {
-            if (&(devregs->devreg[line][dev].term.recv_command) == commandAddr)
-            {
-                dev_position = i;
-                break;
-            }
-            else if (&(devregs->devreg[line][dev].term.transm_command) == commandAddr)
-            {
-                dev_position = i;
-                break;
-            }
-        }
 
-        dev++;
-        if (dev > 8)
-        {
-            dev = 0;
-            line++;
-        }
-    }
+    // Faccio PASSEREN su dispositivo
 
     *commandAddr = commandValue;
 
+    // Abilita gli Interrupt nel currentproc
+
     // Avanzo il PC per evitare il SYSCALL loop
     current_p->p_s.pc_epc += WORDLEN;
-
-    // Restituisco lo status
-    return return_value;
 }
