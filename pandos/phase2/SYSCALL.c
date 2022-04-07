@@ -156,14 +156,6 @@ int Do_IO_Device(int *commandAddr, int commandValue)
         return_value = term.recv_status;
 
     *commandAddr = commandValue;
-    /**
-     * A questo punto non sono sicuro ma io chiamerei la Verhogen sul processo
-     * bloccato prima e, così facendo chiamerei contestualmente lo scheduler
-     */
-    Verhogen(semaddr);
-
-    // TODO: Avanza il PC (ma quale, quello del term?)
-    // scheduler(); Se chiamo la Verhogen mi sembra ridondante chiamare lo scheduler
 
     // Restituisco lo status
     return return_value;
