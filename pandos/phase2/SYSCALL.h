@@ -8,6 +8,15 @@
 #include "scheduler.h"
 #include "SYSCALL_helpers.h"
 
+/**
+ * Per trovare il numero di device io passo l'indirizzo del commandAddr
+ * Tolgo l'offset (DEV_REG_START) e così posso dividere per la dimensione
+ * del blocco di memoria che contiene un dispositivo. Essendo una divisione
+ * intera il numero risultante corrisponde all'indice del relativo semaforo
+ * nell'array dei semafori. Una volta che so la posizione del semaforo è checkmate.
+ */
+#define DEV_POSITION(T) ((int)T - DEV_REG_START) / DEV_REG_SIZE
+
 // Richiamo alle variabili esterne
 extern int proc_count;
 extern struct list_head *high_ready_q, *low_ready_q;
@@ -26,4 +35,4 @@ void Passeren(int *semaddr);
 void Verhogen(int *semaddr);
 
 // DOIO
-int Do_IO_Device(int *commandAddr, int commandValue);
+void Do_IO_Device(int *commandAddr, int commandValue);
