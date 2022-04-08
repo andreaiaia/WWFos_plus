@@ -15,7 +15,7 @@
  * intera il numero risultante corrisponde all'indice del relativo semaforo
  * nell'array dei semafori. Una volta che so la posizione del semaforo è checkmate.
  */
-#define DEV_POSITION(T) ((int)T - DEV_REG_START) / DEV_REG_SIZE
+#define DEV_POSITION(T) ((int)T - DEV_REG_START) / (DEV_REG_SIZE / 2)
 
 // Richiamo alle variabili esterne
 extern int proc_count;

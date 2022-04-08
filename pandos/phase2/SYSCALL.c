@@ -120,13 +120,14 @@ void Do_IO_Device(int *commandAddr, int commandValue)
     // Identifico line e dispositivo
     int line = 0;
     int dev = 0;
-    if (dev_position > 31)
+    if (dev_position > 63)
     {
         line = 4;
-        // TODO come faccio a capire se transm o recv?
+        dev_position -= 32;
     }
     else
     {
+        dev_position = dev_position / 2;
         line = dev_position / 8;
         dev = dev_position - 8 * line;
     }
