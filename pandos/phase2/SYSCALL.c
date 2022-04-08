@@ -117,9 +117,7 @@ void Do_IO_Device(int *commandAddr, int commandValue)
      */
     int dev_position = DEV_POSITION(commandAddr);
 
-    // Identifico line e dispositivo
-    int line = 0;
-    int dev = 0;
+    // Distinguo fra terminal dev e tutti gli altri dispositivi
     if (dev_position > 63)
     {
         line = 4;
@@ -128,8 +126,6 @@ void Do_IO_Device(int *commandAddr, int commandValue)
     else
     {
         dev_position = dev_position / 2;
-        line = dev_position / 8;
-        dev = dev_position - 8 * line;
     }
 
     // Faccio PASSEREN su dispositivo trovato
