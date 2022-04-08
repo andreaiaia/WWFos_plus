@@ -135,3 +135,9 @@ void Do_IO_Device(int *commandAddr, int commandValue)
     // Avanzo il PC per evitare il SYSCALL loop
     current_p->p_s.pc_epc += WORDLEN;
 }
+
+cpu_t Get_CPU_Time()
+{
+    // Ma vuole il tempo del processo corrente?
+    // Altrimenti come si fa a vedere chi ha chiamato la SYSCALL?
+}

@@ -36,3 +36,5 @@ void Verhogen(int *semaddr);
 
 // DOIO
 void Do_IO_Device(int *commandAddr, int commandValue);
+
+cpu_t Get_CPU_Time();
