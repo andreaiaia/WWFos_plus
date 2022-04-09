@@ -47,28 +47,27 @@
 
 extern struct list_head *high_ready_q;
 extern struct list_head *low_ready_q;
-extern device_sem[DEVSEM_NUM];
+extern int device_sem[DEVSEM_NUM];
 extern pcb_PTR current_p;
 
 
 void interruptHandler()
 {
   // TODO controllare tramite la mask se l'interrupt è lecito
-  state_t processor_state = *((state_t*) BIOSDATAPAGE);
-  unsigned int cause_reg = processor_state.cause;
-  unsigned int mask = 1;  // mask per & bit-a-bit
-  for (int line = 1; line < 8; line++) // linea 0 da ignorare
+  unsigned int processor_state = CAUSE_GET_EXCCODE(current_p->p_s.cause);
+  unsigned int cause_reg = processor_state += CAUSE_IP_MASK;
+
+  for(int line = 1; line < 8; line++) // linea 0 da ignorare
   {
-    if ((cause_reg & mask) == mask) 
+    if( (cause_reg & CAUSE_IP(line)) == CAUSE_IP(line) ) 
     {
-      if (line == 1)
+      if(line == 1)
         PLTTimerInterrupt(line);
-      else if (line == 2)
+      else if(line == 2)
         intervalTimerInterrupt(line);
       else
         nonTimerInterrupt(line);
     }
-    mask = mask*2;
   }
 }
 
@@ -129,9 +128,9 @@ void nonTimerInterrupt(int line)
 
       if(device_num == 7)  // se è un terminale
       {
-        memaddr tmp_addr = DEV_REG_START + ((line - 3) * 0x80) + (device_num * DEV_REG_SIZE);
+        termreg_t *device_ptr = DEV_REG_ADDR(line, device_num);
 
-        if( ((termreg_t*) tmp_addr)->transm_status == 1 )  // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
+        if(device_ptr->transm_status == 1)  // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
         {
           // ? al momento non so come usare questa info, per ora ho capito come distinguere la priorità
         }  
@@ -142,8 +141,7 @@ void nonTimerInterrupt(int line)
 
 
   // ottengo il device's device register
-  unsigned int dev_addr_base = (memaddr) 0x10000054 + ((line - 3) * 0x80) + (device_num * 0x10); // pag. 28 manuale pops
-  dtpreg_t *device_ptr = (dtpreg_t*) dev_addr_base;
+  dtpreg_t *device_ptr = DEV_REG_ADDR(line, device_num); // pag. 28 manuale pops
   //* 2. salvare lo status code
   unsigned int device_status = device_ptr->status; 
   // 3. acknowledgement dell'interrupt

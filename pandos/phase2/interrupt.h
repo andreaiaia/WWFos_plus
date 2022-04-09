@@ -18,6 +18,7 @@
 #include "main.h"
 #include "scheduler.h"
 #include "SYSCALL_helpers.h"
+#include "umps/cp0.h"
 
 
 void interruptHandler();
