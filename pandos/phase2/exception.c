@@ -1,4 +1,4 @@
-#include "exception.h"
+#include "main.h"
 #define stato_processo ((state_t *)BIOSDATAPAGE)
 //extern pcb_PTR current_p;
 //#define PROCESSO_CORRENTE current_p
