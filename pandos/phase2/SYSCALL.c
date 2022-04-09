@@ -84,7 +84,7 @@ void Passeren(int *semaddr)
     }
     else if (headBlocked(semaddr) != NULL)
     {
-        pcb_PTR first = outBlocked(semaddr);
+        pcb_PTR first = removeBlocked(semaddr);
 
         if (first->p_prio == 1)
             insertProcQ(high_ready_q, first);
