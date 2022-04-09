@@ -56,7 +56,6 @@ void interruptHandler()
   state_t processor_state = *((state_t*) 0x0FFFF000);
   unsigned int cause_reg = processor_state.cause;
   unsigned int mask = 1;  // mask per & bit-a-bit
-
   for (int line = 1; line < 8; line++) // linea 0 da ignorare
   {
     if ((cause_reg & mask) == mask) 
