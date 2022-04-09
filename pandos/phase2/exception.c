@@ -46,7 +46,7 @@ void exceptionHandler()
 
         // TODO FARE SOLO CONTROLLO SE IN KERNEL MODE E SE SYSCALL (A0 NEGATIVO) POI PASSARE CONTROLLO A
         // TODO syscallExceptionHandler(); da mettere in SYSCALL.c
-        if (PROCESSO_CORRENTE->p_s.status == STATUS_KUp) {
+        if (stato_processo->status == STATUS_KUp) {
 
         }
         
