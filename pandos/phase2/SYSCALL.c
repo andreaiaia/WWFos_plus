@@ -2,7 +2,7 @@
 
 // TODO Rimuovere le chiamate allo scheduler e metterle nello switch case del SYSCALL Handler
 
-int Create_Process(state_t *statep, int prio, support_t *supportp)
+void Create_Process(state_t *statep, int prio, support_t *supportp)
 {
     // Creo il processo figlio
     pcb_PTR child = allocPcb();
@@ -17,7 +17,6 @@ int Create_Process(state_t *statep, int prio, support_t *supportp)
         statep->reg_v0 = NOPROC;
         statep->pc_epc += WORDLEN;
         LDST(statep);
-        return NOPROC;
     }
     else
     {
@@ -48,8 +47,6 @@ int Create_Process(state_t *statep, int prio, support_t *supportp)
     statep->pc_epc += WORDLEN;
     statep->reg_v0 = OK;
     LDST(statep);
-
-    return OK;
 }
 
 // Se il secondo parametro e’ 0 il bersaglio e’ il processo invocante
