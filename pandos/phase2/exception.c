@@ -12,7 +12,6 @@
 // ? called (with a fresh stack) after each and every exception, exclusive of TLBRefill
 // ? events.
 // ? probabilmente lo fa grazie alla riga nel main quando diamo al passupvector l'indirizzo dell'excp handler
-
 void exceptionHandler()
 {
     // * Exception code 0 -> Si passa il controllo al device interrupt handler
