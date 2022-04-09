@@ -1,3 +1,5 @@
+#ifndef SYSCALL_H
+#define SYSCALL_H
 #include "main.h"
 
 /**
@@ -28,3 +30,5 @@ void Get_CPU_Time();
 void Wait_For_Clock();
 
 void Get_Support_Data();
+
+#endif

@@ -1,5 +1,5 @@
-#include "main.h"
-
+#ifndef SCHEDULER_H
+#define SCHEDULER_H
 //* Costanti */
 // Numero di semafori dei dispositivi
 #define DEVSEM_NUM 49
@@ -25,3 +25,5 @@ cpu_t finish;
 void load_new_proc(struct list_head *);
 
 void scheduler();
+
+#endif
