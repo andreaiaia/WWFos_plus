@@ -69,18 +69,40 @@ void Terminate_Process(int pid)
 
 void Passeren(int *semaddr)
 {
-    if (*semaddr == NULL)
+    if (semaddr == NULL)
         return;
-    if (*semaddr > 0)
-        (*semaddr)--;
-    else
+    else if (*semaddr == 0)
     {
-        // Blocco il processo corrente e chiamo lo scheduler
+        // Aggiungo il processo corrente alla coda del semd
         insertBlocked(semaddr, current_p);
+        // Blocco il processo corrente
+        current_p = NULL;
         // Avanzo il PC
         current_p->p_s.pc_epc += WORDLEN;
+        // Chiamo lo scheduler
+        scheduler();
+    }
+    else if (headBlocked(semaddr) != NULL)
+    {
+        pcb_PTR first = outBlocked(semaddr);
 
-        scheduler(); // ! qui credo che lo scheduler ci vada comunque
+        if (first->p_prio == 1)
+            insertProcQ(high_ready_q, first);
+        else
+            insertProcQ(low_ready_q, first);
+
+        // Avanzo il PC del processo corrente
+        current_p->p_s.pc_epc += WORDLEN;
+        // Blocco il processo corrente
+        current_p = NULL;
+        // Avanzo il PC
+        current_p->p_s.pc_epc += WORDLEN;
+        // Chiamo lo scheduler
+        scheduler();
+    }
+    else
+    {
+        (*semaddr)--;
     }
 }
 
