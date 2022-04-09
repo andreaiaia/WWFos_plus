@@ -72,7 +72,7 @@ int main()
     proc_count++;
 
     // Chiamo lo Scheduler
-    //scheduler();
+    scheduler();
 
     return 0;
 }
