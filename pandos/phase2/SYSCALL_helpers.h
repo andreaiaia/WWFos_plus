@@ -6,7 +6,6 @@
 #include "../phase1/pcb.h"
 #include "main.h"
 #include "scheduler.h"
-#include "SYSCALL.h"
 
 // Helpers generici
 void copy_state(state_t *original, state_t *dest);
