@@ -1,5 +1,7 @@
 #include "exception.h"
 #define stato_processo ((state_t *)BIOSDATAPAGE)
+//extern pcb_PTR current_p;
+//#define PROCESSO_CORRENTE current_p
 // CP0 Cause fields
 // #define CAUSE_EXCCODE_MASK     0x0000007c
 // #define CAUSE_EXCCODE_BIT      2
@@ -44,6 +46,10 @@ void exceptionHandler()
 
         // TODO FARE SOLO CONTROLLO SE IN KERNEL MODE E SE SYSCALL (A0 NEGATIVO) POI PASSARE CONTROLLO A
         // TODO syscallExceptionHandler(); da mettere in SYSCALL.c
+        if (PROCESSO_CORRENTE->p_s.status == STATUS_KUp) {
+
+        }
+        
         switch(stato_processo->reg_a0) { //so che non funziona, è un placeholder mi serve capire come prendere lo stato del processo chiamante
             case -1:
             Create_Process(stato_processo->reg_a1, stato_processo->reg_a2, stato_processo->reg_a3);
