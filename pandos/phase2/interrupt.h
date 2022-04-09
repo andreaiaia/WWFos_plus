@@ -1,7 +1,6 @@
-#include "../umps/cp0.h"
-#include "../umps/libumps.h"
+#include <umps3/umps/libumps.h>
 #include "../h/pandos_const.h"
-#include "main.c"
+#include "main.h"
 #include "scheduler.h"
 
 void interruptHandler();

@@ -48,12 +48,13 @@
 extern struct list_head *high_ready_q;
 extern struct list_head *low_ready_q;
 extern device_sem[DEVSEM_NUM];
-extern pcb_PTR current_proc;
+extern pcb_PTR current_p;
 
 
 void interruptHandler()
 {
-  state_t processor_state = *((state_t*) 0x0FFFF000);
+  // TODO controllare tramite la mask se l'interrupt è lecito
+  state_t processor_state = *((state_t*) BIOSDATAPAGE);
   unsigned int cause_reg = processor_state.cause;
   unsigned int mask = 1;  // mask per & bit-a-bit
 
@@ -80,14 +81,11 @@ void PLTTimerInterrupt(int line)
   // acknowledgement del PLT interrupt (4.1.4-pops)
   setTIMER(UNSIGNED_MAX_32_INT);  // ricarico valore 0xFFFF.FFFF
   // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
-  state_t processor_state = *((state_t*) 0x0FFFF000);  
-  current_proc->p_s = processor_state;
+  state_t *processor_state = getSTATUS();  
+  current_p->p_s = *processor_state;
   // metto current process in Ready Queue e da "running" lo metto in "ready"
-  insertProcQ(low_ready_q, current_proc); // ! messa in low queue, forse va in high, o forse da fare if else per distinguere
-
-  current_proc->p_s.status = 1; // ! valore 1 è placeholder, da capire come mettere in "ready"
-  // ? actually la riga qui sopra forse non serve, perché il "transitioning" da running a ready
-  // ? viene fatto appunto mettendo il processo nella coda dei ready
+  insertProcQ(low_ready_q, current_p); 
+  current_p = NULL;  // perché lo scheduler altrimenti continua ad eseguirlo
   scheduler();
 }
 
@@ -99,12 +97,14 @@ void intervalTimerInterrupt(int line)
   // acknowledgement dell'interrupt (4.1.3-pops)
   LDIT(PSECOND); // carico Interval Timer con 100millisec
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
-  // TODO 
-  // resetto il Pseudo-clock semaphore a 0
-  device_sem[48] = 0; //* Andrea ha detto che il Pseudo-clock semaphore è questo
-  LDST(0x0FFFF000);
+  while(removeBlocked(device_sem[48]));
+  // resetto lo pseudo-clock semaphore a 0
+  device_sem[48] = 0;
+  if(current_p)
+    LDST(BIOSDATAPAGE);
+  else
+    scheduler();
 }
-
 
 
 //* linee 3-7    (3.6.1 pandos)
@@ -130,7 +130,7 @@ void nonTimerInterrupt(int line)
 
       if(device_num == 7)  // se è un terminale
       {
-        unsigned int tmp_addr = (memaddr) 0x10000054 + ((line - 3) * 0x80) + (device_num * 0x10);
+        memaddr tmp_addr = (memaddr) DEV_REG_START + ((line - 3) * 0x80) + (device_num * 0x10);
 
         if( ((termreg_t*) tmp_addr)->transm_status == 1 )  // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
         {
