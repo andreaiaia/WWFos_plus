@@ -6,7 +6,8 @@
         "pandos_types.h": "c",
         "pcb.h": "c",
         "asl.h": "c",
-        "regdef.h": "c"
+        "regdef.h": "c",
+        "syscall_helpers.h": "c"
     },
     "peacock.color": "#1857a4",
     "workbench.colorCustomizations": {
