@@ -29,6 +29,17 @@ void exceptionHandler()
         // !SYSCALL EXCEPTION HANDLER
         // !Io lo farei in SYSCALL_helpers.c, così da avere un vero "syscall exception handler" come da manuale 
         // !a pagina 26 (9 del pdf)
-        switch(reg_a0) 
+        // ? se il processo che fa una syscall è in kernel mode E
+        // ? a0 contiene un numero negativo, syscall, altrimenti i guess termina
+        // ? dove trovo lo stato del processo che attualmente stiamo esaminando? 
+        // ? non mi viene passato da nessuno come parametro
+        switch(state_t->reg_a0) { //so che non funziona, è un placeholder
+            case -1:
+            Create_Process();
+            //? chiamata allo scheduler?
+            break;
+
+
+        }
     }
 }
