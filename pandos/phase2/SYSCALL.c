@@ -186,3 +186,13 @@ void Get_Process_Id(int parent)
     else
         current_p->p_s.reg_v0 = (unsigned int)((current_p->p_parent)->p_pid);
 }
+
+void Yield()
+{
+    if (current_p->p_prio == 1)
+        insertProcQ(high_ready_q, current_p);
+    else
+        insertProcQ(low_ready_q, current_p);
+
+    current_p = NULL;
+}

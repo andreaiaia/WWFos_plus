@@ -30,3 +30,5 @@ void Wait_For_Clock();
 void Get_Support_Data();
 
 void Get_Process_Id(int parent);
+
+void Yield();
