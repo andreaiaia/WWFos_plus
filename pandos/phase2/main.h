@@ -1,5 +1,6 @@
 #ifndef MAIN_H
 #define MAIN_H
+#include "scheduler.h"
 #include <umps3/umps/aout.h>
 #include <umps3/umps/arch.h>
 #include <umps3/umps/bios_defs.h>
@@ -16,7 +17,6 @@
 #include "exception.h"
 #include "interrupt.h"
 #include "SYSCALL_helpers.h"
-#include "scheduler.h"
 #include "SYSCALL.h"
 
 // Passup Vector
