@@ -1,5 +1,5 @@
 #include "exception.h"
-
+#define stato_processo ((state_t *)BIOSDATAPAGE)
 // CP0 Cause fields
 // #define CAUSE_EXCCODE_MASK     0x0000007c
 // #define CAUSE_EXCCODE_BIT      2
@@ -9,6 +9,7 @@
 // ? Therefore, if the Pass Up Vector was correctly initialized, fooBar will be
 // ? called (with a fresh stack) after each and every exception, exclusive of TLBRefill
 // ? events.
+// ? probabilmente lo fa grazie alla riga nel main quando diamo al passupvector l'indirizzo dell'excp handler
 
 void exceptionHandler()
 {
@@ -16,37 +17,38 @@ void exceptionHandler()
     // * Exception code 1-3 -> Si passa il controllo al TLB exception handler
     // * Exception code 4-7 9-12 -> Si passa il controllo al Program Trap exception handler
     // * Exception code 8 -> Si passa il controllo al SYSCALL exception handler
-    if (CAUSE_GET_EXCCODE(((state_t *)BIOSDATAPAGE)->cause) == 0)
+    if (CAUSE_GET_EXCCODE(stato_processo->cause) == 0)
     {
         interruptHandler();
     }
-    else if ((CAUSE_GET_EXCCODE(((state_t *)BIOSDATAPAGE)->cause) >= 1) && (CAUSE_GET_EXCCODE(((state_t *)BIOSDATAPAGE)->cause) <= 3))
+    else if ((CAUSE_GET_EXCCODE(stato_processo->cause) >= 1) && (CAUSE_GET_EXCCODE(stato_processo->cause) <= 3))
     {
         uTLB_RefillHandler();
     }
-    else if (((CAUSE_GET_EXCCODE(((state_t *)BIOSDATAPAGE)->cause) >= 4) && (CAUSE_GET_EXCCODE(((state_t *)BIOSDATAPAGE)->cause) <= 7)) || ((CAUSE_GET_EXCCODE(((state_t *)BIOSDATAPAGE)->cause) >= 9) && (CAUSE_GET_EXCCODE(((state_t *)BIOSDATAPAGE)->cause) <= 12)))
+    else if (((CAUSE_GET_EXCCODE(stato_processo->cause) >= 4) && (CAUSE_GET_EXCCODE(stato_processo->cause) <= 7)) || ((CAUSE_GET_EXCCODE(stato_processo->cause) >= 9) && (CAUSE_GET_EXCCODE(stato_processo->cause) <= 12)))
     {
+        // TODO NICK LO FA
         // ! Program trap exception handler
     }
-    else if (CAUSE_GET_EXCCODE(((state_t *)BIOSDATAPAGE)->cause) == 8)
+    else if (CAUSE_GET_EXCCODE(stato_processo->cause) == 8)
     {
         // !SYSCALL EXCEPTION HANDLER
         // !Io lo farei in SYSCALL_helpers.c, così da avere un vero "syscall exception handler" come da manuale 
         // !a pagina 26 (9 del pdf)
-        // ? dove trovo lo stato del processo che attualmente stiamo esaminando? 
-        // ? non mi viene passato da nessuno come parametro. Dal manuale abbiamo:
+        // ? Dal manuale abbiamo:
         // ? Furthermore, the processor state at the time of the exception
         // ? (the saved exception state) will have been stored (for Processor 0) at the start
         // ? of the BIOS Data Page (0x0FFF.F000).
-        // ! io me lo prendo dalla bios data page.
         // TODO se il processo che fa una syscall è in kernel mode E
         // TODO a0 contiene un numero negativo, syscall, altrimenti i guess termina
-        switch(((state_t *)BIOSDATAPAGE)->reg_a0) { //so che non funziona, è un placeholder mi serve capire come prendere lo stato del processo chiamante
+
+        // TODO FARE SOLO CONTROLLO SE IN KERNEL MODE E SE SYSCALL (A0 NEGATIVO) POI PASSARE CONTROLLO A
+        // TODO syscallExceptionHandler(); da mettere in SYSCALL.c
+        switch(stato_processo->reg_a0) { //so che non funziona, è un placeholder mi serve capire come prendere lo stato del processo chiamante
             case -1:
-            Create_Process(((state_t *)BIOSDATAPAGE)->reg_a1, ((state_t *)BIOSDATAPAGE)->reg_a2, ((state_t *)BIOSDATAPAGE)->reg_a3);
+            Create_Process(stato_processo->reg_a1, stato_processo->reg_a2, stato_processo->reg_a3);
             //? chiamata allo scheduler?
             break;
-
 
         }
     }

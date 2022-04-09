@@ -31,7 +31,7 @@
   (4.1.4)
   A PLT is the only device attached to the interrupt line 1
 
-  ! COMANDI COMPILAZIONE <-- se questo lo legge un prof, ci bandisce a vita dall'università
+  ! COMANDI GIT 
   git add .
   git commit -m "nome_commit"
   git push
