@@ -160,11 +160,16 @@ void Do_IO_Device(int *commandAddr, int commandValue)
     current_p->p_s.pc_epc += WORDLEN;
 }
 
-cpu_t Get_CPU_Time()
+void Get_CPU_Time()
 {
     cpu_t elapsed = 0;
     // current_p->p_time + tempo trascorso dall'ultimo time slice
     STCK(elapsed);
     // Calcolo e ritorno il tempo trascorso trascorso da quando il processo è attivo
     current_p->p_s.reg_v0 = (unsigned int)(current_p->p_time + (elapsed - start));
+}
+
+void Wait_For_Clock()
+{
+    Passeren(&(device_sem[48]));
 }
