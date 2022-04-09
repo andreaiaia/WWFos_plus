@@ -7,6 +7,6 @@ void copy_state(state_t *original, state_t *dest);
 
 // Helpers collegati alla Terminate_Process
 void Exterminate(pcb_PTR process);
-pcb_PTR FindProcess(int pid);
+pcb_PTR find_process(int pid);
 
 #endif
