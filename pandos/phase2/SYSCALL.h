@@ -23,7 +23,7 @@ extern struct list_head *high_ready_q, *low_ready_q;
 extern pcb_PTR current_p;
 
 // Questa system call crea un nuovo processo come figlio del chiamante.
-int Create_Process(state_t *statep, int prio, support_t *supportp);
+void Create_Process(state_t *statep, int prio, support_t *supportp);
 
 /** Quando invocata, la SYS2 termina il processo indicato
  * dal secondo parametro insieme a tutta la sua progenie.
