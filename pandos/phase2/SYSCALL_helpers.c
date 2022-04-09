@@ -23,9 +23,9 @@ void exterminate(pcb_PTR process)
         while (!emptyChild(process))
         {
             pcb_PTR child = removeChild(process);
-            Terminate_Process(child->p_pid, 0, 0);
+            Terminate_Process(child->p_pid);
         }
-        Terminate_Process(0, 0, 0); // Infine termino il processo originale
+        Terminate_Process(0); // Infine termino il processo originale
     }
 }
 
