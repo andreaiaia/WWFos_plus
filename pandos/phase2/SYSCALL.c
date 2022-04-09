@@ -173,3 +173,26 @@ void Wait_For_Clock()
 {
     Passeren(&(device_sem[48]));
 }
+
+void Get_Support_Data()
+{
+    current_p->p_s.reg_v0 = (unsigned int)(current_p->p_supportStruct);
+}
+
+void Get_Process_Id(int parent)
+{
+    if (parent == 0)
+        current_p->p_s.reg_v0 = (unsigned int)(current_p->p_pid);
+    else
+        current_p->p_s.reg_v0 = (unsigned int)((current_p->p_parent)->p_pid);
+}
+
+void Yield()
+{
+    if (current_p->p_prio == 1)
+        insertProcQ(high_ready_q, current_p);
+    else
+        insertProcQ(low_ready_q, current_p);
+
+    current_p = NULL;
+}
