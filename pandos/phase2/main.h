@@ -13,10 +13,10 @@
 #include "../h/pandos_const.h"
 #include "../phase1/asl.h"
 #include "../phase1/pcb.h"
+#include "scheduler.h" 
 #include "exception.h"
 #include "interrupt.h"
 #include "SYSCALL_helpers.h"
-//#include "scheduler.h"
 #include "SYSCALL.h"
 
 // Passup Vector
