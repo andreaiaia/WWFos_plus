@@ -17,11 +17,7 @@ void scheduler()
     }
     // Se la coda dei processi a BASSA priorità è non-vuota
     else if (!emptyProcQ(low_ready_q))
-    {
         load_new_proc(low_ready_q);
-        // Imposto il PLT su 5ms
-        setTIMER(TIMESLICE * *((memaddr *)TIMESCALEADDR));
-    }
     // Se le code sono entrambe vuote
     else
     {
@@ -47,6 +43,8 @@ void scheduler()
 // Funzione per prendere un processo dalla coda passata e avviarne l'esecuzione
 void load_new_proc(struct list_head *queue)
 {
+    // Imposto il PLT su 5ms
+    setTIMER(TIMESLICE);
     // Prendo il processo da avviare
     current_p = removeProcQ(queue);
     // Faccio partire il timer leggendo il Time of Day
