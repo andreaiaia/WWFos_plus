@@ -10,6 +10,7 @@
 */
 #include <umps3/umps/libumps.h>
 #include <umps3/umps/arch.h>
+#include <umps3/umps/cp0.h>
 #include "../h/listx.h"
 #include "../h/pandos_types.h"
 #include "../h/pandos_const.h"
@@ -18,7 +19,6 @@
 #include "main.h"
 #include "scheduler.h"
 #include "SYSCALL_helpers.h"
-#include "umps/cp0.h"
 
 
 void interruptHandler();

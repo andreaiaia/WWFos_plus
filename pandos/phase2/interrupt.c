@@ -54,8 +54,9 @@ extern pcb_PTR current_p;
 void interruptHandler()
 {
   // TODO controllare tramite la mask se l'interrupt è lecito
-  unsigned int processor_state = CAUSE_GET_EXCCODE(current_p->p_s.cause);
-  unsigned int cause_reg = processor_state += CAUSE_IP_MASK;
+  //unsigned int processor_state = current_p->p_s.cause;
+  unsigned int processor_state = ((state_t *)BIOSDATAPAGE)->cause;
+  unsigned int cause_reg = processor_state & CAUSE_IP_MASK;
 
   for(int line = 1; line < 8; line++) // linea 0 da ignorare
   {
