@@ -178,3 +178,11 @@ void Get_Support_Data()
 {
     current_p->p_s.reg_v0 = (unsigned int)(current_p->p_supportStruct);
 }
+
+void Get_Process_Id(int parent)
+{
+    if (parent == 0)
+        current_p->p_s.reg_v0 = (unsigned int)(current_p->p_pid);
+    else
+        current_p->p_s.reg_v0 = (unsigned int)((current_p->p_parent)->p_pid);
+}
