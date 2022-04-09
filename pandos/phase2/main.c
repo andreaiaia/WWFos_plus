@@ -1,5 +1,3 @@
-#ifndef MAIN_C
-#define MAIN_C
 #include "scheduler.h" 
 #include "exception.h"
 #include "interrupt.h"
@@ -10,7 +8,6 @@ extern void uTLB_RefillHandler();
 // La funzione test si trova nel file di test fornito
 extern void test();
 
-#endif
 passupvector_t *pu_vector;
 
 //* A LONG TIME AGO, IN A MAIN FUNCTION FAR FAR AWAY */
