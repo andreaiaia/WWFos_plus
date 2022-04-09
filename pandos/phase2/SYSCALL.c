@@ -54,14 +54,14 @@ void Terminate_Process(int pid)
 {
     if (pid == 0)
     {
-        exterminate(current_p); // Termina il current_p
+        Exterminate(current_p); // Termina il current_p
         // Avanzo il PC
         current_p->p_s.pc_epc += WORDLEN;
     }
     else
     {
         pcb_PTR to_terminate = find_process(pid);
-        exterminate(to_terminate); // Termina il proc con il corrispondente pid
+        Exterminate(to_terminate); // Termina il proc con il corrispondente pid
         // Avanzo il PC
         current_p->p_s.pc_epc += WORDLEN;
     }

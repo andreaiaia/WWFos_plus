@@ -2,7 +2,7 @@
 
 // Funzioni Helper della SYSCALL Terminate_Process
 //* "Do you know how you make someone into a Dalek? Subtract Love, add Anger." ~ Steven Moffat
-void exterminate(pcb_PTR process)
+void Exterminate(pcb_PTR process)
 {
     // Controlla se il processo ha figli
     if (emptyChild(process))
