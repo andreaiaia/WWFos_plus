@@ -1,7 +1,8 @@
+#ifndef MAIN_H
 #include "scheduler.h" 
 #include "exception.h"
 #include "interrupt.h"
-
+#endif
 passupvector_t *pu_vector;
 
 //* Dichiarazioni di funzioni esterne */
