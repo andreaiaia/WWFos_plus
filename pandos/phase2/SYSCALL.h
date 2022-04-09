@@ -28,5 +28,7 @@ void Verhogen(int *semaddr);
 
 // DOIO
 void Do_IO_Device(int *commandAddr, int commandValue);
-
-cpu_t Get_CPU_Time();
+// Get CPU time
+void Get_CPU_Time();
+// Wait for Clock
+void Wait_For_Clock();
