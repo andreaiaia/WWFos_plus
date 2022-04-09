@@ -27,5 +27,8 @@ void exceptionHandler()
     else if (CAUSE_GET_EXCCODE(((state_t *)BIOSDATAPAGE)->cause) == 8)
     {
         // !SYSCALL EXCEPTION HANDLER
+        // !Io lo farei in SYSCALL_helpers.c, così da avere un vero "syscall exception handler" come da manuale 
+        // !a pagina 26 (9 del pdf)
+        switch(reg_a0) 
     }
 }
