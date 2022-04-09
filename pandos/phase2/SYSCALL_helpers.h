@@ -1,6 +1,7 @@
-#ifndef SYSCALL_HELPERS_H
-#define SYSCALL_HELPERS_H
-#include "main.h"
+#ifndef SYSH_H
+#define SYSH_H
+#include "sistema.h"
+#include "scheduler.h"
 
 // Helpers generici
 void copy_state(state_t *original, state_t *dest);
