@@ -1,5 +1,4 @@
 #include "main.h"
-#include "SYSCALL_helpers.h"
 
 void interruptHandler();
 void PLTTimerInterrupt(int line);      // 3.6.2 pandos

@@ -1,4 +1,4 @@
-#include "SYSCALL_helpers.h"
+#include "main.h"
 
 // Funzioni Helper della SYSCALL Terminate_Process
 //* "Do you know how you make someone into a Dalek? Subtract Love, add Anger." ~ Steven Moffat

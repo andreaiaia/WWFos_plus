@@ -1,4 +1,4 @@
-#include "SYSCALL.h";
+#include "main.h"
 
 // TODO Rimuovere le chiamate allo scheduler e metterle nello switch case del SYSCALL Handler
 

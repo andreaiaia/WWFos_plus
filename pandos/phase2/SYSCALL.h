@@ -1,5 +1,4 @@
 #include "main.h"
-#include "SYSCALL_helpers.h"
 
 /**
  * Per trovare il numero di device io passo l'indirizzo del commandAddr
