@@ -5,7 +5,10 @@
 // #define CAUSE_EXCCODE_BIT      2
 // #define CAUSE_GET_EXCCODE(x)   (((x) & CAUSE_EXCCODE_MASK) >> CAUSE_EXCCODE_BIT)
 
-// ? chi chiama exceptionHandler() ?
+// ? chi chiama exceptionHandler() ? Dal manuale:
+// ? Therefore, if the Pass Up Vector was correctly initialized, fooBar will be
+// ? called (with a fresh stack) after each and every exception, exclusive of TLBRefill
+// ? events.
 
 void exceptionHandler()
 {
@@ -30,13 +33,17 @@ void exceptionHandler()
         // !SYSCALL EXCEPTION HANDLER
         // !Io lo farei in SYSCALL_helpers.c, così da avere un vero "syscall exception handler" come da manuale 
         // !a pagina 26 (9 del pdf)
+        // ? dove trovo lo stato del processo che attualmente stiamo esaminando? 
+        // ? non mi viene passato da nessuno come parametro. Dal manuale abbiamo:
+        // ? Furthermore, the processor state at the time of the exception
+        // ? (the saved exception state) will have been stored (for Processor 0) at the start
+        // ? of the BIOS Data Page (0x0FFF.F000).
+        // ! io me lo prendo dalla bios data page.
         // TODO se il processo che fa una syscall è in kernel mode E
         // TODO a0 contiene un numero negativo, syscall, altrimenti i guess termina
-        // ? dove trovo lo stato del processo che attualmente stiamo esaminando? 
-        // ? non mi viene passato da nessuno come parametro
-        switch(state_t->reg_a0) { //so che non funziona, è un placeholder mi serve capire come prendere lo stato del processo chiamante
+        switch(((state_t *)BIOSDATAPAGE)->reg_a0) { //so che non funziona, è un placeholder mi serve capire come prendere lo stato del processo chiamante
             case -1:
-            Create_Process();
+            Create_Process(((state_t *)BIOSDATAPAGE)->reg_a1, ((state_t *)BIOSDATAPAGE)->reg_a2, ((state_t *)BIOSDATAPAGE)->reg_a3);
             //? chiamata allo scheduler?
             break;
 
