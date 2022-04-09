@@ -5,6 +5,8 @@
 // #define CAUSE_EXCCODE_BIT      2
 // #define CAUSE_GET_EXCCODE(x)   (((x) & CAUSE_EXCCODE_MASK) >> CAUSE_EXCCODE_BIT)
 
+// ? chi chiama exceptionHandler() ?
+
 void exceptionHandler()
 {
     // * Exception code 0 -> Si passa il controllo al device interrupt handler
@@ -28,11 +30,11 @@ void exceptionHandler()
         // !SYSCALL EXCEPTION HANDLER
         // !Io lo farei in SYSCALL_helpers.c, così da avere un vero "syscall exception handler" come da manuale 
         // !a pagina 26 (9 del pdf)
-        // ? se il processo che fa una syscall è in kernel mode E
-        // ? a0 contiene un numero negativo, syscall, altrimenti i guess termina
+        // TODO se il processo che fa una syscall è in kernel mode E
+        // TODO a0 contiene un numero negativo, syscall, altrimenti i guess termina
         // ? dove trovo lo stato del processo che attualmente stiamo esaminando? 
         // ? non mi viene passato da nessuno come parametro
-        switch(state_t->reg_a0) { //so che non funziona, è un placeholder
+        switch(state_t->reg_a0) { //so che non funziona, è un placeholder mi serve capire come prendere lo stato del processo chiamante
             case -1:
             Create_Process();
             //? chiamata allo scheduler?
