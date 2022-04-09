@@ -3,7 +3,6 @@
 #include "scheduler.h" 
 #include "exception.h"
 #include "interrupt.h"
-#endif
 passupvector_t *pu_vector;
 
 //* Dichiarazioni di funzioni esterne */
@@ -12,6 +11,7 @@ extern void uTLB_RefillHandler();
 // La funzione test si trova nel file di test fornito
 extern void test();
 
+#endif
 
 //* A LONG TIME AGO, IN A MAIN FUNCTION FAR FAR AWAY */
 int main()
