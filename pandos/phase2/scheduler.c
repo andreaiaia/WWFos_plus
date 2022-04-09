@@ -1,22 +1,5 @@
 #include "scheduler.h"
 
-// Queue dei processi ad alta priorità
-struct list_head *high_ready_q;
-// Queue dei processi a bassa priorità
-struct list_head *low_ready_q;
-
-// Richiamo le variabili globali dal main
-extern int proc_count;
-extern int soft_count;
-extern pcb_PTR current_p;
-extern int device_sem[DEVSEM_NUM];
-extern passupvector_t *pu_vector;
-
-cpu_t start;
-cpu_t finish;
-
-void load_new_proc(struct list_head *);
-
 void scheduler()
 {
     // Se un processo è in corso
