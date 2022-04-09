@@ -1,4 +1,5 @@
-#ifndef MAIN_H
+#ifndef MAIN_C
+#define MAIN_C
 #include "scheduler.h" 
 #include "exception.h"
 #include "interrupt.h"
