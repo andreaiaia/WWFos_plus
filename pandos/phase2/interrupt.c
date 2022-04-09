@@ -129,7 +129,7 @@ void nonTimerInterrupt(int line)
 
       if(device_num == 7)  // se è un terminale
       {
-        memaddr tmp_addr = (memaddr) DEV_REG_START + ((line - 3) * 0x80) + (device_num * 0x10);
+        memaddr tmp_addr = DEV_REG_START + ((line - 3) * 0x80) + (device_num * DEV_REG_SIZE);
 
         if( ((termreg_t*) tmp_addr)->transm_status == 1 )  // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
         {
