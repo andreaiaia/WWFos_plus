@@ -105,15 +105,13 @@ void Verhogen(int *semaddr)
 
 void Do_IO_Device(int *commandAddr, int commandValue)
 {
-    // Cerco il semaforo associato al processo corrente
-    int *semaddr = NULL;
     /**
      * Per trovare il dispositivo a cui è associato il
      * commandAddr ricevuto uso una macro che ho definito
      * in SYSCALL.h
      */
+    // TODO commentare bene per il tutor questo procedimento malato
     int dev_position = DEV_POSITION(commandAddr);
-
     // Distinguo fra terminal dev e tutti gli altri dispositivi
     if (dev_position > 63)
         dev_position -= 32;
