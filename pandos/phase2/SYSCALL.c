@@ -173,3 +173,8 @@ void Wait_For_Clock()
 {
     Passeren(&(device_sem[48]));
 }
+
+void Get_Support_Data()
+{
+    current_p->p_s.reg_v0 = (unsigned int)(current_p->p_supportStruct);
+}
