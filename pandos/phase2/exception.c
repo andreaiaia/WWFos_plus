@@ -51,7 +51,7 @@ void exceptionHandler()
         
         switch(stato_processo->reg_a0) { //so che non funziona, è un placeholder mi serve capire come prendere lo stato del processo chiamante
             case -1:
-            Create_Process(stato_processo->reg_a1, stato_processo->reg_a2, stato_processo->reg_a3);
+            Create_Process((state_t *)(stato_processo->reg_a1),(int)(stato_processo->reg_a2), (support_t *)(stato_processo->reg_a3));
             //? chiamata allo scheduler?
             break;
 
