@@ -60,7 +60,7 @@ void interruptHandler()
 
   for(int line = 1; line < 8; line++) // linea 0 da ignorare
   {
-    if( (cause_reg & CAUSE_IP(line)) == CAUSE_IP(line) ) 
+    if( (cause_reg & CAUSE_IP(line)) == CAUSE_IP(line) ) // !Modificare con versione del tutor
     {
       if(line == 1)
         PLTTimerInterrupt(line);
