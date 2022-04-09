@@ -108,22 +108,40 @@ void Passeren(int *semaddr)
 
 void Verhogen(int *semaddr)
 {
-    pcb_PTR first = headBlocked(semaddr);
+    // Avanzo il PC del processo corrente
+    current_p->p_s.pc_epc += WORDLEN;
 
-    if (first == NULL)
-        (*semaddr)++;
-    else
+    if (*semaddr == 1)
     {
-        outBlocked(first);
+        // Blocco il processo corrente
+        if (current_p->p_prio == 1)
+            insertProcQ(high_ready_q, current_p);
+        else
+            insertProcQ(low_ready_q, current_p);
+        current_p = NULL;
+    }
+    else if (headBlocked(semaddr) != NULL)
+    {
+        pcb_PTR first = removeBlocked(semaddr);
         if (first->p_prio == 1)
             insertProcQ(high_ready_q, first);
         else
             insertProcQ(low_ready_q, first);
-
-        // Avanzo il PC del processo corrente
-        current_p->p_s.pc_epc += WORDLEN;
     }
+    else
+        (*semaddr)++;
 }
+
+// void V()
+// {
+//     else if (queue.size() > 0)
+//     {
+//         int pid = queue.dequeue();
+//         wakeup(pid);
+//     }
+//     else
+//         value++;
+// }
 
 void Do_IO_Device(int *commandAddr, int commandValue)
 {
@@ -155,6 +173,5 @@ void Do_IO_Device(int *commandAddr, int commandValue)
 
 cpu_t Get_CPU_Time()
 {
-    // Ma vuole il tempo del processo corrente?
-    // Altrimenti come si fa a vedere chi ha chiamato la SYSCALL?
+    // current_p->p_time + tempo trascorso dall'ultimo time slice
 }
