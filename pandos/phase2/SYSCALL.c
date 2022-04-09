@@ -132,17 +132,6 @@ void Verhogen(int *semaddr)
         (*semaddr)++;
 }
 
-// void V()
-// {
-//     else if (queue.size() > 0)
-//     {
-//         int pid = queue.dequeue();
-//         wakeup(pid);
-//     }
-//     else
-//         value++;
-// }
-
 void Do_IO_Device(int *commandAddr, int commandValue)
 {
     /**
@@ -173,5 +162,9 @@ void Do_IO_Device(int *commandAddr, int commandValue)
 
 cpu_t Get_CPU_Time()
 {
+    cpu_t elapsed = 0;
     // current_p->p_time + tempo trascorso dall'ultimo time slice
+    STCK(elapsed);
+    // Calcolo e ritorno il tempo trascorso trascorso da quando il processo è attivo
+    current_p->p_s.reg_v0 = (unsigned int)(current_p->p_time + (elapsed - start));
 }
