@@ -6,4 +6,6 @@
 // Helpers collegati alla Terminate_Process
 pcb_PTR find_process(int pid);
 
+void Exterminate(pcb_PTR);
+
 #endif

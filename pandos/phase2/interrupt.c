@@ -129,7 +129,7 @@ void nonTimerInterrupt(int line)
   // ottengo il device's device register
   dtpreg_t *device_ptr = (dtpreg_t *)DEV_REG_ADDR(line, device_num); // !come per la riga 118, controlla il cast pag 28 manuale pops
   //* 2. salvare lo status code
-  unsigned int device_status = device_ptr->status;
+  // !unsigned int device_status = device_ptr->status; commentata solo per il make, poi ripristinala
   // 3. acknowledgement dell'interrupt
   device_ptr->command = 0; // TODO: trovare cosa scrivere come acknowledgement, 0 è placeholder
   // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
