@@ -87,7 +87,7 @@ void intervalTimerInterrupt(int line)
   // resetto lo pseudo-clock semaphore a 0
   device_sem[48] = 0;
   if (current_p)
-    LDST(BIOSDATAPAGE);
+    LDST((memaddr)BIOSDATAPAGE);
   else
     scheduler();
 }
