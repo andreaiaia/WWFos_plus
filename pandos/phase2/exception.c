@@ -64,15 +64,12 @@ void PassUpOrDie()
     /** Se la supportStruct è nulla si entra nella "Die"
      *  e si termina il processo corrente e tutta la sua progenie.
      * Altrimenti si esegue la "Pass Up" e si inoltra la richiesta
-     * al livello di supporto (prossima dare del progetto)
+     * al livello di supporto (prossima fase del progetto).
      */
     if (current_p->p_supportStruct == NULL)
         Terminate_Process(0);
     else
     {
-        // KERNELSTACK
-        // BIOSDATAPAGE
-        //  TODO copy the save exc state from the BIOSDATAPAGE to the sup_exceptState of the support struct of the currentP
         current_p->p_supportStruct.sup_exceptState = ((state_t *)BIOSDATAPAGE);
         LDCXT(current_p->p_s.reg_sp, current_p->p_s.status, current_p->p_s.pc_epc);
     }
