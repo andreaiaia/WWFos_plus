@@ -61,8 +61,9 @@ void exceptionHandler()
 
 void PassUpOrDie()
 {
-    /** Se la supportStruct è nulla si entra nella "Die"
-     *  e si termina il processo corrente e tutta la sua progenie.
+    /**
+     * Se la supportStruct è nulla si entra nella "Die"
+     * e si termina il processo corrente e tutta la sua progenie.
      * Altrimenti si esegue la "Pass Up" e si inoltra la richiesta
      * al livello di supporto (prossima fase del progetto).
      */
@@ -70,6 +71,8 @@ void PassUpOrDie()
         Terminate_Process(0);
     else
     {
+        // TODO Controllo per capire se si tratta di una generic except o di un
+        // page fault except e salvare le struct nel campo giusto di conseguenza
         current_p->p_supportStruct.sup_exceptState = ((state_t *)BIOSDATAPAGE);
         LDCXT(current_p->p_s.reg_sp, current_p->p_s.status, current_p->p_s.pc_epc);
     }
