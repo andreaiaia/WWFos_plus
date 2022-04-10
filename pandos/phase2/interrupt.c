@@ -67,7 +67,8 @@ void PLTTimerInterrupt(int line)
   // acknowledgement del PLT interrupt (4.1.4-pops)
   setTIMER(UNSIGNED_MAX_32_INT); // ricarico valore 0xFFFF.FFFF
   // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
-  state_t *processor_state = getSTATUS(); // ! secondo me (nick) qui va messo processor_state = ((state_t *)BIOSDATAPAGE)
+  //state_t *processor_state = getSTATUS(); // ! secondo me (nick) qui va messo processor_state = ((state_t *)BIOSDATAPAGE)
+  state_t *processor_state = ((state_t *)BIOSDATAPAGE);
   current_p->p_s = *processor_state;
   // metto current process in Ready Queue e da "running" lo metto in "ready"
   insertProcQ(low_ready_q, current_p);
