@@ -4,6 +4,7 @@
 #include "SYSCALL_helpers.h"
 #include "scheduler.h"
 #include "interrupt.h"
+#include "SYSCALL.h"
 
 void exceptionHandler();
 
