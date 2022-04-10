@@ -2,9 +2,8 @@
 #define SYSH_H
 #include "sistema.h"
 #include "scheduler.h"
-
+#include "SYSCALL.h"
 // Helpers collegati alla Terminate_Process
-void Exterminate(pcb_PTR process);
 pcb_PTR find_process(int pid);
 
 #endif

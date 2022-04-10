@@ -2,7 +2,7 @@
 #define SYSC_H
 #include "sistema.h"
 #include "scheduler.h"
-
+extern int device_sem[DEVSEM_NUM];
 /**
  * Per trovare il numero di device io passo l'indirizzo del commandAddr
  * Tolgo l'offset (DEV_REG_START) e così posso dividere per la dimensione

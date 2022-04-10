@@ -115,7 +115,7 @@ void nonTimerInterrupt(int line)
 
       if (device_num == 7) // se è un terminale
       {
-        termreg_t *device_ptr = DEV_REG_ADDR(line, device_num);
+       termreg_t *device_ptr = (termreg_t *)DEV_REG_ADDR(line, device_num); //!Fixata da me con un casta a termreg_t *, vedi se va bene alex
 
         if (device_ptr->transm_status == 1) // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
         {
@@ -127,7 +127,7 @@ void nonTimerInterrupt(int line)
   }
 
   // ottengo il device's device register
-  dtpreg_t *device_ptr = DEV_REG_ADDR(line, device_num); // pag. 28 manuale pops
+  dtpreg_t *device_ptr = (dtpreg_t *)DEV_REG_ADDR(line, device_num); // !come per la riga 118, controlla il cast pag 28 manuale pops
   //* 2. salvare lo status code
   unsigned int device_status = device_ptr->status;
   // 3. acknowledgement dell'interrupt
