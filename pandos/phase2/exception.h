@@ -7,5 +7,6 @@
 #include "SYSCALL.h"
 
 void exceptionHandler();
+extern void uTLB_RefillHandler();
 
 #endif
