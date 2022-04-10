@@ -139,7 +139,6 @@ void Do_IO_Device(int *commandAddr, int commandValue)
      * commandAddr ricevuto uso una macro che ho definito
      * in SYSCALL.h
      */
-    // TODO commentare bene per il tutor questo procedimento malato
     int dev_position = DEV_POSITION(commandAddr);
     // Distinguo fra terminal dev e tutti gli altri dispositivi
     if (dev_position > 63)
