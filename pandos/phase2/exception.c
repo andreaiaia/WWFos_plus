@@ -1,4 +1,4 @@
-#include "exception.h"
+/*#include "exception.h"
 
 #define stato_processo ((state_t *)BIOSDATAPAGE)
 //extern pcb_PTR current_p;
@@ -58,4 +58,4 @@ void exceptionHandler()
 
         }
     }
-}
+}*/
