@@ -87,7 +87,7 @@ void intervalTimerInterrupt(int line)
   // resetto lo pseudo-clock semaphore a 0
   device_sem[48] = 0;
   if (current_p)
-    LDST((memaddr)BIOSDATAPAGE);
+    LDST((STATE_PTR)BIOSDATAPAGE);
   else
     scheduler();
 }
@@ -139,5 +139,5 @@ void nonTimerInterrupt(int line)
   // 6. inserisco il pcb sbloccato nella ready queue, processo passa da "blocked" a "ready"
 
   // 7. ritorno controllo al processo corrente
-  LDST(0x0FFFF000);
+  LDST((STATE_PTR)BIOSDATAPAGE);
 }
