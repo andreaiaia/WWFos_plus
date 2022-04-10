@@ -138,5 +138,5 @@ void nonTimerInterrupt(int line)
   // 6. inserisco il pcb sbloccato nella ready queue, processo passa da "blocked" a "ready"
 
   // 7. ritorno controllo al processo corrente
-  LDST(0x0FFFF000);
+  LDST(BIOSDATAPAGE);
 }
