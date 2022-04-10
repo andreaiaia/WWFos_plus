@@ -1,6 +1,7 @@
-#ifndef SYSCALL_H
-#define SYSCALL_H
-#include "main.h"
+#ifndef SYSC_H
+#define SYSC_H
+#include "sistema.h"
+#include "scheduler.h"
 
 /**
  * Per trovare il numero di device io passo l'indirizzo del commandAddr
