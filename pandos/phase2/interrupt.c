@@ -82,7 +82,7 @@ void intervalTimerInterrupt(int line)
   // acknowledgement dell'interrupt (4.1.3-pops)
   LDIT(PSECOND); // carico Interval Timer con 100millisec
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
-  while (removeBlocked(device_sem[48]))
+  while (removeBlocked(&device_sem[48]))
     ;
   // resetto lo pseudo-clock semaphore a 0
   device_sem[48] = 0;
