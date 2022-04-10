@@ -4,4 +4,6 @@
 
 void exceptionHandler();
 
+void PassUpOrDie();
+
 #endif

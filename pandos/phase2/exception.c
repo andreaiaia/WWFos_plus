@@ -1,11 +1,11 @@
 #include "exception.h"
 #define stato_processo ((state_t *)BIOSDATAPAGE)
-//extern pcb_PTR current_p;
+// extern pcb_PTR current_p;
 //#define PROCESSO_CORRENTE current_p
-// CP0 Cause fields
-// #define CAUSE_EXCCODE_MASK     0x0000007c
-// #define CAUSE_EXCCODE_BIT      2
-// #define CAUSE_GET_EXCCODE(x)   (((x) & CAUSE_EXCCODE_MASK) >> CAUSE_EXCCODE_BIT)
+//  CP0 Cause fields
+//  #define CAUSE_EXCCODE_MASK     0x0000007c
+//  #define CAUSE_EXCCODE_BIT      2
+//  #define CAUSE_GET_EXCCODE(x)   (((x) & CAUSE_EXCCODE_MASK) >> CAUSE_EXCCODE_BIT)
 
 // ? chi chiama exceptionHandler() ? Dal manuale:
 // ? Therefore, if the Pass Up Vector was correctly initialized, fooBar will be
@@ -34,7 +34,7 @@ void exceptionHandler()
     else if (CAUSE_GET_EXCCODE(stato_processo->cause) == 8)
     {
         // !SYSCALL EXCEPTION HANDLER
-        // !Io lo farei in SYSCALL_helpers.c, così da avere un vero "syscall exception handler" come da manuale 
+        // !Io lo farei in SYSCALL_helpers.c, così da avere un vero "syscall exception handler" come da manuale
         // !a pagina 26 (9 del pdf)
         // ? Dal manuale abbiamo:
         // ? Furthermore, the processor state at the time of the exception
@@ -45,16 +45,35 @@ void exceptionHandler()
 
         // TODO FARE SOLO CONTROLLO SE IN KERNEL MODE E SE SYSCALL (A0 NEGATIVO) POI PASSARE CONTROLLO A
         // TODO syscallExceptionHandler(); da mettere in SYSCALL.c
-        if (stato_processo->status == STATUS_KUp) {
-
+        if (stato_processo->status == STATUS_KUp)
+        {
         }
-        
-        switch(stato_processo->reg_a0) { //so che non funziona, è un placeholder mi serve capire come prendere lo stato del processo chiamante
-            case -1:
-            Create_Process((state_t *)(stato_processo->reg_a1),(int)(stato_processo->reg_a2), (support_t *)(stato_processo->reg_a3));
+
+        switch (stato_processo->reg_a0)
+        { // so che non funziona, è un placeholder mi serve capire come prendere lo stato del processo chiamante
+        case -1:
+            Create_Process((state_t *)(stato_processo->reg_a1), (int)(stato_processo->reg_a2), (support_t *)(stato_processo->reg_a3));
             //? chiamata allo scheduler?
             break;
-
         }
+    }
+}
+
+void PassUpOrDie()
+{
+    /** Se la supportStruct è nulla si entra nella "Die"
+     *  e si termina il processo corrente e tutta la sua progenie.
+     * Altrimenti si esegue la "Pass Up" e si inoltra la richiesta
+     * al livello di supporto (prossima dare del progetto)
+     */
+    if (current_p->p_supportStruct == NULL)
+        Terminate_Process(0);
+    else
+    {
+        // KERNELSTACK
+        // BIOSDATAPAGE
+        //  TODO copy the save exc state from the BIOSDATAPAGE to the sup_exceptState of the support struct of the currentP
+        current_p->p_supportStruct.sup_exceptState = ((state_t *)BIOSDATAPAGE);
+        LDCXT(current_p->p_s.reg_sp, current_p->p_s.status, current_p->p_s.pc_epc);
     }
 }
