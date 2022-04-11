@@ -59,7 +59,7 @@ void intervalTimerInterrupt(int line)
   // acknowledgement dell'interrupt (4.1.3-pops)
   LDIT(PSECOND); // carico Interval Timer con 100millisec
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
-  while (removeBlocked(&device_sem[48]));
+  while (removeBlocked(device_sem[DEVSEM_NUM-1]));
   // resetto lo pseudo-clock semaphore a 0
   device_sem[DEVSEM_NUM-1] = 0;
   if (current_p)
@@ -95,6 +95,7 @@ void nonTimerInterrupt(int line)
 
         if (device_ptr->transm_status == 1) // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
         {
+          // TODO risolvere sta merda
           // ? al momento non so come usare questa info, per ora ho capito come distinguere la priorità
         }
       }
@@ -104,12 +105,14 @@ void nonTimerInterrupt(int line)
 
   // ottengo il device's device register
   dtpreg_t *device_ptr = (dtpreg_t *)DEV_REG_ADDR(line, device_num); 
-  //* 2. salvare lo status code
+  // 2. salvare lo status code
   unsigned int device_status_code = device_ptr->status; 
   // 3. acknowledgement dell'interrupt
   device_ptr->command = 0; // TODO: trovare cosa scrivere come acknowledgement, 0 è placeholder
   // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
-
+  int sem_num = 8*(line-3) + line==7 ? 2*device_num : device_num;  // calcolo numero semaforo associato a device
+  // TODO nel calcolo di sem_num manca distinguere il caso di ricezione/trasmissione nel terminale
+  Verhogen(device_sem[sem_num]);
   // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
 
   // 6. inserisco il pcb sbloccato nella ready queue, processo passa da "blocked" a "ready"
