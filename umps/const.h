@@ -77,7 +77,7 @@
 
 /* device common COMMAND codes */
 #define RESET           0
-#define ACK             1p
+#define ACK             1
 
 /* Memory related constants */
 #define KSEG0           0x00000000

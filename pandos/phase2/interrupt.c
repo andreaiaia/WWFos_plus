@@ -78,40 +78,37 @@ void nonTimerInterrupt(int line)
   //* 1. calcolare indirizzo del device's device register
   // calcolo il n° del device che ha generato l'interrupt nella line
 
-  unsigned int mask = 1;
-  int i = 0;
-  int flag = 0;
+  unsigned int mask = 1, i = 0, flag = 0;
+  int terminal_request = 0;  // salva il tipo di richiesta del terminale, 0->trasmission, 1->receive
 
-  while ((i < 8) & (flag == 0)) // scorro device
-  {
-    if (bitmap_word & mask) // device con interrupt pending trovato
+    while ((i < 8) & (flag == 0)) // scorro devices della line
     {
-      device_num = i; // salvo n° device
-      flag = 1;
-
-      if (device_num == 7) // se è un terminale
+      if (bitmap_word & mask) // device con interrupt pending trovato
       {
-       termreg_t *device_ptr = (termreg_t *)DEV_REG_ADDR(line, device_num);
+        device_num = i; // salvo n° device
+        flag = 1;
 
-        if (device_ptr->transm_status == 1) // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
+        if (line == 7)   // se è un terminale 
         {
-          // TODO risolvere sta merda
-          // ? al momento non so come usare questa info, per ora ho capito come distinguere la priorità
+          termreg_t *terminal_ptr = (termreg_t *)DEV_REG_ADDR(line, device_num);  // calcolo indirizzo terminale
+
+          if (terminal_ptr->transm_status == READY) // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
+            terminal_request = 0;
+          else
+            terminal_request = 1;
         }
       }
+      mask = mask * 2;
     }
-    mask = mask * 2;
-  }
-
+  
   // ottengo il device's device register
   dtpreg_t *device_ptr = (dtpreg_t *)DEV_REG_ADDR(line, device_num); 
   // 2. salvare lo status code
   unsigned int device_status_code = device_ptr->status; 
   // 3. acknowledgement dell'interrupt
-  device_ptr->command = 0; // TODO: trovare cosa scrivere come acknowledgement, 0 è placeholder
+  device_ptr->command = ACK; 
   // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
-  int sem_num = 8*(line-3) + line==7 ? 2*device_num : device_num;  // calcolo numero semaforo associato a device
-  // TODO nel calcolo di sem_num manca distinguere il caso di ricezione/trasmissione nel terminale
+  int sem_num = 8*(line-3) + (line==7 ? 2*device_num : device_num) + terminal_request;  // calcolo numero semaforo associato a device
   Verhogen(device_sem[sem_num]);
   // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
 
