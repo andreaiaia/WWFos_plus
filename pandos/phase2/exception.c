@@ -6,20 +6,20 @@
 #include "exception.h"
 
 void exceptionHandler() {
-    if (CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) == 0)
+    if (DECODED_EXCEPTION_CAUSE == 0)
     {
         interruptHandler();
     }
-    else if ((CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) >= 1) && (CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) <= 3))
+    else if ((DECODED_EXCEPTION_CAUSE >= 1) && (DECODED_EXCEPTION_CAUSE <= 3))
     {
         PassUpOrDie(PGFAULTEXCEPT);
     }
-    else if (((CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) >= 4) && (CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) <= 7)) || ((CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) >= 9) && (CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) <= 12)))
+    else if (((DECODED_EXCEPTION_CAUSE >= 4) && (DECODED_EXCEPTION_CAUSE <= 7)) || ((DECODED_EXCEPTION_CAUSE >= 9) && (DECODED_EXCEPTION_CAUSE <= 12)))
     {
         PassUpOrDie(GENERALEXCEPT);
     }
-    else if (CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) == 8)
+    else if (DECODED_EXCEPTION_CAUSE == 8)
     {
-        syscallExceptionHandler(STATO_PROCESSO->reg_a0);        
+        syscallExceptionHandler(REG_A0_ST);        
     }
 }
