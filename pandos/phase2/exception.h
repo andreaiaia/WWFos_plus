@@ -10,6 +10,7 @@
 #define INCREMENTO_PC current_p->p_s.pc_epc += WORDLEN
 #define STATO_PROCESSO ((state_t *)BIOSDATAPAGE)
 
+//FUNCTION PROTOTYPES
 void exceptionHandler();
 void PassUpOrDie(int excCode);
 
