@@ -1,4 +1,4 @@
-#include "SYSCALL_helpers.h"
+#include "helpers.h"
 
 // Funzioni Helper della SYSCALL Terminate_Process
 //* "Do you know how you make someone into a Dalek? Subtract Love, add Anger." ~ Steven Moffat
@@ -60,4 +60,9 @@ void copy_state(state_t *original, state_t *dest)
     {
         dest->gpr[i] = original->gpr[i];
     }
+}
+
+void post_syscall() {
+    LDST((state_t *)BIOSDATAPAGE);
+    scheduler();
 }

@@ -1,5 +1,5 @@
-#ifndef SYSH_H
-#define SYSH_H
+#ifndef HELP_H
+#define HELP_H
 #include "sistema.h"
 #include "scheduler.h"
 #include "SYSCALL.h"
@@ -11,4 +11,6 @@ void copy_state(state_t *original, state_t *dest);
 pcb_PTR find_process(int pid);
 void Exterminate(pcb_PTR);
 
+// Helpers collegati al post syscall event (exception handler)
+void post_syscall();
 #endif

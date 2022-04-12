@@ -2,7 +2,7 @@
 #define INT_H
 #include "sistema.h"
 #include "scheduler.h"
-#include "SYSCALL_helpers.h"
+#include "helpers.h"
 
 // Importo le variabili globali necessarie
 extern int device_sem[DEVSEM_NUM];

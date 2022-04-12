@@ -2,7 +2,7 @@
 #define SYSC_H
 #include "sistema.h"
 #include "scheduler.h"
-#include "SYSCALL_helpers.h"
+#include "helpers.h"
 extern int device_sem[DEVSEM_NUM];
 /**
  * Per trovare il numero di device io passo l'indirizzo del commandAddr

@@ -46,52 +46,52 @@ void exceptionHandler()
 
             case -1:
                 Create_Process((state_t *)(STATO_PROCESSO->reg_a1), (int)(STATO_PROCESSO->reg_a2), (support_t *)(STATO_PROCESSO->reg_a3));
-                scheduler();
+                post_syscall();
                 break;
 
             case -2:
                 Terminate_Process((int)(STATO_PROCESSO->reg_a1));                
-                scheduler();
+                post_syscall();
                 break;
 
             case -3:
                 Passeren((int *)(STATO_PROCESSO->reg_a1));                
-                scheduler();
+                post_syscall();
                 break;
 
             case -4:
                 Verhogen((int *)(STATO_PROCESSO->reg_a1));                
-                scheduler();
+                post_syscall();
                 break;
 
             case -5:
                 Do_IO_Device((int *)(STATO_PROCESSO->reg_a1), (int)STATO_PROCESSO->reg_a2);               
-                scheduler();
+                post_syscall();
                 break;
 
             case -6:
                 Get_CPU_Time();                
-                scheduler();
+                post_syscall();
                 break;
 
             case -7:
                 Wait_For_Clock();                
-                scheduler();
+                post_syscall();
                 break;
 
             case -8:
                 Get_Support_Data();                
-                scheduler();
+                post_syscall();
                 break;
 
             case -9:
                 Get_Process_Id((int)(STATO_PROCESSO->reg_a1));                
-                scheduler();
+                post_syscall();
                 break;
 
             case -10:
                 Yield();             
-                scheduler();
+                post_syscall();
                 break;
             }
         }
