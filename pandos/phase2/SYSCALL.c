@@ -19,7 +19,6 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
          */
         statep->reg_v0 = NOPROC;
         // statep->pc_epc += WORDLEN;
-        LDST(statep);
     }
     else
     {
@@ -49,7 +48,6 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
     // Vedi sopra
     // statep->pc_epc += WORDLEN;
     statep->reg_v0 = OK;
-    LDST(statep);
 }
 
 // Se il secondo parametro e’ 0 il bersaglio e’ il processo invocante
