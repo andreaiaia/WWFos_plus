@@ -66,3 +66,88 @@ void post_syscall() {
     LDST((state_t *)BIOSDATAPAGE);
     scheduler();
 }
+
+void syscallExceptionHandler(unsigned int syscallCode) {
+    // * Verifico che il processo chiamante della Syscall sia in KernelMode e che abbia chiamato una Syscall (rega0 < 0)
+    if (STATO_PROCESSO->status == STATUS_KUp && syscallCode < 0) {
+        INCREMENTO_PC;    
+        // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
+        switch (syscallCode) {
+            case -1:
+                Create_Process((state_t *)(REG_A1_ST), (int)(REG_A2_ST), (support_t *)(REG_A3_ST));
+                post_syscall();
+                break;
+
+            case -2:
+                Terminate_Process((int)(REG_A1_ST));                
+                post_syscall();
+                break;
+
+            case -3:
+                Passeren((int *)(REG_A1_ST));                
+                post_syscall();
+                break;
+
+            case -4:
+                Verhogen((int *)(REG_A1_ST));                
+                post_syscall();
+                break;
+
+            case -5:
+                Do_IO_Device((int *)(REG_A1_ST), (int)REG_A2_ST);               
+                post_syscall();
+                break;
+
+            case -6:
+                Get_CPU_Time();                
+                post_syscall();
+                break;
+
+            case -7:
+                Wait_For_Clock();                
+                post_syscall();
+                break;
+
+            case -8:
+                Get_Support_Data();                
+                post_syscall();
+                break;
+
+            case -9:
+                Get_Process_Id((int)(REG_A1_ST));                
+                post_syscall();
+                break;
+
+            case -10:
+                Yield();             
+                post_syscall();
+                break;
+        }
+    }
+        // * Caso in cui la syscall non è lecita 
+        else
+            // ! Secondo me qui devo solo fare una terminate_process(0)
+            PassUpOrDie(0);
+}
+
+void PassUpOrDie(int excCode) {
+    /**
+     * Se la supportStruct è nulla si entra nella "Die"
+     * e si termina il processo corrente e tutta la sua progenie.
+     * Altrimenti si esegue la "Pass Up" e si inoltra la richiesta
+     * al livello di supporto (prossima fase del progetto).
+     */
+    if (current_p->p_supportStruct == NULL)
+        Terminate_Process(0);
+    else
+    {
+        // Copio l'exception state
+        copy_state((state_t *)BIOSDATAPAGE, &(current_p->p_supportStruct->sup_exceptState[excCode]));
+        // Copio stack pointer, status e program counter
+        unsigned int stack_ptr = current_p->p_supportStruct->sup_exceptContext[excCode].stackPtr;
+        unsigned int status = current_p->p_supportStruct->sup_exceptContext[excCode].status;
+        unsigned int pc = current_p->p_supportStruct->sup_exceptContext[excCode].pc;
+        // Carico il nuovo contesto nel processo attivo
+        LDCXT(stack_ptr, status, pc);
+    }
+}

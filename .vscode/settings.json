@@ -10,7 +10,9 @@
         "syscall_helpers.h": "c",
         "main.h": "c",
         "scheduler.h": "c",
-        "exception.h": "c"
+        "exception.h": "c",
+        "interrupt.h": "c",
+        "sistema.h": "c"
     },
     "peacock.color": "#1857a4",
     "workbench.colorCustomizations": {
