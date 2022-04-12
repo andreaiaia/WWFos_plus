@@ -1,6 +1,5 @@
 #include "exception.h"
 
-#define stato_processo ((state_t *)BIOSDATAPAGE)
 // extern pcb_PTR current_p;
 //#define PROCESSO_CORRENTE current_p
 //  CP0 Cause fields
@@ -50,52 +49,62 @@ void exceptionHandler()
 
             case -1:
                 Create_Process((state_t *)(stato_processo->reg_a1), (int)(stato_processo->reg_a2), (support_t *)(stato_processo->reg_a3));
-                //? chiamata allo scheduler?
+                incremento_pc;
+                scheduler();
                 break;
 
             case -2:
                 Terminate_Process((int)(stato_processo->reg_a1));
-                //? chiamata allo scheduler?
+                incremento_pc;
+                scheduler();
                 break;
 
             case -3:
                 Passeren((int *)(stato_processo->reg_a1));
-                //? chiamata allo scheduler?
+                incremento_pc;
+                scheduler();
                 break;
 
             case -4:
                 Verhogen((int *)(stato_processo->reg_a1));
-                //? chiamata allo scheduler?
+                incremento_pc;
+                scheduler();
                 break;
 
             case -5:
                 Do_IO_Device((int *)(stato_processo->reg_a1), (int)stato_processo->reg_a2);
-                //? chiamata allo scheduler?
+                incremento_pc;
+                scheduler();
                 break;
 
             case -6:
                 Get_CPU_Time();
-                //? chiamata allo scheduler?
+                incremento_pc;
+                scheduler();
                 break;
 
             case -7:
                 Wait_For_Clock();
-                //? chiamata allo scheduler?
+                incremento_pc;
+                scheduler();
                 break;
 
             case -8:
                 Get_Support_Data();
-                //? chiamata allo scheduler?
+                incremento_pc;
+                scheduler();
                 break;
 
             case -9:
                 Get_Process_Id((int *)(stato_processo->reg_a1));
-                //? chiamata allo scheduler?
+                incremento_pc;
+                scheduler();
                 break;
 
             case -10:
                 Yield();
-                //? chiamata allo scheduler?
+                incremento_pc;
+                scheduler();
                 break;
             }
         }

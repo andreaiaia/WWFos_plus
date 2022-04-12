@@ -8,7 +8,8 @@
 
 void exceptionHandler();
 extern void uTLB_RefillHandler();
-
+#define incremento_pc current_p->p_s.pc_epc += WORDLEN
+#define stato_processo ((state_t *)BIOSDATAPAGE)
 void PassUpOrDie(int excCode);
 
 #endif
