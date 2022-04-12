@@ -1,13 +1,9 @@
 #include "exception.h"
 
-// extern pcb_PTR current_p;
-//#define PROCESSO_CORRENTE current_p
 //  CP0 Cause fields
 //  #define CAUSE_EXCCODE_MASK     0x0000007c
 //  #define CAUSE_EXCCODE_BIT      2
 //  #define CAUSE_GET_EXCCODE(x)   (((x) & CAUSE_EXCCODE_MASK) >> CAUSE_EXCCODE_BIT)
-
-// ? chi chiama exceptionHandler() ? Dal manuale:
 // ? Therefore, if the Pass Up Vector was correctly initialized, fooBar will be
 // ? called (with a fresh stack) after each and every exception, exclusive of TLBRefill
 // ? events.
@@ -110,7 +106,8 @@ void exceptionHandler()
         }
         // Caso in cui la syscall non è lecita
         else
-            PassUpOrDie(NULL);
+            // ! Secondo me qui devo solo fare una terminate_process(0)
+            PassUpOrDie(0);
     }
 }
 
