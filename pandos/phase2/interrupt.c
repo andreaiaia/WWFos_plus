@@ -93,15 +93,17 @@ void nonTimerInterrupt(int line)
           termreg_t *terminal_ptr = (termreg_t *)DEV_REG_ADDR(line, device_num);  // calcolo indirizzo terminale
 
           if (terminal_ptr->transm_status == READY) // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
-            terminal_request = 0;
-          else
             terminal_request = 1;
+          else
+            terminal_request = 0;
+            // TODO Controllare la correttezza del calcolo del sem_num
         }
       }
       mask = mask * 2;
     }
   
   // ottengo il device's device register
+  // ! correggere il tipo del puntatore a seconda di terminale o non terminale
   dtpreg_t *device_ptr = (dtpreg_t *)DEV_REG_ADDR(line, device_num); 
   // 2. salvare lo status code
   unsigned int device_status_code = device_ptr->status; 
@@ -110,6 +112,7 @@ void nonTimerInterrupt(int line)
   // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
   int sem_num = 8*(line-3) + (line==7 ? 2*device_num : device_num) + terminal_request;  // calcolo numero semaforo associato a device
   Verhogen(device_sem[sem_num]);
+  Do_IO_Device();
   // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
 
   // 6. inserisco il pcb sbloccato nella ready queue, processo passa da "blocked" a "ready"
@@ -117,6 +120,7 @@ void nonTimerInterrupt(int line)
   // 7. ritorno controllo al processo corrente
   LDST((STATE_PTR)BIOSDATAPAGE);
 }
+
 
 
 void copyProcessorState(state_t *destination, state_t *source)
