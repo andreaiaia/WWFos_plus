@@ -18,20 +18,20 @@ void exceptionHandler()
     // * Exception code 1-3 -> Si passa il controllo al TLB exception handler
     // * Exception code 4-7 9-12 -> Si passa il controllo al Program Trap exception handler
     // * Exception code 8 -> Si passa il controllo al SYSCALL exception handler
-    if (CAUSE_GET_EXCCODE(stato_processo->cause) == 0)
+    if (CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) == 0)
     {
         interruptHandler();
     }
-    else if ((CAUSE_GET_EXCCODE(stato_processo->cause) >= 1) && (CAUSE_GET_EXCCODE(stato_processo->cause) <= 3))
+    else if ((CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) >= 1) && (CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) <= 3))
     {
         PassUpOrDie(PGFAULTEXCEPT);
     }
-    else if (((CAUSE_GET_EXCCODE(stato_processo->cause) >= 4) && (CAUSE_GET_EXCCODE(stato_processo->cause) <= 7)) || ((CAUSE_GET_EXCCODE(stato_processo->cause) >= 9) && (CAUSE_GET_EXCCODE(stato_processo->cause) <= 12)))
+    else if (((CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) >= 4) && (CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) <= 7)) || ((CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) >= 9) && (CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) <= 12)))
     {
 
         PassUpOrDie(GENERALEXCEPT);
     }
-    else if (CAUSE_GET_EXCCODE(stato_processo->cause) == 8)
+    else if (CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) == 8)
     {
         // !SYSCALL EXCEPTION HANDLER
         // !a pagina 26 (9 del pdf)
@@ -41,69 +41,69 @@ void exceptionHandler()
         // ? of the BIOS Data Page (0x0FFF.F000).
         // TODO se il processo che fa una syscall è in kernel mode E
         // TODO a0 contiene un numero negativo, syscall, altrimenti i guess termina
-        if (stato_processo->status == STATUS_KUp && stato_processo->reg_a0 < 0)
+        if (STATO_PROCESSO->status == STATUS_KUp && STATO_PROCESSO->reg_a0 < 0)
         {
             // Caso in cui la syscall è lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
-            switch (stato_processo->reg_a0)
+            switch (STATO_PROCESSO->reg_a0)
             {
 
             case -1:
-                Create_Process((state_t *)(stato_processo->reg_a1), (int)(stato_processo->reg_a2), (support_t *)(stato_processo->reg_a3));
-                incremento_pc;
+                Create_Process((state_t *)(STATO_PROCESSO->reg_a1), (int)(STATO_PROCESSO->reg_a2), (support_t *)(STATO_PROCESSO->reg_a3));
+                INCREMENTO_PC;
                 scheduler();
                 break;
 
             case -2:
-                Terminate_Process((int)(stato_processo->reg_a1));
-                incremento_pc;
+                Terminate_Process((int)(STATO_PROCESSO->reg_a1));
+                INCREMENTO_PC;
                 scheduler();
                 break;
 
             case -3:
-                Passeren((int *)(stato_processo->reg_a1));
-                incremento_pc;
+                Passeren((int *)(STATO_PROCESSO->reg_a1));
+                INCREMENTO_PC;
                 scheduler();
                 break;
 
             case -4:
-                Verhogen((int *)(stato_processo->reg_a1));
-                incremento_pc;
+                Verhogen((int *)(STATO_PROCESSO->reg_a1));
+                INCREMENTO_PC;
                 scheduler();
                 break;
 
             case -5:
-                Do_IO_Device((int *)(stato_processo->reg_a1), (int)stato_processo->reg_a2);
-                incremento_pc;
+                Do_IO_Device((int *)(STATO_PROCESSO->reg_a1), (int)STATO_PROCESSO->reg_a2);
+                INCREMENTO_PC;
                 scheduler();
                 break;
 
             case -6:
                 Get_CPU_Time();
-                incremento_pc;
+                INCREMENTO_PC;
                 scheduler();
                 break;
 
             case -7:
                 Wait_For_Clock();
-                incremento_pc;
+                INCREMENTO_PC;
                 scheduler();
                 break;
 
             case -8:
                 Get_Support_Data();
-                incremento_pc;
+                INCREMENTO_PC;
                 scheduler();
                 break;
 
             case -9:
-                Get_Process_Id((int)(stato_processo->reg_a1));
-                incremento_pc;
+                Get_Process_Id((int)(STATO_PROCESSO->reg_a1));
+                INCREMENTO_PC;
                 scheduler();
                 break;
 
             case -10:
                 Yield();
-                incremento_pc;
+                INCREMENTO_PC;
                 scheduler();
                 break;
             }
