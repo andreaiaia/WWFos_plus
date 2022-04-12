@@ -34,8 +34,7 @@ void exceptionHandler()
     }
     else if (CAUSE_GET_EXCCODE(stato_processo->cause) == 8)
     {
-        // !SYSCALL EXCEPTION HANDLER
-        // !Io lo farei in SYSCALL_helpers.c, così da avere un vero "syscall exception handler" come da manuale
+        // !SYSCALL EXCEPTION HANDLER        
         // !a pagina 26 (9 del pdf)
         // ? Dal manuale abbiamo:
         // ? Furthermore, the processor state at the time of the exception
@@ -43,9 +42,6 @@ void exceptionHandler()
         // ? of the BIOS Data Page (0x0FFF.F000).
         // TODO se il processo che fa una syscall è in kernel mode E
         // TODO a0 contiene un numero negativo, syscall, altrimenti i guess termina
-
-        // TODO FARE SOLO CONTROLLO SE IN KERNEL MODE E SE SYSCALL (A0 NEGATIVO) POI PASSARE CONTROLLO A
-        // TODO syscallExceptionHandler(); da mettere in SYSCALL.c
         if (stato_processo->status == STATUS_KUp && stato_processo->reg_a0 < 0)
         {
             //Caso in cui la syscall è lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
