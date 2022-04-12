@@ -24,12 +24,12 @@ void exceptionHandler()
     }
     else if ((CAUSE_GET_EXCCODE(stato_processo->cause) >= 1) && (CAUSE_GET_EXCCODE(stato_processo->cause) <= 3))
     {
-        uTLB_RefillHandler();
+        PassUpOrDie(PGFAULTEXCEPT);
     }
     else if (((CAUSE_GET_EXCCODE(stato_processo->cause) >= 4) && (CAUSE_GET_EXCCODE(stato_processo->cause) <= 7)) || ((CAUSE_GET_EXCCODE(stato_processo->cause) >= 9) && (CAUSE_GET_EXCCODE(stato_processo->cause) <= 12)))
     {
-        // TODO NICK LO FA
-        // ! Program trap exception handler
+       
+        PassUpOrDie(GENERALEXCEPT);
     }
     else if (CAUSE_GET_EXCCODE(stato_processo->cause) == 8)
     {
