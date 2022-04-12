@@ -13,6 +13,6 @@ void Exterminate(pcb_PTR);
 
 // * Helpers collegati al post syscall event (exception handler)
 
-// Incremento PC e Caricamento BIOSDATAPAGE nel registro della CPU.
+// Caricamento BIOSDATAPAGE nel registro della CPU e call allo scheduler()
 void post_syscall();
 #endif
