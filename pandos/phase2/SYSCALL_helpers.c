@@ -47,3 +47,17 @@ pcb_PTR find_process(int pid)
     // Ricerca infruttuosa
     return NULL;
 }
+
+void copy_state(state_t *original, state_t *dest)
+{
+    dest->entry_hi = original->entry_hi;
+    dest->cause = original->cause;
+    dest->status = original->status;
+    dest->pc_epc = original->pc_epc;
+    dest->hi = original->hi;
+    dest->lo = original->lo;
+    for (int i = 0; i < STATE_GPR_LEN; i++)
+    {
+        dest->gpr[i] = original->gpr[i];
+    }
+}
