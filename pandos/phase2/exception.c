@@ -39,67 +39,58 @@ void exceptionHandler()
         // TODO a0 contiene un numero negativo, syscall, altrimenti i guess termina
         if (STATO_PROCESSO->status == STATUS_KUp && STATO_PROCESSO->reg_a0 < 0)
         {
+            INCREMENTO_PC;    
             // Caso in cui la syscall è lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
             switch (STATO_PROCESSO->reg_a0)
             {
 
             case -1:
                 Create_Process((state_t *)(STATO_PROCESSO->reg_a1), (int)(STATO_PROCESSO->reg_a2), (support_t *)(STATO_PROCESSO->reg_a3));
-                INCREMENTO_PC;
                 scheduler();
                 break;
 
             case -2:
-                Terminate_Process((int)(STATO_PROCESSO->reg_a1));
-                INCREMENTO_PC;
+                Terminate_Process((int)(STATO_PROCESSO->reg_a1));                
                 scheduler();
                 break;
 
             case -3:
-                Passeren((int *)(STATO_PROCESSO->reg_a1));
-                INCREMENTO_PC;
+                Passeren((int *)(STATO_PROCESSO->reg_a1));                
                 scheduler();
                 break;
 
             case -4:
-                Verhogen((int *)(STATO_PROCESSO->reg_a1));
-                INCREMENTO_PC;
+                Verhogen((int *)(STATO_PROCESSO->reg_a1));                
                 scheduler();
                 break;
 
             case -5:
-                Do_IO_Device((int *)(STATO_PROCESSO->reg_a1), (int)STATO_PROCESSO->reg_a2);
-                INCREMENTO_PC;
+                Do_IO_Device((int *)(STATO_PROCESSO->reg_a1), (int)STATO_PROCESSO->reg_a2);               
                 scheduler();
                 break;
 
             case -6:
-                Get_CPU_Time();
-                INCREMENTO_PC;
+                Get_CPU_Time();                
                 scheduler();
                 break;
 
             case -7:
-                Wait_For_Clock();
-                INCREMENTO_PC;
+                Wait_For_Clock();                
                 scheduler();
                 break;
 
             case -8:
-                Get_Support_Data();
-                INCREMENTO_PC;
+                Get_Support_Data();                
                 scheduler();
                 break;
 
             case -9:
-                Get_Process_Id((int)(STATO_PROCESSO->reg_a1));
-                INCREMENTO_PC;
+                Get_Process_Id((int)(STATO_PROCESSO->reg_a1));                
                 scheduler();
                 break;
 
             case -10:
-                Yield();
-                INCREMENTO_PC;
+                Yield();             
                 scheduler();
                 break;
             }
