@@ -15,10 +15,15 @@
 
 // ! Helpers generici
 
+// * Copia lo stato di una cpu
 void copy_state(state_t *original, state_t *dest);
 
 // ! Helpers collegati alla Terminate_Process
+
+// * Verifica se un processo è presente nella coda (sia bassa che altra priorità)
 pcb_PTR find_process(int pid);
+
+//* "Do you know how you make someone into a Dalek? Subtract Love, add Anger." ~ Steven Moffat
 void Exterminate(pcb_PTR);
 
 // ! Helpers collegati all'exception handler
