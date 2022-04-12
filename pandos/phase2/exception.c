@@ -34,7 +34,7 @@ void exceptionHandler()
     }
     else if (CAUSE_GET_EXCCODE(stato_processo->cause) == 8)
     {
-        // !SYSCALL EXCEPTION HANDLER        
+        // !SYSCALL EXCEPTION HANDLER
         // !a pagina 26 (9 del pdf)
         // ? Dal manuale abbiamo:
         // ? Furthermore, the processor state at the time of the exception
@@ -44,62 +44,64 @@ void exceptionHandler()
         // TODO a0 contiene un numero negativo, syscall, altrimenti i guess termina
         if (stato_processo->status == STATUS_KUp && stato_processo->reg_a0 < 0)
         {
-            //Caso in cui la syscall è lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
-            switch (stato_processo->reg_a0) { 
-                
-                case -1:
-                    Create_Process((state_t *)(stato_processo->reg_a1), (int)(stato_processo->reg_a2), (support_t *)(stato_processo->reg_a3));
-                    //? chiamata allo scheduler?
-                    break;
+            // Caso in cui la syscall è lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
+            switch (stato_processo->reg_a0)
+            {
 
-                case -2:
-                    Terminate_Process((int)(stato_processo->reg_a1));
-                    //? chiamata allo scheduler?
+            case -1:
+                Create_Process((state_t *)(stato_processo->reg_a1), (int)(stato_processo->reg_a2), (support_t *)(stato_processo->reg_a3));
+                //? chiamata allo scheduler?
                 break;
 
-                case -3:
-                    Passeren((int *)(stato_processo->reg_a1));
-                    //? chiamata allo scheduler?
+            case -2:
+                Terminate_Process((int)(stato_processo->reg_a1));
+                //? chiamata allo scheduler?
                 break;
 
-                case -4:
-                    Verhogen((int *)(stato_processo->reg_a1));
-                    //? chiamata allo scheduler?
+            case -3:
+                Passeren((int *)(stato_processo->reg_a1));
+                //? chiamata allo scheduler?
                 break;
 
-                case -5:
-                    Do_IO_Device((int *)(stato_processo->reg_a1),(int)stato_processo->reg_a2);
-                    //? chiamata allo scheduler?
-                break;        
-
-                case -6:
-                    Get_CPU_Time();
-                    //? chiamata allo scheduler?
-                break; 
-
-                case -7:
-                    Wait_For_Clock();
-                    //? chiamata allo scheduler?
+            case -4:
+                Verhogen((int *)(stato_processo->reg_a1));
+                //? chiamata allo scheduler?
                 break;
 
-                case -8:
-                    Get_Support_Data();
-                    //? chiamata allo scheduler?
+            case -5:
+                Do_IO_Device((int *)(stato_processo->reg_a1), (int)stato_processo->reg_a2);
+                //? chiamata allo scheduler?
                 break;
 
-                case -9:
-                    Get_Process_Id((int *)(stato_processo->reg_a1));
-                    //? chiamata allo scheduler?
+            case -6:
+                Get_CPU_Time();
+                //? chiamata allo scheduler?
                 break;
 
-                case -10:
-                    Yield();
-                    //? chiamata allo scheduler?
-                break;                               
+            case -7:
+                Wait_For_Clock();
+                //? chiamata allo scheduler?
+                break;
+
+            case -8:
+                Get_Support_Data();
+                //? chiamata allo scheduler?
+                break;
+
+            case -9:
+                Get_Process_Id((int *)(stato_processo->reg_a1));
+                //? chiamata allo scheduler?
+                break;
+
+            case -10:
+                Yield();
+                //? chiamata allo scheduler?
+                break;
             }
-        } 
-        //Caso in cui la syscall non è lecita
-        else PassUpOrDie(NULL);
+        }
+        // Caso in cui la syscall non è lecita
+        else
+            PassUpOrDie(NULL);
     }
 }
 
@@ -116,7 +118,7 @@ void PassUpOrDie(int excCode)
     else
     {
         // Copio l'exception state
-        copy_state(current_p->p_supportStruct->sup_exceptState, ((state_t *)BIOSDATAPAGE));
+        copy_state(current_p->p_supportStruct->sup_exceptState[excCode], ((state_t *)BIOSDATAPAGE));
         // Copio stack pointer, status e program counter
         int stack_ptr = current_p->p_supportStruct->sup_exceptContext[excCode].stackPtr;
         int status = current_p->p_supportStruct->sup_exceptContext[excCode].status;
