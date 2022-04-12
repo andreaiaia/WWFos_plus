@@ -46,17 +46,64 @@ void exceptionHandler()
 
         // TODO FARE SOLO CONTROLLO SE IN KERNEL MODE E SE SYSCALL (A0 NEGATIVO) POI PASSARE CONTROLLO A
         // TODO syscallExceptionHandler(); da mettere in SYSCALL.c
-        if (stato_processo->status == STATUS_KUp)
+        if (stato_processo->status == STATUS_KUp && stato_processo->reg_a0 < 0)
         {
-        }
+            //Caso in cui la syscall è lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
+            switch (stato_processo->reg_a0) { 
+                
+                case -1:
+                    Create_Process((state_t *)(stato_processo->reg_a1), (int)(stato_processo->reg_a2), (support_t *)(stato_processo->reg_a3));
+                    //? chiamata allo scheduler?
+                    break;
 
-        switch (stato_processo->reg_a0)
-        { // so che non funziona, è un placeholder mi serve capire come prendere lo stato del processo chiamante
-        case -1:
-            Create_Process((state_t *)(stato_processo->reg_a1), (int)(stato_processo->reg_a2), (support_t *)(stato_processo->reg_a3));
-            //? chiamata allo scheduler?
-            break;
-        }
+                case -2:
+                    Terminate_Process((int)(stato_processo->reg_a1));
+                    //? chiamata allo scheduler?
+                break;
+
+                case -3:
+                    Passeren((int *)(stato_processo->reg_a1));
+                    //? chiamata allo scheduler?
+                break;
+
+                case -4:
+                    Verhogen((int *)(stato_processo->reg_a1));
+                    //? chiamata allo scheduler?
+                break;
+
+                case -5:
+                    Do_IO_Device((int *)(stato_processo->reg_a1),(int)stato_processo->reg_a2);
+                    //? chiamata allo scheduler?
+                break;        
+
+                case -6:
+                    Get_CPU_Time();
+                    //? chiamata allo scheduler?
+                break; 
+
+                case -7:
+                    Wait_For_Clock();
+                    //? chiamata allo scheduler?
+                break;
+
+                case -8:
+                    Get_Support_Data();
+                    //? chiamata allo scheduler?
+                break;
+
+                case -9:
+                    Get_Process_Id((int *)(stato_processo->reg_a1));
+                    //? chiamata allo scheduler?
+                break;
+
+                case -10:
+                    Yield();
+                    //? chiamata allo scheduler?
+                break;                               
+            }
+        } 
+        //Caso in cui la syscall non è lecita
+        else PassUpOrDie(NULL);
     }
 }
 

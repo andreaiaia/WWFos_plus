@@ -29,8 +29,10 @@ void Do_IO_Device(int *commandAddr, int commandValue);
 
 void Get_CPU_Time();
 
+void Get_Process_Id(int parent); 
 void Wait_For_Clock();
 
 void Get_Support_Data();
+void Yield();
 
 #endif
