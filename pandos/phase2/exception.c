@@ -96,7 +96,7 @@ void exceptionHandler()
                 break;
 
             case -9:
-                Get_Process_Id((int *)(stato_processo->reg_a1));
+                Get_Process_Id((int)(stato_processo->reg_a1));
                 incremento_pc;
                 scheduler();
                 break;
