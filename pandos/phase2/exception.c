@@ -28,7 +28,7 @@ void exceptionHandler()
     }
     else if (((CAUSE_GET_EXCCODE(stato_processo->cause) >= 4) && (CAUSE_GET_EXCCODE(stato_processo->cause) <= 7)) || ((CAUSE_GET_EXCCODE(stato_processo->cause) >= 9) && (CAUSE_GET_EXCCODE(stato_processo->cause) <= 12)))
     {
-       
+
         PassUpOrDie(GENERALEXCEPT);
     }
     else if (CAUSE_GET_EXCCODE(stato_processo->cause) == 8)
@@ -127,7 +127,7 @@ void PassUpOrDie(int excCode)
     else
     {
         // Copio l'exception state
-        copy_state(current_p->p_supportStruct->sup_exceptState[excCode], ((state_t *)BIOSDATAPAGE));
+        copy_state(&(current_p->p_supportStruct->sup_exceptState[excCode]), ((state_t *)BIOSDATAPAGE));
         // Copio stack pointer, status e program counter
         int stack_ptr = current_p->p_supportStruct->sup_exceptContext[excCode].stackPtr;
         int status = current_p->p_supportStruct->sup_exceptContext[excCode].status;

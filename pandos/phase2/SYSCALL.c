@@ -18,7 +18,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
          * di SYSCALL, quindi ripasso il controllo al chiamante
          */
         statep->reg_v0 = NOPROC;
-        statep->pc_epc += WORDLEN;
+        // statep->pc_epc += WORDLEN;
         LDST(statep);
     }
     else
@@ -47,7 +47,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
     }
 
     // Vedi sopra
-    statep->pc_epc += WORDLEN;
+    // statep->pc_epc += WORDLEN;
     statep->reg_v0 = OK;
     LDST(statep);
 }
