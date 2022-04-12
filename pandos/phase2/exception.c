@@ -115,11 +115,11 @@ void PassUpOrDie(int excCode)
     else
     {
         // Copio l'exception state
-        copy_state(&(current_p->p_supportStruct->sup_exceptState[excCode]), ((state_t *)BIOSDATAPAGE));
+        copy_state((state_t *)BIOSDATAPAGE, &(current_p->p_supportStruct->sup_exceptState[excCode]));
         // Copio stack pointer, status e program counter
-        int stack_ptr = current_p->p_supportStruct->sup_exceptContext[excCode].stackPtr;
-        int status = current_p->p_supportStruct->sup_exceptContext[excCode].status;
-        int pc = current_p->p_supportStruct->sup_exceptContext[excCode].pc;
+        unsigned int stack_ptr = current_p->p_supportStruct->sup_exceptContext[excCode].stackPtr;
+        unsigned int status = current_p->p_supportStruct->sup_exceptContext[excCode].status;
+        unsigned int pc = current_p->p_supportStruct->sup_exceptContext[excCode].pc;
         // Carico il nuovo contesto nel processo attivo
         LDCXT(stack_ptr, status, pc);
     }
