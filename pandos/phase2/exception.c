@@ -72,14 +72,12 @@ void PassUpOrDie(int excCode)
         Terminate_Process(0);
     else
     {
-        if (excCode ==)
-            // TODO Controllo per capire se si tratta di una generic except o di un
-            // Copio l'exception state
-            copy_state(current_p->p_supportStruct.sup_exceptState, ((state_t *)BIOSDATAPAGE));
+        // Copio l'exception state
+        copy_state(current_p->p_supportStruct.sup_exceptState, ((state_t *)BIOSDATAPAGE));
         // Copio stack pointer, status e program counter
-        int stack_ptr = current_p->p_supportStruct->sup_exceptContext[PGFAULTEXCEPT].stackPtr;
-        int status = current_p->p_supportStruct->sup_exceptContext[PGFAULTEXCEPT].status;
-        int pc = current_p->p_supportStruct->sup_exceptContext[PGFAULTEXCEPT].pc;
+        int stack_ptr = current_p->p_supportStruct->sup_exceptContext[excCode].stackPtr;
+        int status = current_p->p_supportStruct->sup_exceptContext[excCode].status;
+        int pc = current_p->p_supportStruct->sup_exceptContext[excCode].pc;
         // Carico il nuovo contesto nel processo attivo
         LDCXT(stack_ptr, status, pc);
     }
