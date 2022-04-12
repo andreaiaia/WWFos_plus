@@ -15,7 +15,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         /**
          * Imposto il valore di fallimento nel registro v0
          * E avanto il PC di una WORDLEN per evitare il loop
-         * di SYSCALL quando ripasso il controllo al chiamante
+         * di SYSCALL, quindi ripasso il controllo al chiamante
          */
         statep->reg_v0 = NOPROC;
         statep->pc_epc += WORDLEN;
