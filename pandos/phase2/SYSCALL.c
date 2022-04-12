@@ -1,6 +1,9 @@
 #include "SYSCALL.h"
 
 // TODO Rimuovere le chiamate allo scheduler e metterle nello switch case del SYSCALL Handler
+// TODO AVANZARE IL PROGRAM COUNTER NELL'EXCEPTION HANDLER
+// il comando per farlo è
+// current_p->p_s.pc_epc += WORDLEN;
 
 void Create_Process(state_t *statep, int prio, support_t *supportp)
 {
@@ -53,17 +56,11 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
 void Terminate_Process(int pid)
 {
     if (pid == 0)
-    {
         Exterminate(current_p); // Termina il current_p
-        // Avanzo il PC
-        current_p->p_s.pc_epc += WORDLEN;
-    }
     else
     {
         pcb_PTR to_terminate = find_process(pid);
         Exterminate(to_terminate); // Termina il proc con il corrispondente pid
-        // Avanzo il PC
-        current_p->p_s.pc_epc += WORDLEN;
     }
 }
 
@@ -77,8 +74,6 @@ void Passeren(int *semaddr)
         insertBlocked(semaddr, current_p);
         // Blocco il processo corrente
         current_p = NULL;
-        // Avanzo il PC
-        current_p->p_s.pc_epc += WORDLEN;
         // Chiamo lo scheduler
         scheduler();
     }
@@ -91,12 +86,8 @@ void Passeren(int *semaddr)
         else
             insertProcQ(low_ready_q, first);
 
-        // Avanzo il PC del processo corrente
-        current_p->p_s.pc_epc += WORDLEN;
         // Blocco il processo corrente
         current_p = NULL;
-        // Avanzo il PC
-        current_p->p_s.pc_epc += WORDLEN;
         // Chiamo lo scheduler
         scheduler();
     }
@@ -108,9 +99,6 @@ void Passeren(int *semaddr)
 
 void Verhogen(int *semaddr)
 {
-    // Avanzo il PC del processo corrente
-    current_p->p_s.pc_epc += WORDLEN;
-
     if (*semaddr == 1)
     {
         // Blocco il processo corrente
@@ -154,9 +142,6 @@ void Do_IO_Device(int *commandAddr, int commandValue)
 
     // Abilito gli Interrupt nel processo corrente
     current_p->p_s.status = (current_p->p_s.status) | IEPON | IMON;
-
-    // Avanzo il PC per evitare il SYSCALL loop
-    current_p->p_s.pc_epc += WORDLEN;
 }
 
 void Get_CPU_Time()
