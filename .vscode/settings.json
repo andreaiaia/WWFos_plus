@@ -8,7 +8,8 @@
         "asl.h": "c",
         "regdef.h": "c",
         "syscall_helpers.h": "c",
-        "main.h": "c"
+        "main.h": "c",
+        "scheduler.h": "c"
     },
     "peacock.color": "#1857a4",
     "workbench.colorCustomizations": {
