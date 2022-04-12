@@ -5,13 +5,13 @@
 #include "SYSCALL.h"
 
 // ! HANDY DEFINES
-#define DECODED_EXCEPTION_CAUSE CAUSE_GET_EXCCODE(((state_t *)BIOSDATAPAGE)->cause)
 #define INCREMENTO_PC current_p->p_s.pc_epc += WORDLEN
-#define STATO_PROCESSO ((state_t *)BIOSDATAPAGE) // * Shortcut per il Saved Status Process.
-#define REG_A0_ST ((state_t *)BIOSDATAPAGE)->reg_a0 // * Shortcut per il reg_a0 che contiene il syscallCode.
-#define REG_A1_ST ((state_t *)BIOSDATAPAGE)->reg_a1 // * Shortcut per il reg_a1 che contiene il 1° parametro da passare alla syscall.
-#define REG_A2_ST ((state_t *)BIOSDATAPAGE)->reg_a2 // * Shortcut per il reg_a2 che contiene il 2° parametro da passare alla syscall.
-#define REG_A3_ST ((state_t *)BIOSDATAPAGE)->reg_a3 // * Shortcut per il reg_a3 che contiene il 3° parametro da passare alla syscall.
+#define STATO_PROCESSO ((state_t *)BIOSDATAPAGE) // * Macro per il Saved Status Process.
+#define DECODED_EXCEPTION_CAUSE CAUSE_GET_EXCCODE(STATO_PROCESSO->cause) //* Macro per l'exception code
+#define REG_A0_ST STATO_PROCESSO->reg_a0 // * Macro per il reg_a0 che contiene il syscallCode.
+#define REG_A1_ST STATO_PROCESSO->reg_a1 // * Macro per il reg_a1 che contiene il 1° parametro da passare alla syscall.
+#define REG_A2_ST STATO_PROCESSO->reg_a2 // * Macro per il reg_a2 che contiene il 2° parametro da passare alla syscall.
+#define REG_A3_ST STATO_PROCESSO->reg_a3 // * Macro per il reg_a3 che contiene il 3° parametro da passare alla syscall.
 
 // ! Helpers generici
 
