@@ -45,7 +45,7 @@ void PLTTimerInterrupt(int line)
   // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
   state_t *processor_state = ((state_t *)BIOSDATAPAGE);
 
-  copyProcessorState(&current_p->p_s, processor_state);
+  copy_state(&current_p->p_s, processor_state);
 
   // metto current process in Ready Queue e da "running" lo metto in "ready"
   insertProcQ(low_ready_q, current_p);
@@ -59,9 +59,10 @@ void intervalTimerInterrupt(int line)
   // acknowledgement dell'interrupt (4.1.3-pops)
   LDIT(PSECOND); // carico Interval Timer con 100millisec
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
-  while (removeBlocked(device_sem[DEVSEM_NUM-1]));
+  while (removeBlocked(device_sem[DEVSEM_NUM - 1]))
+    ;
   // resetto lo pseudo-clock semaphore a 0
-  device_sem[DEVSEM_NUM-1] = 0;
+  device_sem[DEVSEM_NUM - 1] = 0;
   if (current_p)
     LDST((STATE_PTR)BIOSDATAPAGE);
   else
@@ -79,38 +80,38 @@ void nonTimerInterrupt(int line)
   // calcolo il n° del device che ha generato l'interrupt nella line
 
   unsigned int mask = 1, i = 0, flag = 0;
-  int terminal_request = 0;  // salva il tipo di richiesta del terminale, 0->trasmission, 1->receive
+  int terminal_request = 0; // salva il tipo di richiesta del terminale, 0->trasmission, 1->receive
 
-    while ((i < 8) & (flag == 0)) // scorro devices della line
+  while ((i < 8) & (flag == 0)) // scorro devices della line
+  {
+    if (bitmap_word & mask) // device con interrupt pending trovato
     {
-      if (bitmap_word & mask) // device con interrupt pending trovato
+      device_num = i; // salvo n° device
+      flag = 1;
+
+      if (line == 7) // se è un terminale
       {
-        device_num = i; // salvo n° device
-        flag = 1;
+        termreg_t *terminal_ptr = (termreg_t *)DEV_REG_ADDR(line, device_num); // calcolo indirizzo terminale
 
-        if (line == 7)   // se è un terminale 
-        {
-          termreg_t *terminal_ptr = (termreg_t *)DEV_REG_ADDR(line, device_num);  // calcolo indirizzo terminale
-
-          if (terminal_ptr->transm_status == READY) // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
-            terminal_request = 1;
-          else
-            terminal_request = 0;
-            // TODO Controllare la correttezza del calcolo del sem_num
-        }
+        if (terminal_ptr->transm_status == READY) // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
+          terminal_request = 1;
+        else
+          terminal_request = 0;
+        // TODO Controllare la correttezza del calcolo del sem_num
       }
-      mask = mask * 2;
     }
-  
+    mask = mask * 2;
+  }
+
   // ottengo il device's device register
   // ! correggere il tipo del puntatore a seconda di terminale o non terminale
-  dtpreg_t *device_ptr = (dtpreg_t *)DEV_REG_ADDR(line, device_num); 
+  dtpreg_t *device_ptr = (dtpreg_t *)DEV_REG_ADDR(line, device_num);
   // 2. salvare lo status code
-  unsigned int device_status_code = device_ptr->status; 
+  unsigned int device_status_code = device_ptr->status;
   // 3. acknowledgement dell'interrupt
-  device_ptr->command = ACK; 
+  device_ptr->command = ACK;
   // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
-  int sem_num = 8*(line-3) + (line==7 ? 2*device_num : device_num) + terminal_request;  // calcolo numero semaforo associato a device
+  int sem_num = 8 * (line - 3) + (line == 7 ? 2 * device_num : device_num) + terminal_request; // calcolo numero semaforo associato a device
   Verhogen(device_sem[sem_num]);
   Do_IO_Device();
   // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
@@ -119,21 +120,4 @@ void nonTimerInterrupt(int line)
 
   // 7. ritorno controllo al processo corrente
   LDST((STATE_PTR)BIOSDATAPAGE);
-}
-
-
-
-void copyProcessorState(state_t *destination, state_t *source)
-{
-  destination->cause = source->cause;
-  destination->entry_hi = source->entry_hi;
-  destination->hi = source->hi;
-  destination->lo = source->lo;
-  destination->pc_epc = source->pc_epc;
-  destination->status = source->status;
-
-  for(int i=0; i < STATE_GPR_LEN; i++)
-  {
-    destination->gpr[i] = source->gpr[i];
-  }
 }
