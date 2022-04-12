@@ -9,6 +9,6 @@
 void exceptionHandler();
 extern void uTLB_RefillHandler();
 
-void PassUpOrDie();
+void PassUpOrDie(int excCode);
 
 #endif
