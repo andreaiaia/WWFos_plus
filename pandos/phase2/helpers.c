@@ -75,27 +75,27 @@ void syscallExceptionHandler(unsigned int syscallCode) {
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
         switch (syscallCode) {
             case -1:
-                Create_Process((state_t *)(REG_A1_ST), (int)(REG_A2_ST), (support_t *)(REG_A3_ST));
+                Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
                 post_syscall();
                 break;
 
             case -2:
-                Terminate_Process((int)(REG_A1_ST));                
+                Terminate_Process((int)(REG_A1_SS));                
                 post_syscall();
                 break;
 
             case -3:
-                Passeren((int *)(REG_A1_ST));                
+                Passeren((int *)(REG_A1_SS));                
                 post_syscall();
                 break;
 
             case -4:
-                Verhogen((int *)(REG_A1_ST));                
+                Verhogen((int *)(REG_A1_SS));                
                 post_syscall();
                 break;
 
             case -5:
-                Do_IO_Device((int *)(REG_A1_ST), (int)REG_A2_ST);               
+                Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS);               
                 post_syscall();
                 break;
 
@@ -115,7 +115,7 @@ void syscallExceptionHandler(unsigned int syscallCode) {
                 break;
 
             case -9:
-                Get_Process_Id((int)(REG_A1_ST));                
+                Get_Process_Id((int)(REG_A1_SS));                
                 post_syscall();
                 break;
 

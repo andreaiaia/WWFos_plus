@@ -15,6 +15,6 @@ void exceptionHandler() {
     }
     // * Exception code 8 -> Si passa il controllo al SYSCALL exception handler
     else if (DECODED_EXCEPTION_CAUSE == 8) {
-        syscallExceptionHandler(REG_A0_ST);        
+        syscallExceptionHandler(REG_A0_SS);        
     }
 }
