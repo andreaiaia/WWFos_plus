@@ -72,6 +72,7 @@ void syscallExceptionHandler(unsigned int syscallCode) {
     if (STATO_PROCESSO->status == STATUS_KUp && syscallCode < 0) {
         INCREMENTO_PC;    
         // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
+        // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
         switch (syscallCode) {
             case -1:
                 Create_Process((state_t *)(REG_A1_ST), (int)(REG_A2_ST), (support_t *)(REG_A3_ST));
