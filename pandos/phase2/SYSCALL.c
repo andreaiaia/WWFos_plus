@@ -24,7 +24,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
     else
     {
         // Imposto i campi secondo i parametri ricevuti
-        copy_state(&(child->p_s), statep); // ! Controlla Andre, l'ho sistemata coi tipo, statep è già puntatore e child-Zp_s non è puntatore
+        copy_state(&(child->p_s), statep); // ! Controlla Andre, l'ho sistemata coi tipi, statep è già puntatore e child-Zp_s non è puntatore
         child->p_prio = prio;
         child->p_supportStruct = supportp;
         /**
