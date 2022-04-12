@@ -24,7 +24,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
     else
     {
         // Imposto i campi secondo i parametri ricevuti
-        child->p_s = *statep;
+        copy_state(child->p_s, *statep);
         child->p_prio = prio;
         child->p_supportStruct = supportp;
         /**
