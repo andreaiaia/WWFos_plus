@@ -59,8 +59,7 @@ void intervalTimerInterrupt(int line)
   // acknowledgement dell'interrupt (4.1.3-pops)
   LDIT(PSECOND); // carico Interval Timer con 100millisec
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
-  while (removeBlocked(device_sem[DEVSEM_NUM - 1]))
-    ;
+  while (removeBlocked(&(device_sem[DEVSEM_NUM - 1])));
   // resetto lo pseudo-clock semaphore a 0
   device_sem[DEVSEM_NUM - 1] = 0;
   if (current_p)
@@ -75,6 +74,7 @@ void nonTimerInterrupt(int line)
   int device_num = 0;
   devregarea_t *device_regs = (devregarea_t *)RAMBASEADDR; // tutor: nel campo deviceRegs->interrupt_dev trovate la interrupt device bitmap
   unsigned int bitmap_word = device_regs->interrupt_dev[line - 3];
+  unsigned int device_status_code = 0;
 
   //* 1. calcolare indirizzo del device's device register
   // calcolo il n° del device che ha generato l'interrupt nella line
@@ -93,31 +93,32 @@ void nonTimerInterrupt(int line)
       {
         termreg_t *terminal_ptr = (termreg_t *)DEV_REG_ADDR(line, device_num); // calcolo indirizzo terminale
 
-        if (terminal_ptr->transm_status == READY) // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
+        if (terminal_ptr->transm_status == READY){ // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
+          // 2. salvare lo status code
+          device_status_code = terminal_ptr->transm_status;  
+          // 3. acknowledgement dell'interrupt
+          terminal_ptr->transm_command = ACK;
           terminal_request = 1;
-        else
+        }
+        else{
+          device_status_code = terminal_ptr->recv_status; 
+          terminal_ptr->recv_command = ACK;
           terminal_request = 0;
-        // TODO Controllare la correttezza del calcolo del sem_num
+        }
+      }
+      else{ // non-terminale
+        dtpreg_t *device_ptr = (dtpreg_t *)DEV_REG_ADDR(line, device_num);
+        device_status_code = device_ptr->status;
+        device_ptr->command = ACK;
       }
     }
     mask = mask * 2;
   }
-
-  // ottengo il device's device register
-  // ! correggere il tipo del puntatore a seconda di terminale o non terminale
-  dtpreg_t *device_ptr = (dtpreg_t *)DEV_REG_ADDR(line, device_num);
-  // 2. salvare lo status code
-  unsigned int device_status_code = device_ptr->status;
-  // 3. acknowledgement dell'interrupt
-  device_ptr->command = ACK;
-  // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)
+  // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)  + 6. inserisco il pcb sbloccato nella ready queue, processo passa da "blocked" a "ready"
   int sem_num = 8 * (line - 3) + (line == 7 ? 2 * device_num : device_num) + terminal_request; // calcolo numero semaforo associato a device
-  Verhogen(device_sem[sem_num]);
-  Do_IO_Device();
+  Verhogen(&(device_sem[sem_num]));
   // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
-
-  // 6. inserisco il pcb sbloccato nella ready queue, processo passa da "blocked" a "ready"
-
+  //  TODO  tutor:"Al processo che e' stato rimosso dalla coda dei processi bloccati del semaforo corrispondente al dispositivo"
   // 7. ritorno controllo al processo corrente
   LDST((STATE_PTR)BIOSDATAPAGE);
 }
