@@ -146,7 +146,7 @@ void PassUpOrDie(int excCode) {
     else
     {
         // Copio l'exception state
-        copy_state((state_t *)BIOSDATAPAGE, &(current_p->p_supportStruct->sup_exceptState[excCode]));
+        copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_supportStruct->sup_exceptState[excCode]));
         // Copio stack pointer, status e program counter
         unsigned int stack_ptr = current_p->p_supportStruct->sup_exceptContext[excCode].stackPtr;
         unsigned int status = current_p->p_supportStruct->sup_exceptContext[excCode].status;
