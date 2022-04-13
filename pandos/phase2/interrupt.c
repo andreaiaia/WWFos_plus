@@ -25,7 +25,7 @@ void interruptHandler()
   // TODO controllare tramite la mask se l'interrupt è lecito
   for (int line = 1; line < 8; line++) // linea 0 da ignorare
   {
-    if (((state_t *)BIOSDATAPAGE)->cause & CAUSE_IP(line))
+    if (getCAUSE() & CAUSE_IP(line))
     {
       if (line == 1)
         PLTTimerInterrupt(line);
@@ -43,9 +43,9 @@ void PLTTimerInterrupt(int line)
   // acknowledgement del PLT interrupt (4.1.4-pops)
   setTIMER(UNSIGNED_MAX_32_INT); // ricarico valore 0xFFFF.FFFF
   // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
-  state_t *processor_state = ((state_t *)BIOSDATAPAGE);
+  state_t *processor_state = PROCESSOR_SAVED_STATE;
 
-  copy_state(&current_p->p_s, processor_state);
+  copy_state(processor_state, &current_p->p_s);
 
   // metto current process in Ready Queue e da "running" lo metto in "ready"
   insertProcQ(low_ready_q, current_p);
