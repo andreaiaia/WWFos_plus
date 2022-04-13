@@ -63,13 +63,13 @@ void copy_state(state_t *original, state_t *dest)
 }
 
 void post_syscall() {
-    LDST((state_t *)BIOSDATAPAGE);
+    LDST(((state_t *)BIOSDATAPAGE)->status);
     scheduler();
 }
 
 void syscallExceptionHandler(unsigned int syscallCode) {
     // * Verifico che il processo chiamante della Syscall sia in KernelMode e che abbia chiamato una Syscall (rega0 < 0)
-    if (STATO_PROCESSO->status == STATUS_KUp && syscallCode < 0) {
+    if (((STATO_PROCESSO->status & STATUS_KUp) == STATUS_KUp) && syscallCode < 0) {
         INCREMENTO_PC;    
         // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
