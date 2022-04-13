@@ -127,8 +127,11 @@ void syscallExceptionHandler(unsigned int syscallCode) {
     }
         // * Caso in cui la syscall non è lecita 
         else
-            // ! Secondo me qui devo solo fare una terminate_process(0)
-            PassUpOrDie(0);
+        // * Imposto il bit RI
+        (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
+        // * Simulo una TRAP
+        PassUpOrDie(GENERALEXCEPT);
+
 }
 
 void PassUpOrDie(int excCode) {
