@@ -128,7 +128,7 @@ void syscallExceptionHandler(unsigned int syscallCode) {
         // * Caso in cui la syscall non è lecita 
         else
         // * Imposto il bit RI
-        (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
+        PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
         // * Simulo una TRAP
         PassUpOrDie(GENERALEXCEPT);
 
