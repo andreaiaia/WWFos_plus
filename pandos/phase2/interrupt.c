@@ -118,7 +118,8 @@ void nonTimerInterrupt(int line)
   int sem_num = 8 * (line - 3) + (line == 7 ? 2 * device_num : device_num) + terminal_request; // calcolo numero semaforo associato a device
   Verhogen(&(device_sem[sem_num]));
   // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
-  //  TODO  tutor:"Al processo che e' stato rimosso dalla coda dei processi bloccati del semaforo corrispondente al dispositivo"
+  //? pcb_PTR tmp = Verhogen();
+  //? pcb_andrea->p_s.reg_v0 = device_status_code;
   // 7. ritorno controllo al processo corrente
   LDST((STATE_PTR)BIOSDATAPAGE);
 }
