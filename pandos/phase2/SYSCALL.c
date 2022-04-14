@@ -64,9 +64,10 @@ void Passeren(int *semaddr)
         return;
     else if (*semaddr == 0)
     {
+        // Blocco il processo corrente
         // Aggiungo il processo corrente alla coda del semd
         insertBlocked(semaddr, current_p);
-        // Blocco il processo corrente
+        soft_count++;
         current_p = NULL;
         // Chiamo lo scheduler
         scheduler();
@@ -74,6 +75,7 @@ void Passeren(int *semaddr)
     else if (headBlocked(semaddr) != NULL)
     {
         pcb_PTR first = removeBlocked(semaddr);
+        soft_count--;
 
         if (first->p_prio == 1)
             insertProcQ(high_ready_q, first);
@@ -107,6 +109,7 @@ pcb_PTR Verhogen(int *semaddr)
     else if (headBlocked(semaddr) != NULL)
     {
         pcb_PTR first = removeBlocked(semaddr);
+        soft_count--;
         if (first->p_prio == 1)
             insertProcQ(high_ready_q, first);
         else
@@ -144,7 +147,7 @@ void Do_IO_Device(int *commandAddr, int commandValue)
 
 void Get_CPU_Time()
 {
-    cpu_t elapsed = 0;
+    cpu_t elapsed;
     // current_p->p_time + tempo trascorso dall'ultimo time slice
     STCK(elapsed);
     // Calcolo e ritorno il tempo trascorso trascorso da quando il processo è attivo

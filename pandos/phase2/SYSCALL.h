@@ -14,7 +14,7 @@
 #define DEV_POSITION(T) ((int)T - DEV_REG_START) / (DEV_REG_SIZE / 2)
 
 /* Richiamo le variabili globali necessarie */
-extern int device_sem[DEVSEM_NUM];
+extern int proc_count, soft_count, device_sem[DEVSEM_NUM];
 extern pcb_PTR current_p, yielded;
 extern struct list_head *all_processes;
 
