@@ -1,6 +1,23 @@
 #include "helpers.h"
 
-// Funzioni Helper della SYSCALL Terminate_Process
+/* Helpers Generici */
+
+void copy_state(state_t *original, state_t *dest)
+{
+    dest->entry_hi = original->entry_hi;
+    dest->cause = original->cause;
+    dest->status = original->status;
+    dest->pc_epc = original->pc_epc;
+    dest->hi = original->hi;
+    dest->lo = original->lo;
+    for (int i = 0; i < STATE_GPR_LEN; i++)
+    {
+        dest->gpr[i] = original->gpr[i];
+    }
+}
+
+/* Helpers per le SYSCALL */
+
 //* "Do you know how you make someone into a Dalek? Subtract Love, add Anger." ~ Steven Moffat
 void Exterminate(pcb_PTR process)
 {
@@ -46,20 +63,6 @@ pcb_PTR find_process(int pid)
     }
     // Ricerca infruttuosa
     return NULL;
-}
-
-void copy_state(state_t *original, state_t *dest)
-{
-    dest->entry_hi = original->entry_hi;
-    dest->cause = original->cause;
-    dest->status = original->status;
-    dest->pc_epc = original->pc_epc;
-    dest->hi = original->hi;
-    dest->lo = original->lo;
-    for (int i = 0; i < STATE_GPR_LEN; i++)
-    {
-        dest->gpr[i] = original->gpr[i];
-    }
 }
 
 void post_syscall() {
@@ -133,6 +136,8 @@ void syscallExceptionHandler(unsigned int syscallCode) {
         PassUpOrDie(GENERALEXCEPT);
 
 }
+
+/* PassUpOrDie */
 
 void PassUpOrDie(int excCode) {
     /**

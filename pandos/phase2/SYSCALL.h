@@ -28,7 +28,7 @@ void Terminate_Process(int pid);
 
 // SYSCALL sui semafori
 void Passeren(int *semaddr);
-void Verhogen(int *semaddr);
+pcb_PTR Verhogen(int *semaddr);
 
 void Do_IO_Device(int *commandAddr, int commandValue);
 

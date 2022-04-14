@@ -95,8 +95,10 @@ void Passeren(int *semaddr)
     }
 }
 
-void Verhogen(int *semaddr)
+pcb_PTR Verhogen(int *semaddr)
 {
+    pcb_PTR first = NULL;
+
     if (*semaddr == 1)
     {
         // Blocco il processo corrente
@@ -116,6 +118,8 @@ void Verhogen(int *semaddr)
     }
     else
         (*semaddr)++;
+
+    return first;
 }
 
 void Do_IO_Device(int *commandAddr, int commandValue)
