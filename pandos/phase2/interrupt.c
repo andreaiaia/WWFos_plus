@@ -112,9 +112,7 @@ void nonTimerInterrupt(int line)
   // calcolo semaforo associato a device
   int sem_num = 8 * (line - 3) + (line == 7 ? 2 * device_num : device_num) + terminal_request; 
   
-  Verhogen(&(device_sem[sem_num]));
-  //? pcb_PTR tmp = Verhogen();
-  //? pcb_andrea->p_s.reg_v0 = device_status_code;
+  pcb_PTR released = Verhogen(&(device_sem[sem_num]));
 
   LDST((STATE_PTR)BIOSDATAPAGE);
   scheduler();
