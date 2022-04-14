@@ -63,7 +63,7 @@ void Passeren(int *semaddr)
         return;
     else if (*semaddr == 0)
     {
-        // Blocco il processo corrente
+        //* Blocco il processo corrente
         // Aggiungo il processo corrente alla coda del semd
         insertBlocked(semaddr, current_p);
         soft_count++;

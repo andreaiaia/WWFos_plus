@@ -52,17 +52,25 @@ pcb_PTR find_process(int pid)
 
     if (current_p->p_pid == pid)
         return current_p;
-    else
+    else if (!emptyProcQ(high_ready_q))
     {
-        // Cerco direttamente nella lista di tutti i processi vivi
-        list_for_each_entry(iter, all_processes, p_list)
+        list_for_each_entry(iter, high_ready_q, p_list)
+        {
+            if (iter->p_pid == pid)
+                return iter;
+        }
+    }
+    else if (!emptyProcQ(low_ready_q))
+    {
+        list_for_each_entry(iter, high_ready_q, p_list)
         {
             if (iter->p_pid == pid)
                 return iter;
         }
     }
     // Ricerca infruttuosa
-    return NULL;
+    else
+        return NULL;
 }
 
 void post_syscall()
@@ -81,7 +89,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
         switch (syscallCode)
         {
-        case CREATEPROCESS: 
+        case CREATEPROCESS:
             Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
             post_syscall();
             break;
@@ -130,7 +138,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
             Yield();
             post_syscall();
             break;
-        
+
         default:
             // * Imposto il bit RI
             PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
@@ -143,8 +151,8 @@ void syscallExceptionHandler(unsigned int syscallCode)
     else
         // * Imposto il bit RI
         PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
-        // * Simulo una TRAP
-        PassUpOrDie(GENERALEXCEPT);
+    // * Simulo una TRAP
+    PassUpOrDie(GENERALEXCEPT);
 }
 
 /* PassUpOrDie */
