@@ -50,7 +50,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
     statep->reg_v0 = OK;
 }
 
-// Se il secondo parametro e’ 0 il bersaglio e’ il processo invocante
+// Se il secondo parametro è 0 il bersaglio è il processo invocante
 void Terminate_Process(int pid)
 {
     if (pid == 0)
