@@ -4,9 +4,8 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
 {
     // Creo il processo figlio
     pcb_PTR child = allocPcb();
-    insertProcQ(all_processes, child)
-        // Se non è stato possibile allocare, ritorno errore
-        if (child == NULL)
+    // Se non è stato possibile allocare, ritorno errore
+    if (child == NULL)
     {
         /**
          * Imposto il valore di fallimento nel registro v0
