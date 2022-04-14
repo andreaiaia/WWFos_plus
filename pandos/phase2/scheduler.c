@@ -30,6 +30,7 @@ void scheduler()
             // E disabilito il tutto il resto (quindi anche il PLT)
             unsigned int waitingStatus = IECON | IMON;
             setSTATUS(waitingStatus);
+            current_p = NULL;
 
             WAIT(); // Aspettando un interrupt
         }
