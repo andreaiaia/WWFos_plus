@@ -17,7 +17,7 @@ struct list_head *high_ready_q;
 // Queue dei processi a bassa priorità
 struct list_head *low_ready_q;
 // Array di tutti i processi creati
-pcb_PTR *all_processes[MAXPROC];
+pcb_PTR all_processes[MAXPROC];
 
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
 pcb_PTR current_p, yielded;
