@@ -49,17 +49,24 @@ void Exterminate(pcb_PTR process)
 pcb_PTR find_process(int pid)
 {
     pcb_PTR iter = NULL;
-    // Cerco nella lista dei processi ad alta prio
-    list_for_each_entry(iter, high_ready_q, p_list)
-    {
-        if (iter->p_pid == pid)
-            return iter;
-    }
-    // Cerco nella lista dei processi a bassa prio
-    list_for_each_entry(iter, low_ready_q, p_list)
-    {
-        if (iter->p_pid == pid)
-            return iter;
+
+    if (current_p->p_pid == pid) return current_p;
+    else if (!emptyProcQ(high_ready_q)) {
+        // Cerco nella lista dei processi ad alta prio
+        list_for_each_entry(iter, high_ready_q, p_list)
+        {
+            if (iter->p_pid == pid)
+                return iter;
+        }
+    } else if (!emptyProcQ(low_ready_q)) {
+        // Cerco nella lista dei processi a bassa prio
+        list_for_each_entry(iter, low_ready_q, p_list)
+        {
+            if (iter->p_pid == pid)
+                return iter;
+        }
+    } else {
+        
     }
     // Ricerca infruttuosa
     return NULL;
