@@ -1,29 +1,21 @@
-#include "interrupt.h"
+
 
 /*
-  ! MACRO
-  #define CAUSE_IP_MASK          0x0000ff00
-  #define CAUSE_IP(line)         (1U << (8 + (line)))
-  #define CAUSE_IP_BIT(line)     (8 + (line))
-
-  Interrupting devices bitmap (file arch.h)
-  #define CDEV_BITMAP_BASE        0x10000040
-  #define CDEV_BITMAP_END         (CDEV_BITMAP_BASE + N_EXT_IL * WS)
-  #define CDEV_BITMAP_ADDR(line)  (CDEV_BITMAP_BASE + ((line) - DEV_IL_START) * WS)
-
   ! COMANDI GIT
   git add .
   git commit -m "nome_commit"
   git push
+*/
 
-***************************************************************************************************************************************/
+#include "interrupt.h"
 
-#define UNSIGNED_MAX_32_INT 4294967295
+#define UNSIGNED_MAX_32_INT 4294967295 // =0xFFFF.FFFF per ricaricare PLTTimer
+
 
 void interruptHandler()
 {
-  // TODO controllare tramite la mask se l'interrupt è lecito
-  for (int line = 1; line < 8; line++) // linea 0 da ignorare
+  // scorro linee di Cause.IP cercando interrupt pending
+  for (int line = 1; line < 8; line++)  // linea 0 da ignorare
   {
     if (getCAUSE() & CAUSE_IP(line))
     {
@@ -37,68 +29,69 @@ void interruptHandler()
   }
 }
 
-//* linea 1   (3.6.2 pandos)
+
+// linea 1   (3.6.2 pandos)
 void PLTTimerInterrupt(int line)
 {
-  // acknowledgement del PLT interrupt (4.1.4-pops)
-  setTIMER(UNSIGNED_MAX_32_INT); // ricarico valore 0xFFFF.FFFF
-  // ottengo e copio stato processore (che si trova all'indirizzo 0x0FFF.F000, 3.2.2-pops) nel pcb attuale
-  state_t *processor_state = PROCESSOR_SAVED_STATE;
+  setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
 
+  // copio stato processore nel pcb attuale
+  state_t *processor_state = PROCESSOR_SAVED_STATE;
   copy_state(processor_state, &current_p->p_s);
 
-  // metto current process in Ready Queue e da "running" lo metto in "ready"
-  insertProcQ(low_ready_q, current_p);
+  // metto current process in "ready"
+  insertProcQ(low_ready_q, current_p); 
   current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
+
   scheduler();
 }
 
-//* linea 2   (3.6.3 pandos)
+
+// linea 2   (3.6.3 pandos)
 void intervalTimerInterrupt(int line)
 {
-  // acknowledgement dell'interrupt (4.1.3-pops)
   LDIT(PSECOND); // carico Interval Timer con 100millisec
+
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
   while (removeBlocked(&(device_sem[DEVSEM_NUM - 1])));
-  // resetto lo pseudo-clock semaphore a 0
+
+  // resetto pseudo-clock semaphore
   device_sem[DEVSEM_NUM - 1] = 0;
-  /*if (current_p)
+
+  // se c'é un processo in esecuzione torno a quello altrimenti chiamo scheduler
+  if (current_p)
     LDST((STATE_PTR)BIOSDATAPAGE);
   else
-    scheduler();*/
-  LDST((STATE_PTR)BIOSDATAPAGE);
-  scheduler();
+    scheduler();
 }
 
-//* linee 3-7    (3.6.1 pandos)
+
+// linee 3-7   (3.6.1 pandos)
 void nonTimerInterrupt(int line)
 {
-  int device_num = 0;
-  devregarea_t *device_regs = (devregarea_t *)RAMBASEADDR; // tutor: nel campo deviceRegs->interrupt_dev trovate la interrupt device bitmap
-  unsigned int bitmap_word = device_regs->interrupt_dev[line - 3];
-  unsigned int device_status_code = 0;
-
-  //* 1. calcolare indirizzo del device's device register
-  // calcolo il n° del device che ha generato l'interrupt nella line
-
+  int device_num = 0;  
+  devregarea_t *device_regs = (devregarea_t *)RAMBASEADDR; 
+  // salvo word della line in cui trovo i device con interrupt pending
+  unsigned int bitmap_word = device_regs->interrupt_dev[line - 3];  // tutor: nel campo deviceRegs->interrupt_dev trovate la interrupt device bitmap
+  unsigned int device_status_code = 0;  
   unsigned int mask = 1, i = 0, flag = 0;
-  int terminal_request = 0; // salva il tipo di richiesta del terminale, 0->trasmission, 1->receive
+  int terminal_request = 0; // 0->receive, 1->transmission; per distinguere semaforo da usare
 
+  // calcolo n° del device che ha generato l'interrupt nella line
   while ((i < 8) & (flag == 0)) // scorro devices della line
   {
-    if (bitmap_word & mask) // device con interrupt pending trovato
+    // device con interrupt pending trovato
+    if (bitmap_word & mask) 
     {
       device_num = i; // salvo n° device
       flag = 1;
-
-      if (line == 7) // se è un terminale
+      // se è un terminale
+      if (line == 7) 
       {
         termreg_t *terminal_ptr = (termreg_t *)DEV_REG_ADDR(line, device_num); // calcolo indirizzo terminale
 
         if (terminal_ptr->transm_status == READY){ // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
-          // 2. salvare lo status code
           device_status_code = terminal_ptr->transm_status;  
-          // 3. acknowledgement dell'interrupt
           terminal_ptr->transm_command = ACK;
           terminal_request = 1;
         }
@@ -116,13 +109,13 @@ void nonTimerInterrupt(int line)
     }
     mask = mask * 2;
   }
-  // 4. Verhogen sul semaforo associato al device (sblocco pcb e metto in ready)  + 6. inserisco il pcb sbloccato nella ready queue, processo passa da "blocked" a "ready"
-  int sem_num = 8 * (line - 3) + (line == 7 ? 2 * device_num : device_num) + terminal_request; // calcolo numero semaforo associato a device
+  // calcolo semaforo associato a device
+  int sem_num = 8 * (line - 3) + (line == 7 ? 2 * device_num : device_num) + terminal_request; 
+  
   Verhogen(&(device_sem[sem_num]));
-  // 5. metto lo status code salvato precedentemente nel registro v0 del pcb appena sbloccato
   //? pcb_PTR tmp = Verhogen();
   //? pcb_andrea->p_s.reg_v0 = device_status_code;
-  // 7. ritorno controllo al processo corrente
+
   LDST((STATE_PTR)BIOSDATAPAGE);
   scheduler();
 }
