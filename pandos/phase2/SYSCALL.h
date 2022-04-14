@@ -16,7 +16,7 @@
 /* Richiamo le variabili globali necessarie */
 extern int proc_count, soft_count, device_sem[DEVSEM_NUM];
 extern pcb_PTR current_p, yielded;
-extern pcb_PTR *all_processes[MAXPROC];
+extern pcb_PTR all_processes[MAXPROC];
 
 // Questa system call crea un nuovo processo come figlio del chiamante.
 void Create_Process(state_t *statep, int prio, support_t *supportp);
