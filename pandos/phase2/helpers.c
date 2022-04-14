@@ -33,6 +33,7 @@ void Exterminate(pcb_PTR process)
         freePcb(process);
         // Decremento il conto dei processi attivi
         proc_count--;
+        all_processes[proc_count] = NULL;
     }
     else
     {
@@ -52,25 +53,18 @@ pcb_PTR find_process(int pid)
 
     if (current_p->p_pid == pid)
         return current_p;
-    else if (!emptyProcQ(high_ready_q))
-    {
-        list_for_each_entry(iter, high_ready_q, p_list)
-        {
-            if (iter->p_pid == pid)
-                return iter;
-        }
-    }
-    else if (!emptyProcQ(low_ready_q))
-    {
-        list_for_each_entry(iter, high_ready_q, p_list)
-        {
-            if (iter->p_pid == pid)
-                return iter;
-        }
-    }
-    // Ricerca infruttuosa
     else
-        return NULL;
+    {
+        for (int i = 0; i < MAXPROC; i++)
+        {
+            if (all_processes[i]->p_pid == pid)
+            {
+                return all_processes[i];
+            }
+        }
+    }
+
+    return NULL;
 }
 
 void post_syscall()

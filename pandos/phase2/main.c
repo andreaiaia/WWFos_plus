@@ -16,8 +16,8 @@ int soft_count;
 struct list_head *high_ready_q;
 // Queue dei processi a bassa priorità
 struct list_head *low_ready_q;
-// Coda di tutti i processi creati
-struct list_head *blocked_processes;
+// Array di tutti i processi creati
+pcb_PTR *all_processes[MAXPROC];
 
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
 pcb_PTR current_p, yielded;
@@ -40,7 +40,6 @@ int main()
     soft_count = 0;
     mkEmptyProcQ(high_ready_q);
     mkEmptyProcQ(low_ready_q);
-    mkEmptyProcQ(blocked_processes);
     current_p = NULL;
     yielded = NULL;
     for (int i = 0; i < DEVSEM_NUM; i++)
@@ -102,6 +101,7 @@ int main()
     // Finalmente inserisco il processo impostato nella ready queue
     insertProcQ(low_ready_q, kernel_mode_proc);
     proc_count++;
+    all_processes[proc_count - 1] = kernel_mode_proc;
 
     // Chiamo lo Scheduler
     scheduler();
