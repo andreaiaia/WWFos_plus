@@ -130,14 +130,21 @@ void syscallExceptionHandler(unsigned int syscallCode)
             Yield();
             post_syscall();
             break;
+        
+        default:
+            // * Imposto il bit RI
+            PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
+            // * Simulo una TRAP
+            PassUpOrDie(GENERALEXCEPT);
+            break;
         }
     }
     // * Caso in cui la syscall non è lecita
     else
         // * Imposto il bit RI
         PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
-    // * Simulo una TRAP
-    PassUpOrDie(GENERALEXCEPT);
+        // * Simulo una TRAP
+        PassUpOrDie(GENERALEXCEPT);
 }
 
 /* PassUpOrDie */
