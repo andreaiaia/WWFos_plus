@@ -62,10 +62,12 @@ void intervalTimerInterrupt(int line)
   while (removeBlocked(&(device_sem[DEVSEM_NUM - 1])));
   // resetto lo pseudo-clock semaphore a 0
   device_sem[DEVSEM_NUM - 1] = 0;
-  if (current_p)
+  /*if (current_p)
     LDST((STATE_PTR)BIOSDATAPAGE);
   else
-    scheduler();
+    scheduler();*/
+  LDST((STATE_PTR)BIOSDATAPAGE);
+  scheduler();
 }
 
 //* linee 3-7    (3.6.1 pandos)
@@ -122,4 +124,5 @@ void nonTimerInterrupt(int line)
   //? pcb_andrea->p_s.reg_v0 = device_status_code;
   // 7. ritorno controllo al processo corrente
   LDST((STATE_PTR)BIOSDATAPAGE);
+  scheduler();
 }
