@@ -1,4 +1,4 @@
-#include "scheduler.h" 
+#include "scheduler.h"
 #include "exception.h"
 #include "interrupt.h"
 
@@ -16,6 +16,9 @@ int soft_count;
 struct list_head *high_ready_q;
 // Queue dei processi a bassa priorità
 struct list_head *low_ready_q;
+// Coda di tutti i processi creati
+struct list_head *all_processes;
+
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
 pcb_PTR current_p, yielded;
 // Device Semaphores - we need 49 sem in total
@@ -37,6 +40,7 @@ int main()
     soft_count = 0;
     mkEmptyProcQ(high_ready_q);
     mkEmptyProcQ(low_ready_q);
+    mkEmptyProcQ(all_processes);
     current_p = NULL;
     yielded = NULL;
     for (int i = 0; i < DEVSEM_NUM; i++)
@@ -64,6 +68,7 @@ int main()
 
     // Creo un processo (a bassa priorità) da inserire nella Ready queue
     pcb_PTR kernel_mode_proc = allocPcb();
+    insertProcQ(all_processes, kernel_mode_proc);
 
     /**
      * Imposto lo state_t su kernel mode, interrupt abilitati e Processor Local Time abilitato.

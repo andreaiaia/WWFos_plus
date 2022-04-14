@@ -16,7 +16,7 @@
 /* Richiamo le variabili globali necessarie */
 extern int device_sem[DEVSEM_NUM];
 extern pcb_PTR current_p, yielded;
-
+extern struct list_head *all_processes;
 
 // Questa system call crea un nuovo processo come figlio del chiamante.
 void Create_Process(state_t *statep, int prio, support_t *supportp);
@@ -34,7 +34,7 @@ void Do_IO_Device(int *commandAddr, int commandValue);
 
 void Get_CPU_Time();
 
-void Get_Process_Id(int parent); 
+void Get_Process_Id(int parent);
 void Wait_For_Clock();
 
 void Get_Support_Data();

@@ -50,103 +50,100 @@ pcb_PTR find_process(int pid)
 {
     pcb_PTR iter = NULL;
 
-    if (current_p->p_pid == pid) return current_p;
-    else if (!emptyProcQ(high_ready_q)) {
-        // Cerco nella lista dei processi ad alta prio
-        list_for_each_entry(iter, high_ready_q, p_list)
+    if (current_p->p_pid == pid)
+        return current_p;
+    else
+    {
+        // Cerco direttamente nella lista di tutti i processi vivi
+        list_for_each_entry(iter, all_processes, p_list)
         {
             if (iter->p_pid == pid)
                 return iter;
         }
-    } else if (!emptyProcQ(low_ready_q)) {
-        // Cerco nella lista dei processi a bassa prio
-        list_for_each_entry(iter, low_ready_q, p_list)
-        {
-            if (iter->p_pid == pid)
-                return iter;
-        }
-    } else {
-        
     }
     // Ricerca infruttuosa
     return NULL;
 }
 
-void post_syscall() {
+void post_syscall()
+{
     LDST((PROCESSOR_SAVED_STATE));
     scheduler();
 }
 
-void syscallExceptionHandler(unsigned int syscallCode) {
+void syscallExceptionHandler(unsigned int syscallCode)
+{
     // * Verifico che il processo chiamante della Syscall sia in KernelMode e che abbia chiamato una Syscall (rega0 < 0)
-    if (((PROCESSOR_SAVED_STATE->status & STATUS_KUp) == STATUS_KUp) && syscallCode < 0) {
-        INCREMENTO_PC;    
+    if (((PROCESSOR_SAVED_STATE->status & STATUS_KUp) == STATUS_KUp) && syscallCode < 0)
+    {
+        INCREMENTO_PC;
         // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
-        switch (syscallCode) {
-            case -1:
-                Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
-                post_syscall();
-                break;
+        switch (syscallCode)
+        {
+        case -1:
+            Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
+            post_syscall();
+            break;
 
-            case -2:
-                Terminate_Process((int)(REG_A1_SS));                
-                post_syscall();
-                break;
+        case -2:
+            Terminate_Process((int)(REG_A1_SS));
+            post_syscall();
+            break;
 
-            case -3:
-                Passeren((int *)(REG_A1_SS));                
-                post_syscall();
-                break;
+        case -3:
+            Passeren((int *)(REG_A1_SS));
+            post_syscall();
+            break;
 
-            case -4:
-                Verhogen((int *)(REG_A1_SS));                
-                post_syscall();
-                break;
+        case -4:
+            Verhogen((int *)(REG_A1_SS));
+            post_syscall();
+            break;
 
-            case -5:
-                Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS);               
-                post_syscall();
-                break;
+        case -5:
+            Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS);
+            post_syscall();
+            break;
 
-            case -6:
-                Get_CPU_Time();                
-                post_syscall();
-                break;
+        case -6:
+            Get_CPU_Time();
+            post_syscall();
+            break;
 
-            case -7:
-                Wait_For_Clock();                
-                post_syscall();
-                break;
+        case -7:
+            Wait_For_Clock();
+            post_syscall();
+            break;
 
-            case -8:
-                Get_Support_Data();                
-                post_syscall();
-                break;
+        case -8:
+            Get_Support_Data();
+            post_syscall();
+            break;
 
-            case -9:
-                Get_Process_Id((int)(REG_A1_SS));                
-                post_syscall();
-                break;
+        case -9:
+            Get_Process_Id((int)(REG_A1_SS));
+            post_syscall();
+            break;
 
-            case -10:
-                Yield();             
-                post_syscall();
-                break;
+        case -10:
+            Yield();
+            post_syscall();
+            break;
         }
     }
-        // * Caso in cui la syscall non è lecita 
-        else
+    // * Caso in cui la syscall non è lecita
+    else
         // * Imposto il bit RI
         PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
-        // * Simulo una TRAP
-        PassUpOrDie(GENERALEXCEPT);
-
+    // * Simulo una TRAP
+    PassUpOrDie(GENERALEXCEPT);
 }
 
 /* PassUpOrDie */
 
-void PassUpOrDie(int excCode) {
+void PassUpOrDie(int excCode)
+{
     /**
      * Se la supportStruct è nulla si entra nella "Die"
      * e si termina il processo corrente e tutta la sua progenie.

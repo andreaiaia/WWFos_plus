@@ -1,16 +1,12 @@
 #include "SYSCALL.h"
 
-// TODO Rimuovere le chiamate allo scheduler e metterle nello switch case del SYSCALL Handler
-// TODO AVANZARE IL PROGRAM COUNTER NELL'EXCEPTION HANDLER
-// il comando per farlo è
-// current_p->p_s.pc_epc += WORDLEN;
-
 void Create_Process(state_t *statep, int prio, support_t *supportp)
 {
     // Creo il processo figlio
     pcb_PTR child = allocPcb();
-    // Se non è stato possibile allocare, ritorno errore
-    if (child == NULL)
+    insertProcQ(all_processes, child)
+        // Se non è stato possibile allocare, ritorno errore
+        if (child == NULL)
     {
         /**
          * Imposto il valore di fallimento nel registro v0
@@ -175,15 +171,20 @@ void Get_Process_Id(int parent)
 
 void Yield()
 {
-    if (current_p->p_prio == 0) {
+    if (current_p->p_prio == 0)
+    {
         insertProcQ(low_ready_q, current_p);
         current_p = NULL;
     }
-    else {
-        if (emptyProcQ(high_ready_q)) {
+    else
+    {
+        if (emptyProcQ(high_ready_q))
+        {
             yielded = current_p;
             current_p = NULL;
-        } else {
+        }
+        else
+        {
             insertProcQ(high_ready_q, current_p);
             current_p = NULL;
         }
