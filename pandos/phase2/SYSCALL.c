@@ -38,7 +38,11 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
 
         // Incremento il conto dei processi
         proc_count++;
-        all_processes[proc_count - 1] = child;
+        for (int i = 0; i < MAXPROC; i++)
+        {
+            if (all_processes[i] == NULL)
+                all_processes[i] = child;
+        }
     }
 
     // Vedi sopra

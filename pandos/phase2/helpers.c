@@ -33,7 +33,11 @@ void Exterminate(pcb_PTR process)
         freePcb(process);
         // Decremento il conto dei processi attivi
         proc_count--;
-        all_processes[proc_count] = NULL;
+        for (int i = 0; i < MAXPROC; i++)
+        {
+            if (all_processes[i] == process)
+                all_processes[i] = NULL;
+        }
     }
     else
     {
@@ -49,8 +53,6 @@ void Exterminate(pcb_PTR process)
 
 pcb_PTR find_process(int pid)
 {
-    pcb_PTR iter = NULL;
-
     if (current_p->p_pid == pid)
         return current_p;
     else

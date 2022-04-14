@@ -18,6 +18,8 @@ struct list_head *high_ready_q;
 struct list_head *low_ready_q;
 // Array di tutti i processi creati
 pcb_PTR all_processes[MAXPROC];
+// Indice in cui aggiungere nuovi pcb
+int last_free_index = 0;
 
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
 pcb_PTR current_p, yielded;
@@ -33,7 +35,7 @@ passupvector_t *pu_vector;
 //* A LONG TIME AGO, IN A MAIN FUNCTION FAR FAR AWAY */
 int main()
 {
-    // Inizializzo le variabili globali e la coda dei processi
+    // Inizializzo le variabili globali e le code dei processi
     initPcbs();
     initASL();
     proc_count = 0;
@@ -45,6 +47,10 @@ int main()
     for (int i = 0; i < DEVSEM_NUM; i++)
     {
         device_sem[i] = 0;
+    }
+    for (int j = 0; j < MAXPROC; j++)
+    {
+        all_processes[j] = NULL;
     }
 
     // Inizializzo il Passup Vector
@@ -101,7 +107,7 @@ int main()
     // Finalmente inserisco il processo impostato nella ready queue
     insertProcQ(low_ready_q, kernel_mode_proc);
     proc_count++;
-    all_processes[proc_count - 1] = kernel_mode_proc;
+    all_processes[0] = kernel_mode_proc;
 
     // Chiamo lo Scheduler
     scheduler();
