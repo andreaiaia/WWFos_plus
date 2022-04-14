@@ -171,10 +171,17 @@ void Get_Process_Id(int parent)
 
 void Yield()
 {
-    if (current_p->p_prio == 1)
-        insertProcQ(high_ready_q, current_p);
-    else
+    if (current_p->p_prio == 0) {
         insertProcQ(low_ready_q, current_p);
-
-    current_p = NULL;
+        current_p = NULL;
+    }
+    else {
+        if (emptyProcQ(high_ready_q)) {
+            yielded = current_p;
+            current_p = NULL;
+        } else {
+            insertProcQ(high_ready_q, current_p);
+            current_p = NULL;
+        }
+    }
 }

@@ -17,8 +17,13 @@ void scheduler()
         load_new_proc(high_ready_q);
     }
     // Se la coda dei processi a BASSA priorità è non-vuota
-    else if (!emptyProcQ(low_ready_q))
+    else if (!emptyProcQ(low_ready_q)) 
+    {
+        if (yielded != NULL)
+            insertProcQ(high_ready_q, yielded);
+
         load_new_proc(low_ready_q);
+    }
     // Se le code sono entrambe vuote
     else
     {

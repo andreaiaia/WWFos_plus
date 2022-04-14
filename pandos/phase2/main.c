@@ -17,7 +17,7 @@ struct list_head *high_ready_q;
 // Queue dei processi a bassa priorità
 struct list_head *low_ready_q;
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
-pcb_PTR current_p;
+pcb_PTR current_p, yielded;
 // Device Semaphores - we need 49 sem in total
 // Ultimo semaforo è il pseudo-clock semaphore
 int device_sem[DEVSEM_NUM];
@@ -38,6 +38,7 @@ int main()
     mkEmptyProcQ(high_ready_q);
     mkEmptyProcQ(low_ready_q);
     current_p = NULL;
+    yielded = NULL;
     for (int i = 0; i < DEVSEM_NUM; i++)
     {
         device_sem[i] = 0;

@@ -3,7 +3,7 @@
 #include "sistema.h"
 #include "scheduler.h"
 #include "helpers.h"
-extern int device_sem[DEVSEM_NUM];
+
 /**
  * Per trovare il numero di device io passo l'indirizzo del commandAddr
  * Tolgo l'offset (DEV_REG_START) e così posso dividere per la dimensione
@@ -12,6 +12,11 @@ extern int device_sem[DEVSEM_NUM];
  * nell'array dei semafori. Una volta che so la posizione del semaforo è checkmate.
  */
 #define DEV_POSITION(T) ((int)T - DEV_REG_START) / (DEV_REG_SIZE / 2)
+
+/* Richiamo le variabili globali necessarie */
+extern int device_sem[DEVSEM_NUM];
+extern pcb_PTR current_p, yielded;
+
 
 // Questa system call crea un nuovo processo come figlio del chiamante.
 void Create_Process(state_t *statep, int prio, support_t *supportp);
