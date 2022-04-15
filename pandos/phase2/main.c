@@ -70,7 +70,7 @@ int main()
      * Moltiplicando per TIMESCALEADDR mi assicuro che il timer sia tarato con le
      * impostazioni dell'emulatore di umps
      */
-    LDIT(PSECOND * *((memaddr *)TIMESCALEADDR));
+    LDIT(PSECOND);
 
     // Creo un processo (a bassa priorità) da inserire nella Ready queue
     pcb_PTR kernel_mode_proc = allocPcb();
