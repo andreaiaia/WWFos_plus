@@ -37,6 +37,7 @@ int main()
     // Inizializzo le variabili globali e le code dei processi
     initPcbs();
     initASL();
+    klog_print("Sono a riga 40\n");
     proc_count = 0;
     soft_count = 0;
     mkEmptyProcQ(high_ready_q);
@@ -51,7 +52,7 @@ int main()
     {
         all_processes[j] = NULL;
     }
-
+    klog_print("Sono a riga 54 secondo me mi blocco qui\n");
     // Inizializzo il Passup Vector
     pu_vector = (passupvector_t *)PASSUPVECTOR;
     // Popolo il Passup Vector
@@ -72,7 +73,7 @@ int main()
 
     // Creo un processo (a bassa priorità) da inserire nella Ready queue
     pcb_PTR kernel_mode_proc = allocPcb();
-
+    klog_print("Sono a riga 75\n");
     /**
      * Imposto lo state_t su kernel mode, interrupt abilitati e Processor Local Time abilitato.
      * Uso l'or | per sommare i bit del registro e accenderli dove serve con le macro da pandos_const.h
@@ -93,7 +94,7 @@ int main()
      */
     RAMTOP(kernel_mode_proc->p_s.reg_sp);
 
-    klog_print("Sono dentro");
+    klog_print("Sono a riga 96\n");
     // Imposto il PC sull'indirizzo della funzione test
     kernel_mode_proc->p_s.pc_epc = (memaddr)test;
 
