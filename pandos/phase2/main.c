@@ -2,7 +2,6 @@
 #include "exception.h"
 #include "interrupt.h"
 
-extern void klog_print(void);
 
 //* Dichiarazioni di funzioni esterne */
 // Funzione fornita dalle specifiche, la riscriveremo nella prossima fase
@@ -35,7 +34,6 @@ passupvector_t *pu_vector;
 //* A LONG TIME AGO, IN A MAIN FUNCTION FAR FAR AWAY */
 int main()
 {
-    klog_print("Sono dentro");
     // Inizializzo le variabili globali e le code dei processi
     initPcbs();
     initASL();
@@ -95,6 +93,7 @@ int main()
      */
     RAMTOP(kernel_mode_proc->p_s.reg_sp);
 
+    klog_print("Sono dentro");
     // Imposto il PC sull'indirizzo della funzione test
     kernel_mode_proc->p_s.pc_epc = (memaddr)test;
 
