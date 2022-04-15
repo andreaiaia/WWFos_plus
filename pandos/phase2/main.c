@@ -82,7 +82,7 @@ int main()
      * Bisogna usare i Previous bit invece dei current quando si inizializza
      * un nuovo processor state
      */
-    kernel_mode_proc->p_s.status = IEPON | IMON | TEBITON;
+    kernel_mode_proc->p_s.status = ALLOFF | IEPON | IMON | TEBITON;
 
     // Imposto lo Stack Pointer su RAMTOP
     /**

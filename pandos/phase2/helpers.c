@@ -77,9 +77,11 @@ void post_syscall()
 
 void syscallExceptionHandler(unsigned int syscallCode)
 {
+    klog_print("HELP1\n");
     // * Verifico che il processo chiamante della Syscall sia in KernelMode e che abbia chiamato una Syscall (rega0 < 0)
     if (((PROCESSOR_SAVED_STATE->status & STATUS_KUp) == STATUS_KUp) && syscallCode < 0)
     {
+        klog_print("HELP2\n");
         INCREMENTO_PC;
         // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
@@ -145,10 +147,13 @@ void syscallExceptionHandler(unsigned int syscallCode)
     }
     // * Caso in cui la syscall non è lecita
     else
+    {
+        klog_print("HELP3\n");
         // * Imposto il bit RI
         PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
-    // * Simulo una TRAP
-    PassUpOrDie(GENERALEXCEPT);
+        // * Simulo una TRAP
+        PassUpOrDie(GENERALEXCEPT);
+    }
 }
 
 /* PassUpOrDie */

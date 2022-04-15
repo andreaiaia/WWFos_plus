@@ -99,6 +99,7 @@ void Passeren(int *semaddr)
 
 pcb_PTR Verhogen(int *semaddr)
 {
+    klog_print("ciaone");
     pcb_PTR first = NULL;
 
     if (*semaddr == 1)
