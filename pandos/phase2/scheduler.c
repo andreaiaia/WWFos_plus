@@ -5,7 +5,6 @@ void scheduler()
     klog_print("SC1\n");
     // Se un processo è in corso
     if (current_p != NULL)
-        klog_print("SC1\n");
     {
         // Leggo il time of day
         klog_print("SC2\n");
