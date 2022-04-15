@@ -1,8 +1,8 @@
 #ifndef SYS_H
     #define SYS_H
     //#include <umps3/umps/aout.h>
-    #include <umps3/umps/arch.h>
     //#include <umps3/umps/bios_defs.h>
+    #include <umps3/umps/arch.h>
     #include <umps3/umps/const.h>
     #include <umps3/umps/cp0.h>
     #include <umps3/umps/libumps.h>
