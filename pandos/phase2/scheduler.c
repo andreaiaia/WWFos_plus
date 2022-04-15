@@ -4,8 +4,8 @@ void scheduler()
 {
     klog_print("SC1\n");
     // Se un processo è in corso
-    if (current_p == NULL) klog_print("Current_p è nullo");
-    if (current_p != NULL) klog_print("Current_p non è nullo");
+    //if (current_p == NULL) klog_print("Current_p è nullo");
+    //if (current_p != NULL) klog_print("Current_p non è nullo");
     if (current_p != NULL)
     {
         // Leggo il time of day
