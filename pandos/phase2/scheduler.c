@@ -74,5 +74,6 @@ void load_new_proc(struct list_head *queue)
     // Faccio partire il timer leggendo il Time of Day
     STCK(start);
     // Carico lo stato del processo sulla CPU
+    klog_print("LOAD\n");
     LDST(&(current_p->p_s));
 }

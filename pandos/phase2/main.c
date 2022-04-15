@@ -2,11 +2,6 @@
 #include "exception.h"
 #include "interrupt.h"
 
-//* Dichiarazioni di funzioni esterne */
-// Funzione fornita dalle specifiche, la riscriveremo nella prossima fase
-extern void uTLB_RefillHandler();
-// La funzione test si trova nel file di test fornito
-extern void test();
 //* Variabili Globali */
 // Process Count - Contatore processi vivi (started but not yet finished)
 int proc_count;
