@@ -26,11 +26,13 @@ void scheduler()
     else if (!emptyProcQ(&low_ready_q))
     {
         klog_print("SC6\n");
-        if (yielded != NULL)
+        if (yielded != NULL){
+            klog_print("SC6.1\n");
             insertProcQ(&high_ready_q, yielded);
-
+        }
         klog_print("SC7\n");
         load_new_proc(&low_ready_q);
+        klog_print("SC7\n");
     }
     // Se le code sono entrambe vuote
     else
