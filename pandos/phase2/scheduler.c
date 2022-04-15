@@ -5,24 +5,30 @@ void scheduler()
     klog_print("SC1\n");
     // Se un processo è in corso
     if (current_p != NULL)
+    klog_print("SC1\n");
     {
         // Leggo il time of day
+        klog_print("SC2\n");
         STCK(finish);
         // Aggiungo il tempo trascorso al tempo impiegato dal processo
+        klog_print("SC3\n");
         current_p->p_time += (finish - start);
     }
+    klog_print("SC4\n");
     // Se la coda dei processi ad ALTA priorità è non-vuota
     if (!emptyProcQ(&high_ready_q))
-    {
+    {   klog_print("SC5\n");
         load_new_proc(&high_ready_q);
     }
     // Se la coda dei processi a BASSA priorità è non-vuota
     else if (!emptyProcQ(&low_ready_q))
-    {
+    {klog_print("SC6\n");
         if (yielded != NULL)
             insertProcQ(&high_ready_q, yielded);
 
+        klog_print("SC7\n");
         load_new_proc(&low_ready_q);
+
     }
     // Se le code sono entrambe vuote
     else
