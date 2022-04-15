@@ -116,5 +116,5 @@ void nonTimerInterrupt(int line)
   tmp->p_s.reg_v0 = device_status_code;
 
   LDST((STATE_PTR)BIOSDATAPAGE);
-  scheduler();
+  //scheduler();
 }

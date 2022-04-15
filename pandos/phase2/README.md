@@ -50,3 +50,17 @@ Per la gestione della SYSCALL NSYS5, ovvero della DOIO, abbiamo cercato di ottim
 Per comodità è stata definita una Macro nell'header file che, preso come parametro il puntatore commandAddr esegue un calcolo aritmetico per individuare il dispositivo in cui si trova il commandAddr fornito.
 Nel definire questa Macro la prima volta è emerso subito il problema che essa non riusciva a distinguere, nel caso il commandAddr fosse contenuto in un dispositivo terminale, se questo fosse associato ad un semaforo recv o ad uno transm, con la conseguenza che la macro avrebbe sempre restituito un indice massimo di 40, ignorando ben 8 semafori.
 Il modo più semplice per risolvere questo comportamento è stato modificare la macro in modo che dividesse per la metà della dimensione di un blocco di Registro dispositivo, in questo modo trova correttamente il semaforo da bloccare sul terminale, ma chiaramente questa modifica sballa i conti con gli indici. Questo errore viene risolto con un costrutto if-then-else che, nel caso l'indice trovato sia superiore a 63 (quindi avendo raddoppiato tutti equivarrebbe ad aver superato il 32esimo dispositivo), lo normalizza togliendo l'offset artificiosamente introdotto, in caso contrario per normalizzare basta dimezzare l'indice trovato e si ha il corretto indice di semaforo su cui eseguire la Passeren.
+
+### Implementazione dell'interruptHandler
+
+L'interrupt handler è stato gestito in due fasi:
+- 1 -> trovare la "line" nel registro Cause.IP
+- 2 -> richiamare la funzione appropriata in base alla line con un interrupt pending (partendo dall'indice piu' basso)
+
+Le funzioni sono fedeli a quanto indicato dal manuale, un accorgimento utile è stato quello di usare una variabile "mask" che partisse da uno e raddoppiasse di volta in volta per fare degli AND bit a bit.
+
+Abbiamo scelto di mettere in conto al processo corrente il tempo speso per gli interrupt, in particolare ciò che accade è:
+- processo corrente è interrotto
+- viene gestito l'interrupt
+- interrupt ritorna controllo a processo corrente
+- il processo corrente nel calcolo del tempo dedicatogli include quello speso per l'interrupt
