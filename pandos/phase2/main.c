@@ -2,26 +2,6 @@
 #include "exception.h"
 #include "interrupt.h"
 
-// Print str to klog
-void klog_print(char *str)
-{
-    while (*str != '\0')
-    {
-        // If there is a newline skip to the next one
-        if (*str == '\n')
-        {
-            next_line();
-            str++;
-        }
-        // Otherwise just fill the current one
-        else
-        {
-            klog_buffer[klog_line_index][klog_char_index] = *str++;
-            next_char();
-        }
-    }
-}
-
 //* Dichiarazioni di funzioni esterne */
 // Funzione fornita dalle specifiche, la riscriveremo nella prossima fase
 extern void uTLB_RefillHandler();
