@@ -36,16 +36,17 @@ int main()
     // Inizializzo le variabili globali e le code dei processi
     initPcbs();
     initASL();
-    klog_print("Sono a riga 40\n");
     proc_count = 0;
     soft_count = 0;
-    INIT_LIST_HEAD(high_ready_q);
-    klog_print("Sono a riga 44\n");
+    klog_print("PH 1\n");
+    LIST_HEAD_INIT(high_ready_q);
+    klog_print("PH2\n");
+    mkEmptyProcQ(high_ready_q);
+    klog_print("PH3\n");
     INIT_LIST_HEAD(low_ready_q);
-    klog_print("Sono a riga 46\n");
+    klog_print("PH4");
     current_p = NULL;
     yielded = NULL;
-    klog_print("Sono a riga 49\n");
     for (int i = 0; i < DEVSEM_NUM; i++)
     {
         device_sem[i] = 0;
