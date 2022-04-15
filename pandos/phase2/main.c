@@ -13,7 +13,7 @@ int proc_count;
 // Soft-Block Count - Contatore dei processi avviati ma non ancora terminati (e quindi bloccati)
 int soft_count;
 // Queue dei processi ad alta priorità
-struct list_head *high_ready_q = LIST_HEAD_INIT(high_ready_q);
+struct list_head high_ready_q = LIST_HEAD_INIT(high_ready_q);
 // Queue dei processi a bassa priorità
 struct list_head *low_ready_q;
 // Array di tutti i processi creati
@@ -40,7 +40,7 @@ int main()
     soft_count = 0;
     klog_print("PH 1\n");
     klog_print("PH2\n");
-    mkEmptyProcQ(high_ready_q);
+    mkEmptyProcQ(&high_ready_q);
     klog_print("PH3\n");
     INIT_LIST_HEAD(low_ready_q);
     klog_print("PH4");
