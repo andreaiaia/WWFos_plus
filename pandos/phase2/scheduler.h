@@ -5,8 +5,8 @@
 // Numero di semafori dei dispositivi
 #define DEVSEM_NUM 49
 
-extern struct list_head *high_ready_q;
-extern struct list_head *low_ready_q;
+extern struct list_head high_ready_q;
+extern struct list_head low_ready_q;
 extern pcb_PTR current_p, yielded;
 extern int proc_count;
 extern int soft_count;

@@ -1,6 +1,5 @@
 #include "scheduler.h"
 
-
 void scheduler()
 {
     // Se un processo è in corso
@@ -12,17 +11,17 @@ void scheduler()
         current_p->p_time += (finish - start);
     }
     // Se la coda dei processi ad ALTA priorità è non-vuota
-    if (!emptyProcQ(high_ready_q))
+    if (!emptyProcQ(&high_ready_q))
     {
-        load_new_proc(high_ready_q);
+        load_new_proc(&high_ready_q);
     }
     // Se la coda dei processi a BASSA priorità è non-vuota
-    else if (!emptyProcQ(low_ready_q)) 
+    else if (!emptyProcQ(&low_ready_q))
     {
         if (yielded != NULL)
-            insertProcQ(high_ready_q, yielded);
+            insertProcQ(&high_ready_q, yielded);
 
-        load_new_proc(low_ready_q);
+        load_new_proc(&low_ready_q);
     }
     // Se le code sono entrambe vuote
     else

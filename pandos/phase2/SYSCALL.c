@@ -32,9 +32,9 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
 
         // Inserisco il processo nella coda corretta
         if (prio)
-            insertProcQ(high_ready_q, child);
+            insertProcQ(&high_ready_q, child);
         else
-            insertProcQ(low_ready_q, child);
+            insertProcQ(&low_ready_q, child);
 
         // Incremento il conto dei processi
         proc_count++;
@@ -82,9 +82,9 @@ void Passeren(int *semaddr)
         soft_count--;
 
         if (first->p_prio == 1)
-            insertProcQ(high_ready_q, first);
+            insertProcQ(&high_ready_q, first);
         else
-            insertProcQ(low_ready_q, first);
+            insertProcQ(&low_ready_q, first);
 
         // Blocco il processo corrente
         current_p = NULL;
@@ -105,9 +105,9 @@ pcb_PTR Verhogen(int *semaddr)
     {
         // Blocco il processo corrente
         if (current_p->p_prio == 1)
-            insertProcQ(high_ready_q, current_p);
+            insertProcQ(&high_ready_q, current_p);
         else
-            insertProcQ(low_ready_q, current_p);
+            insertProcQ(&low_ready_q, current_p);
         current_p = NULL;
     }
     else if (headBlocked(semaddr) != NULL)
@@ -115,9 +115,9 @@ pcb_PTR Verhogen(int *semaddr)
         pcb_PTR first = removeBlocked(semaddr);
         soft_count--;
         if (first->p_prio == 1)
-            insertProcQ(high_ready_q, first);
+            insertProcQ(&high_ready_q, first);
         else
-            insertProcQ(low_ready_q, first);
+            insertProcQ(&low_ready_q, first);
     }
     else
         (*semaddr)++;
@@ -180,19 +180,19 @@ void Yield()
 {
     if (current_p->p_prio == 0)
     {
-        insertProcQ(low_ready_q, current_p);
+        insertProcQ(&low_ready_q, current_p);
         current_p = NULL;
     }
     else
     {
-        if (emptyProcQ(high_ready_q))
+        if (emptyProcQ(&high_ready_q))
         {
             yielded = current_p;
             current_p = NULL;
         }
         else
         {
-            insertProcQ(high_ready_q, current_p);
+            insertProcQ(&high_ready_q, current_p);
             current_p = NULL;
         }
     }

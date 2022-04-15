@@ -110,7 +110,7 @@ int main()
     kernel_mode_proc->p_prio = 0;
 
     // Finalmente inserisco il processo impostato nella ready queue
-    insertProcQ(low_ready_q, kernel_mode_proc);
+    insertProcQ(&low_ready_q, kernel_mode_proc);
     proc_count++;
     all_processes[0] = kernel_mode_proc;
 
