@@ -32,7 +32,7 @@ void scheduler()
         }
         klog_print("SC7\n");
         load_new_proc(&low_ready_q);
-        klog_print("SC7\n");
+        klog_print("SC7.1\n");
     }
     // Se le code sono entrambe vuote
     else
