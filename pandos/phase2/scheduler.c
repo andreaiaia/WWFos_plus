@@ -31,6 +31,8 @@ void scheduler()
             klog_print("SC6.1\n");
             insertProcQ(&high_ready_q, yielded);
         }
+        // Imposto il PLT su 5ms
+        setTIMER(TIMESLICE);
         klog_print("SC7\n");
         load_new_proc(&low_ready_q);
         klog_print("SC7.1\n");
@@ -67,8 +69,6 @@ void scheduler()
 // Funzione per prendere un processo dalla coda passata e avviarne l'esecuzione
 void load_new_proc(struct list_head *queue)
 {
-    // Imposto il PLT su 5ms
-    setTIMER(TIMESLICE);
     // Prendo il processo da avviare
     current_p = removeProcQ(queue);
     // Faccio partire il timer leggendo il Time of Day
