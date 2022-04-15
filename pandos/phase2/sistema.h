@@ -11,6 +11,5 @@
 #include "../h/pandos_types.h"
 #include "../phase1/asl.h"
 #include "../phase1/pcb.h"
-#include "klog.c"
 
 #endif

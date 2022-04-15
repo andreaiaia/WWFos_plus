@@ -2,6 +2,7 @@
 #include "exception.h"
 #include "interrupt.h"
 
+extern void klog_print(void);
 
 //* Dichiarazioni di funzioni esterne */
 // Funzione fornita dalle specifiche, la riscriveremo nella prossima fase
