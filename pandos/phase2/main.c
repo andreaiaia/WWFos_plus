@@ -93,16 +93,17 @@ int main()
      * semplicemente con notazione puntata sotto al nome di reg_sp
      */
     RAMTOP(kernel_mode_proc->p_s.reg_sp);
-    /**
-     * Come indicato sul manuale, per ragioni tecniche va
-     * inizializzato allo steso modo anche il registro t9 del gpr
-     */
-    RAMTOP(kernel_mode_proc->p_s.reg_t9);
 
     // Imposto il PC sull'indirizzo della funzione test
     kernel_mode_proc->p_s.pc_epc = (memaddr)test;
 
-    // ? imposta p_prio a 0
+    /**
+     * Come indicato sul manuale, per ragioni tecniche va
+     * inizializzato allo stesso modo anche il registro t9 del gpr
+     */
+    kernel_mode_proc->p_s.reg_t9 = (memaddr)test;
+
+    kernel_mode_proc->p_prio = 0;
 
     // Finalmente inserisco il processo impostato nella ready queue
     insertProcQ(low_ready_q, kernel_mode_proc);
