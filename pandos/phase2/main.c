@@ -40,8 +40,8 @@ int main()
     klog_print("Sono a riga 40\n");
     proc_count = 0;
     soft_count = 0;
-    klog_print("Sono a riga 43\n");
     mkEmptyProcQ(high_ready_q);
+    klog_print("Sono a riga 44\n");
     mkEmptyProcQ(low_ready_q);
     klog_print("Sono a riga 46\n");
     current_p = NULL;
