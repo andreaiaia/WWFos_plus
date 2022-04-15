@@ -4,8 +4,8 @@ void scheduler()
 {
     klog_print("SC1\n");
     // Se un processo è in corso
-    //if (current_p == NULL) klog_print("Current_p è nullo");
-    //if (current_p != NULL) klog_print("Current_p non è nullo");
+    //if (current_p == NULL) klog_print("Current_p nullo\n");
+    //if (current_p != NULL) klog_print("Current_p non nullo\n");
     if (current_p != NULL)
     {
         // Leggo il time of day
@@ -34,23 +34,27 @@ void scheduler()
     }
     // Se le code sono entrambe vuote
     else
-    {
+    {   klog_print("SC8\n");
         if (proc_count == 0)
             HALT(); // Spegne il computer
         else if (soft_count > 0)
-        {
+        {   klog_print("SC9\n");
             // Imposto lo stato corrente per accettare interrupt
             // E disabilito il tutto il resto (quindi anche il PLT)
             unsigned int waitingStatus = IECON | IMON;
+            klog_print("SC10\n");
             setSTATUS(waitingStatus);
+            klog_print("SC11\n");
             current_p = NULL;
-
+            klog_print("SC12\n");
             WAIT(); // Aspettando un interrupt
         }
         else
-        {
+        {   
+            klog_print("SC13\n");
             // Siamo in deadlock
             PANIC();
+            klog_print("SC14\n");
         }
     }
 }
