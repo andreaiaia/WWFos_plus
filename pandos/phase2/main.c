@@ -40,19 +40,23 @@ int main()
     klog_print("Sono a riga 40\n");
     proc_count = 0;
     soft_count = 0;
+    klog_print("Sono a riga 43\n");
     mkEmptyProcQ(high_ready_q);
     mkEmptyProcQ(low_ready_q);
+    klog_print("Sono a riga 46\n");
     current_p = NULL;
     yielded = NULL;
+    klog_print("Sono a riga 49\n");
     for (int i = 0; i < DEVSEM_NUM; i++)
     {
         device_sem[i] = 0;
     }
+    klog_print("Sono a riga 54\n");
     for (int j = 0; j < MAXPROC; j++)
     {
         all_processes[j] = NULL;
     }
-    klog_print("Sono a riga 54 secondo me mi blocco qui\n");
+    klog_print("Sono a riga 59 secondo me mi blocco qui\n");
     // Inizializzo il Passup Vector
     pu_vector = (passupvector_t *)PASSUPVECTOR;
     // Popolo il Passup Vector
