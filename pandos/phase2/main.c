@@ -3,21 +3,24 @@
 #include "interrupt.h"
 
 // Print str to klog
-void klog_print(char *str) {
-    while (*str != '\0') {
+void klog_print(char *str)
+{
+    while (*str != '\0')
+    {
         // If there is a newline skip to the next one
-        if (*str == '\n') {
+        if (*str == '\n')
+        {
             next_line();
             str++;
-        } 
+        }
         // Otherwise just fill the current one
-        else {
+        else
+        {
             klog_buffer[klog_line_index][klog_char_index] = *str++;
             next_char();
         }
     }
 }
-
 
 //* Dichiarazioni di funzioni esterne */
 // Funzione fornita dalle specifiche, la riscriveremo nella prossima fase
@@ -35,9 +38,7 @@ struct list_head *high_ready_q;
 struct list_head *low_ready_q;
 // Array di tutti i processi creati
 pcb_PTR all_processes[MAXPROC];
-// Indice in cui aggiungere nuovi pcb
-int last_free_index = 0;
-klog_print("Sono a riga 40");
+
 // Current Process - Puntatore a pcb in stato "Running" (correntemente attivo)
 pcb_PTR current_p, yielded;
 // Device Semaphores - we need 49 sem in total
@@ -52,6 +53,7 @@ passupvector_t *pu_vector;
 //* A LONG TIME AGO, IN A MAIN FUNCTION FAR FAR AWAY */
 int main()
 {
+    klog_print("Sono dentro");
     // Inizializzo le variabili globali e le code dei processi
     initPcbs();
     initASL();
