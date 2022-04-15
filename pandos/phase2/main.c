@@ -2,7 +2,6 @@
 #include "exception.h"
 #include "interrupt.h"
 
-
 //* Dichiarazioni di funzioni esterne */
 // Funzione fornita dalle specifiche, la riscriveremo nella prossima fase
 extern void uTLB_RefillHandler();
@@ -40,9 +39,9 @@ int main()
     klog_print("Sono a riga 40\n");
     proc_count = 0;
     soft_count = 0;
-    mkEmptyProcQ(high_ready_q);
+    INIT_LIST_HEAD(high_ready_q);
     klog_print("Sono a riga 44\n");
-    mkEmptyProcQ(low_ready_q);
+    INIT_LIST_HEAD(low_ready_q);
     klog_print("Sono a riga 46\n");
     current_p = NULL;
     yielded = NULL;
