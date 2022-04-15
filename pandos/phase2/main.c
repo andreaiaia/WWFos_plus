@@ -50,12 +50,12 @@ int main()
     {
         device_sem[i] = 0;
     }
-    klog_print("Sono a riga 54\n");
+    klog_print("PH5");
     for (int j = 0; j < MAXPROC; j++)
     {
         all_processes[j] = NULL;
     }
-    klog_print("Sono a riga 59 secondo me mi blocco qui\n");
+    klog_print("PH6");
     // Inizializzo il Passup Vector
     pu_vector = (passupvector_t *)PASSUPVECTOR;
     // Popolo il Passup Vector
@@ -76,7 +76,7 @@ int main()
 
     // Creo un processo (a bassa priorità) da inserire nella Ready queue
     pcb_PTR kernel_mode_proc = allocPcb();
-    klog_print("Sono a riga 75\n");
+    klog_print("PH7");
     /**
      * Imposto lo state_t su kernel mode, interrupt abilitati e Processor Local Time abilitato.
      * Uso l'or | per sommare i bit del registro e accenderli dove serve con le macro da pandos_const.h
@@ -97,10 +97,10 @@ int main()
      */
     RAMTOP(kernel_mode_proc->p_s.reg_sp);
 
-    klog_print("Sono a riga 96\n");
+    klog_print("PH9");
     // Imposto il PC sull'indirizzo della funzione test
     kernel_mode_proc->p_s.pc_epc = (memaddr)test;
-
+    klog_print("PH10");
     /**
      * Come indicato sul manuale, per ragioni tecniche va
      * inizializzato allo stesso modo anche il registro t9 del gpr
