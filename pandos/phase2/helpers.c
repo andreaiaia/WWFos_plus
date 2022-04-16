@@ -87,57 +87,69 @@ void syscallExceptionHandler(unsigned int syscallCode)
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
         switch (syscallCode)
         {
+        klog_print("HELP2.1\n");
         case CREATEPROCESS:
+            klog_print("HELP2.2\n");
             Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
             post_syscall();
             break;
 
         case TERMPROCESS:
+            klog_print("HELP2.3\n");
             Terminate_Process((int)(REG_A1_SS));
             post_syscall();
             break;
 
         case PASSEREN:
+        klog_print("HELP2.4\n");
             Passeren((int *)(REG_A1_SS));
             post_syscall();
             break;
 
         case VERHOGEN:
+        klog_print("HELP2.5\n");
             Verhogen((int *)(REG_A1_SS));
             post_syscall();
             break;
 
         case DOIO:
+        klog_print("HELP2.6\n");
             Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS);
             post_syscall();
             break;
 
         case GETTIME:
+        klog_print("HELP2.7\n");
             Get_CPU_Time();
             post_syscall();
             break;
 
         case CLOCKWAIT:
+        klog_print("HELP2.8\n");
             Wait_For_Clock();
             post_syscall();
             break;
 
         case GETSUPPORTPTR:
+        klog_print("HELP2.9\n");
             Get_Support_Data();
             post_syscall();
             break;
 
         case GETPROCESSID:
+        klog_print("HELP2.10\n");
             Get_Process_Id((int)(REG_A1_SS));
             post_syscall();
             break;
 
         case YIELD:
+        klog_print("HELP2.11\n");
             Yield();
             post_syscall();
             break;
 
         default:
+            klog_print("HELP2.12\n");
             // * Imposto il bit RI
             PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
             // * Simulo una TRAP
@@ -152,7 +164,9 @@ void syscallExceptionHandler(unsigned int syscallCode)
         // * Imposto il bit RI
         PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
         // * Simulo una TRAP
+        klog_print("HELP4\n");
         PassUpOrDie(GENERALEXCEPT);
+        klog_print("HELP5\n");
     }
 }
 
@@ -166,17 +180,22 @@ void PassUpOrDie(int excCode)
      * Altrimenti si esegue la "Pass Up" e si inoltra la richiesta
      * al livello di supporto (prossima fase del progetto).
      */
-    if (current_p->p_supportStruct == NULL)
-        Terminate_Process(0);
+    klog_print("HELP6\n");
+    if (current_p->p_supportStruct == NULL) {
+        klog_print("HELP7\n");
+        Terminate_Process(0); }
     else
     {
+        klog_print("HELP8\n");
         // Copio l'exception state
         copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_supportStruct->sup_exceptState[excCode]));
+        klog_print("HELP9\n");
         // Copio stack pointer, status e program counter
         unsigned int stack_ptr = current_p->p_supportStruct->sup_exceptContext[excCode].stackPtr;
         unsigned int status = current_p->p_supportStruct->sup_exceptContext[excCode].status;
         unsigned int pc = current_p->p_supportStruct->sup_exceptContext[excCode].pc;
         // Carico il nuovo contesto nel processo attivo
         LDCXT(stack_ptr, status, pc);
+        klog_print("HELP10\n");
     }
 }
