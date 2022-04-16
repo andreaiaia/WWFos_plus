@@ -79,7 +79,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 {
     klog_print("HELP1\n");
     // * Verifico che il processo chiamante della Syscall sia in KernelMode e che abbia chiamato una Syscall (rega0 < 0)
-    if (((PROCESSOR_SAVED_STATE->status & STATUS_KUp) == STATUS_KUp))
+    if (!((PROCESSOR_SAVED_STATE->status & STATUS_KUp) == STATUS_KUp) && (syscallCode < 0))
     {
         klog_print("HELP2\n");
         INCREMENTO_PC;
