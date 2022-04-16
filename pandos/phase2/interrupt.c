@@ -13,6 +13,7 @@
 
 void interruptHandler()
 {
+  klog_print("INTH\n");
   // scorro linee di Cause.IP cercando interrupt pending
   for (int line = 1; line < 8; line++) // linea 0 da ignorare
   {
@@ -31,6 +32,9 @@ void interruptHandler()
 // linea 1   (3.6.2 pandos)
 void PLTTimerInterrupt(int line)
 {
+  klog_print("PLT\n");
+  klog_print_hex(line);
+  klog_print("\n");
   setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
 
   // copio stato processore nel pcb attuale
@@ -47,6 +51,7 @@ void PLTTimerInterrupt(int line)
 // linea 2   (3.6.3 pandos)
 void intervalTimerInterrupt(int line)
 {
+  klog_print("INTTIMER\n");
   LDIT(PSECOND); // carico Interval Timer con 100millisec
 
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
@@ -116,5 +121,5 @@ void nonTimerInterrupt(int line)
   tmp->p_s.reg_v0 = device_status_code;
 
   LDST((STATE_PTR)BIOSDATAPAGE);
-  //scheduler();
+  // scheduler();
 }

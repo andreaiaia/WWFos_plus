@@ -18,5 +18,6 @@ extern void uTLB_RefillHandler();
 extern void test();
 // Funzione utile per il debugging
 extern void klog_print(char *);
+extern void klog_print_hex(unsigned int);
 
 #endif

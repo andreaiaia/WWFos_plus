@@ -99,11 +99,12 @@ void Passeren(int *semaddr)
 
 pcb_PTR Verhogen(int *semaddr)
 {
-    klog_print("ciaone");
+    klog_print("VER\n");
     pcb_PTR first = NULL;
 
     if (*semaddr == 1)
     {
+        klog_print("VER1\n");
         // Blocco il processo corrente
         if (current_p->p_prio == 1)
             insertProcQ(&high_ready_q, current_p);
@@ -113,6 +114,7 @@ pcb_PTR Verhogen(int *semaddr)
     }
     else if (headBlocked(semaddr) != NULL)
     {
+        klog_print("VER2\n");
         pcb_PTR first = removeBlocked(semaddr);
         soft_count--;
         if (first->p_prio == 1)
@@ -121,8 +123,11 @@ pcb_PTR Verhogen(int *semaddr)
             insertProcQ(&low_ready_q, first);
     }
     else
+    {
+        klog_print("VER3\n");
         (*semaddr)++;
-
+    }
+    klog_print("VER4\n");
     return first;
 }
 

@@ -18,7 +18,7 @@ void exceptionHandler()
     // * Exception code 4-7 9-12 -> Si passa il controllo al Program Trap exception handler (PassUpOrDie GENERALEXCEPT)
     else if (((DECODED_EXCEPTION_CAUSE >= 4) && (DECODED_EXCEPTION_CAUSE <= 7)) || ((DECODED_EXCEPTION_CAUSE >= 9) && (DECODED_EXCEPTION_CAUSE <= 12)))
     {
-        klog_print("EXH4\n");
+        klog_print_hex(DECODED_EXCEPTION_CAUSE);
         PassUpOrDie(GENERALEXCEPT);
     }
     // * Exception code 8 -> Si passa il controllo al SYSCALL exception handler

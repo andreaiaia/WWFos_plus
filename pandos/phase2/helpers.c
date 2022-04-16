@@ -71,6 +71,7 @@ pcb_PTR find_process(int pid)
 
 void post_syscall()
 {
+    klog_print("POST_SYSCALL\n");
     LDST((PROCESSOR_SAVED_STATE));
     scheduler();
 }
@@ -101,49 +102,49 @@ void syscallExceptionHandler(unsigned int syscallCode)
             break;
 
         case PASSEREN:
-        klog_print("HELP2.4\n");
+            klog_print("HELP2.4\n");
             Passeren((int *)(REG_A1_SS));
             post_syscall();
             break;
 
         case VERHOGEN:
-        klog_print("HELP2.5\n");
+            klog_print("HELP2.5\n");
             Verhogen((int *)(REG_A1_SS));
             post_syscall();
             break;
 
         case DOIO:
-        klog_print("HELP2.6\n");
+            klog_print("HELP2.6\n");
             Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS);
             post_syscall();
             break;
 
         case GETTIME:
-        klog_print("HELP2.7\n");
+            klog_print("HELP2.7\n");
             Get_CPU_Time();
             post_syscall();
             break;
 
         case CLOCKWAIT:
-        klog_print("HELP2.8\n");
+            klog_print("HELP2.8\n");
             Wait_For_Clock();
             post_syscall();
             break;
 
         case GETSUPPORTPTR:
-        klog_print("HELP2.9\n");
+            klog_print("HELP2.9\n");
             Get_Support_Data();
             post_syscall();
             break;
 
         case GETPROCESSID:
-        klog_print("HELP2.10\n");
+            klog_print("HELP2.10\n");
             Get_Process_Id((int)(REG_A1_SS));
             post_syscall();
             break;
 
         case YIELD:
-        klog_print("HELP2.11\n");
+            klog_print("HELP2.11\n");
             Yield();
             post_syscall();
             break;
@@ -181,9 +182,11 @@ void PassUpOrDie(int excCode)
      * al livello di supporto (prossima fase del progetto).
      */
     klog_print("HELP6\n");
-    if (current_p->p_supportStruct == NULL) {
+    if (current_p->p_supportStruct == NULL)
+    {
         klog_print("HELP7\n");
-        Terminate_Process(0); }
+        Terminate_Process(0);
+    }
     else
     {
         klog_print("HELP8\n");
@@ -198,4 +201,5 @@ void PassUpOrDie(int excCode)
         LDCXT(stack_ptr, status, pc);
         klog_print("HELP10\n");
     }
+    klog_print("HELPEND\n");
 }
