@@ -85,9 +85,9 @@ void syscallExceptionHandler(unsigned int syscallCode)
         INCREMENTO_PC;
         // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
+        klog_print("HELP2.1\n");
         switch (syscallCode)
         {
-        klog_print("HELP2.1\n");
         case CREATEPROCESS:
             klog_print("HELP2.2\n");
             Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
