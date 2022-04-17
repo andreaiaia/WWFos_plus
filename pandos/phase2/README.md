@@ -42,7 +42,7 @@ Abbiamo scelto di dare il seguente ordine ai semafori dell'array:
 #### Implementazione della Terminate_Process
 
 Per implementare la SYSCALL NSYS2 TERMINATEPROCESS abbiamo scelto di seguire un approccio ricorsivo, pur consapevoli della penalizzazione delle prestazioni che questo comporta rispetto ad un approccio puramente iterativo, perché abbiamo preferito mantenere la chiarezza del codice (essendo dopotutto questo un progetto a scopo didattico).
-Per implementare questo approccio ricorsivo abbiamo fatto uso di due funzioni di appoggio (i.e. `void Exterminate` e `find_process`) che, per ragioni di pulizia e leggibilità del codice, abbiamo preferito spostare in un file dedicato.
+Per implementare questo approccio ricorsivo abbiamo fatto uso di due funzioni di appoggio (i.e. `void Exterminate(pcb_PTR)` e `pcb_PTR find_process(int)`) che, per ragioni di pulizia e leggibilità del codice, abbiamo preferito spostare in un file dedicato.
 
 #### Implementazione della Do_IO_Device
 
