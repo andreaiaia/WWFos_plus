@@ -55,7 +55,8 @@ void Terminate_Process(int pid)
 void Passeren(int *semaddr)
 {
     klog_print("PASS\n");
-    if (semaddr == NULL) {
+    if (semaddr == NULL)
+    {
         klog_print("PASS1\n");
         return;
     }
