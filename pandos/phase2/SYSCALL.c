@@ -103,7 +103,7 @@ pcb_PTR Verhogen(int *semaddr)
     else if (headBlocked(semaddr) != NULL)
     {
         klog_print("VER2\n");
-        pcb_PTR first = removeBlocked(semaddr);
+        first = removeBlocked(semaddr);
         soft_count--;
         if (first->p_prio == 1)
             insertProcQ(&high_ready_q, first);
@@ -127,14 +127,15 @@ void Do_IO_Device(int *commandAddr, int commandValue)
      * commandAddr ricevuto uso una macro che ho definito
      * in SYSCALL.h
      */
-    int dev_position = DEV_POSITION(commandAddr);
+    int dev_position = find_dev(commandAddr);
+
     // Distinguo fra terminal dev e tutti gli altri dispositivi
-    if (dev_position > 63)
-        dev_position -= 32;
-    else
-        dev_position = dev_position / 2;
+    // if (dev_position > 32)
+    //     dev_position = FIND_TERM(commandAddr);
 
     // Faccio PASSEREN su dispositivo trovato
+    klog_print_hex(dev_position);
+    klog_print("\n");
     Passeren(&(device_sem[dev_position]));
     klog_print("DOIO1\n");
     // Scrivo nel commandAddr il valore ricevuto
