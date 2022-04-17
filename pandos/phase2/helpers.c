@@ -69,56 +69,6 @@ pcb_PTR find_process(int pid)
     return NULL;
 }
 
-int find_dev(int *commandAddr)
-{
-    devregarea_t *devices = (devregarea_t *)RAMBASEADDR;
-    int flag = 0;
-    int index = 0;
-    for (int i = 0; i < 8; i++)
-    {
-        klog_print("entro nel for\n");
-        if (&(devices->devreg[4][i].term.transm_command) == (memaddr *)commandAddr)
-        {
-            klog_print("trovato transm i: ");
-            klog_print_hex(i);
-            klog_print("\n");
-            flag = 1;
-            index = i;
-            break;
-        }
-        else if (&(devices->devreg[4][i].term.recv_command) == (memaddr *)commandAddr)
-        {
-            klog_print("trovato recv i: ");
-            klog_print_hex(i);
-            klog_print("\n");
-            index = i;
-            break;
-        }
-        else
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                klog_print("entro nel for j\n");
-                if (&(devices->devreg[i][j].dtp.command) == (memaddr *)commandAddr)
-                {
-                    klog_print("trovato dev i: ");
-                    klog_print_hex(i);
-                    klog_print(" j: ");
-                    klog_print_hex(j);
-                    klog_print("\n");
-                    return (i + 1) * (j + 1); // ! da correggere
-                }
-            }
-        }
-    }
-    klog_print_hex(index);
-    klog_print("\n");
-    int return_val = (32 + index + index) + flag;
-    klog_print_hex(return_val);
-    klog_print("\n");
-    return return_val;
-}
-
 void syscallExceptionHandler(unsigned int syscallCode)
 {
     klog_print("HELP1\n");

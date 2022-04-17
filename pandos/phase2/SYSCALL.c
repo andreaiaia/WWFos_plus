@@ -130,8 +130,10 @@ void Do_IO_Device(int *commandAddr, int commandValue)
     int dev_position = find_dev(commandAddr);
 
     // Distinguo fra terminal dev e tutti gli altri dispositivi
-    // if (dev_position > 32)
-    //     dev_position = FIND_TERM(commandAddr);
+    if (dev_position > 63)
+        dev_position -= 32;
+    else
+        dev_position /= 2;
 
     // Faccio PASSEREN su dispositivo trovato
     klog_print_hex(dev_position);
