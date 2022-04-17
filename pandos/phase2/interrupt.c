@@ -33,8 +33,6 @@ void interruptHandler()
 void PLTTimerInterrupt(int line)
 {
   klog_print("PLT\n");
-  klog_print_hex(line);
-  klog_print("\n");
   setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
 
   // copio stato processore nel pcb attuale
