@@ -33,7 +33,7 @@ Abbiamo scelto di dare il seguente ordine ai semafori dell'array:
 - I successivi 8 semafori (indici **8-15**) sono associati ai **Tape** Devices;
 - I successivi 8 semafori (indici **16-23**) sono associati ai **Network** Devices;
 - I successivi 8 semafori (indici **24-31**) sono associati ai **Printer** Devices;
-- I restanti 16 semafori (indici **31-47**) sono associati ai **Terminal** Devices nel seguente modo,
+- I restanti 16 semafori (indici **32-47**) sono associati ai **Terminal** Devices nel seguente modo,
   - I semafori sono associati a due a due ai rispettivi terminali (quindi semaforo 32 e 33 sono associati al primo terminale, ad esempio), in questo modo i semafori _recv_ sono quelli di indice _pari_, mentre i semafori _transm_ sono quelli di indice _dispari_;
 - Infine c'è il semaforo dello **pseudo-clock** all'indice **48**.
 
@@ -54,12 +54,14 @@ Il modo più semplice per risolvere questo comportamento è stato modificare la 
 ### Implementazione dell'interruptHandler
 
 L'interrupt handler è stato gestito in due fasi:
+
 - 1 -> trovare la "line" nel registro Cause.IP
 - 2 -> richiamare la funzione appropriata in base alla line con un interrupt pending (partendo dall'indice piu' basso)
 
 Le funzioni sono fedeli a quanto indicato dal manuale, un accorgimento utile è stato quello di usare una variabile "mask" che partisse da uno e raddoppiasse di volta in volta per fare degli AND bit a bit.
 
 Abbiamo scelto di mettere in conto al processo corrente il tempo speso per gli interrupt, in particolare ciò che accade è:
+
 - processo corrente è interrotto
 - viene gestito l'interrupt
 - interrupt ritorna controllo a processo corrente
