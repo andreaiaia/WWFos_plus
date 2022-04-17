@@ -9,9 +9,6 @@
 // Copia lo stato di una cpu
 void copy_state(state_t *original, state_t *dest);
 
-//* Operazioni sui semafori
-pcb_PTR P(int *semaddr);
-
 //* Helpers collegati alla Terminate_Process
 
 // Verifica se un processo è presente nella coda (sia bassa che alta priorità)
