@@ -69,6 +69,38 @@ pcb_PTR find_process(int pid)
     return NULL;
 }
 
+int find_dev(int *commandAddr)
+{
+    int flag = 0;
+    devregarea_t *devices = (devregarea_t *)RAMBASEADDR;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            if (&(devices->devreg[j][i].dtp.command) == (memaddr *)commandAddr)
+            {
+                return (j + 1) * i;
+            }
+        }
+    }
+    int index = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        if (&(devices->devreg[4][i].term.transm_command) == (memaddr *)commandAddr)
+        {
+            flag = 1;
+            index = i;
+            break;
+        }
+        else if (&(devices->devreg[4][i].term.recv_command) == (memaddr *)commandAddr)
+        {
+            index = i;
+            break;
+        }
+    }
+    return index * 2 + flag;
+}
+
 void syscallExceptionHandler(unsigned int syscallCode)
 {
     klog_print("HELP1\n");
@@ -166,8 +198,6 @@ void PassUpOrDie(int excCode)
      * al livello di supporto (prossima fase del progetto).
      */
     klog_print("HELP6\n");
-    klog_print("HELP6BIS\n");
-    klog_print("HELP6TRIS\n");
     if (current_p->p_supportStruct == NULL)
     {
         klog_print("HELP7\n");

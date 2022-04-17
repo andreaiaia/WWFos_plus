@@ -12,8 +12,9 @@ void copy_state(state_t *original, state_t *dest);
 //* Helpers collegati alla Terminate_Process
 
 // Verifica se un processo è presente nella coda (sia bassa che alta priorità)
-pcb_PTR find_process(int pid);
 void Exterminate(pcb_PTR);
+pcb_PTR find_process(int pid);
+int find_dev(int *commandAddr);
 
 //* Helpers collegati all'exception handler
 
