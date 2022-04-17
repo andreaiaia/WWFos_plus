@@ -33,26 +33,22 @@ int main()
     initASL();
     proc_count = 0;
     soft_count = 0;
-    // klog_print("PH 1\n");
-    // klog_print("PH2\n");
     mkEmptyProcQ(&high_ready_q);
-    // klog_print("PH3\n");
     mkEmptyProcQ(&low_ready_q);
-    // klog_print("PH4\n");
     current_p = NULL;
     yielded = NULL;
     for (int i = 0; i < DEVSEM_NUM; i++)
     {
         device_sem[i] = 0;
     }
-    // klog_print("PH5\n");
     for (int j = 0; j < MAXPROC; j++)
     {
         all_processes[j] = NULL;
     }
-    // klog_print("PH6\n");
+
     // Inizializzo il Passup Vector
     pu_vector = (passupvector_t *)PASSUPVECTOR;
+
     // Popolo il Passup Vector
     pu_vector->tlb_refill_handler = (memaddr)uTLB_RefillHandler;
     pu_vector->tlb_refill_stackPtr = KERNELSTACK;
@@ -71,7 +67,7 @@ int main()
 
     // Creo un processo (a bassa priorità) da inserire nella Ready queue
     pcb_PTR kernel_mode_proc = allocPcb();
-    // klog_print("PH7\n");
+
     /**
      * Imposto lo state_t su kernel mode, interrupt abilitati e Processor Local Time abilitato.
      * Uso l'or | per sommare i bit del registro e accenderli dove serve con le macro da pandos_const.h
@@ -92,30 +88,27 @@ int main()
      */
     RAMTOP(kernel_mode_proc->p_s.reg_sp);
 
-    // klog_print("PH9\n");
     // Imposto il PC sull'indirizzo della funzione test
     kernel_mode_proc->p_s.pc_epc = (memaddr)test;
     /**
      * Come indicato sul manuale, per ragioni tecniche va
      * inizializzato allo stesso modo anche il registro t9 del gpr
      */
-    // klog_print("PH10\n");
     kernel_mode_proc->p_s.reg_t9 = (memaddr)test;
-    // klog_print("PH11\n");
+
+    // Essendo un processo a bassa priorità, imposto il campo prio di conseguenza
     kernel_mode_proc->p_prio = 0;
 
-    // Finalmente inserisco il processo impostato nella ready queue
-    // klog_print("PH12\n");
+    // Finalmente inserisco il processo inizializzato nella ready queue
     insertProcQ(&low_ready_q, kernel_mode_proc);
-    // klog_print("PH13\n");
     proc_count++;
-    // klog_print("PH14\n");
+    // Aggiorno il vettore dei processi
     all_processes[0] = kernel_mode_proc;
 
     // Chiamo lo Scheduler
-    // klog_print("PH15\n");
     scheduler();
-    klog_print("PH16\n");
+    // Questa roba non dovrebbe mai stamparla
+    klog_print("MAIN_END\n");
 
     return 0;
 }
