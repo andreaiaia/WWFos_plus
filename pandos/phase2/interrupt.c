@@ -24,7 +24,11 @@ void interruptHandler()
       else if (line == 2)
         intervalTimerInterrupt(line);
       else
+      {
+        klog_print_hex(line);
+        klog_print("\n");
         nonTimerInterrupt(line);
+      }
     }
   }
 }
@@ -33,15 +37,18 @@ void interruptHandler()
 void PLTTimerInterrupt(int line)
 {
   klog_print("PLT\n");
-  setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
+  if (current_p != NULL && current_p->p_semAdd == NULL)
+  {
+    setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
 
-  // copio stato processore nel pcb attuale
-  state_t *processor_state = PROCESSOR_SAVED_STATE;
-  copy_state(processor_state, &current_p->p_s);
+    // copio stato processore nel pcb attuale
+    state_t *processor_state = PROCESSOR_SAVED_STATE;
+    copy_state(processor_state, &current_p->p_s);
 
-  // metto current process in "ready"
-  insertProcQ(&low_ready_q, current_p);
-  current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
+    // metto current process in "ready"
+    insertProcQ(&low_ready_q, current_p);
+    current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
+  }
 
   scheduler();
 }
@@ -69,6 +76,7 @@ void intervalTimerInterrupt(int line)
 // linee 3-7   (3.6.1 pandos)
 void nonTimerInterrupt(int line)
 {
+  klog_print("NTI\n");
   int device_num = 0;
   devregarea_t *device_regs = (devregarea_t *)RAMBASEADDR;
   // salvo word della line in cui trovo i device con interrupt pending

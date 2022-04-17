@@ -66,9 +66,7 @@ void Passeren(int *semaddr)
         //* Blocco il processo corrente
         // Aggiungo il processo corrente alla coda del semd
         insertBlocked(semaddr, current_p);
-        copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
         soft_count++;
-        current_p = NULL;
     }
     else if (headBlocked(semaddr) != NULL)
     {
@@ -80,9 +78,6 @@ void Passeren(int *semaddr)
             insertProcQ(&high_ready_q, first);
         else
             insertProcQ(&low_ready_q, first);
-
-        // Blocco il processo corrente
-        current_p = NULL;
     }
     else
     {
@@ -104,7 +99,6 @@ pcb_PTR Verhogen(int *semaddr)
             insertProcQ(&high_ready_q, current_p);
         else
             insertProcQ(&low_ready_q, current_p);
-        current_p = NULL;
     }
     else if (headBlocked(semaddr) != NULL)
     {
@@ -146,8 +140,8 @@ void Do_IO_Device(int *commandAddr, int commandValue)
     // Scrivo nel commandAddr il valore ricevuto
     *commandAddr = commandValue;
 
-    // Abilito gli Interrupt nel processo corrente
-    current_p->p_s.status = (current_p->p_s.status) | IEPON | IMON;
+    // Abilito gli Interrupt nei device
+    // current_p->p_s.status = (current_p->p_s.status) | IEPON | IMON;
 }
 
 void Get_CPU_Time()
