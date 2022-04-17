@@ -6,15 +6,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
     pcb_PTR child = allocPcb();
     // Se non è stato possibile allocare, ritorno errore
     if (child == NULL)
-    {
-        /**
-         * Imposto il valore di fallimento nel registro v0
-         * E avanto il PC di una WORDLEN per evitare il loop
-         * di SYSCALL, quindi ripasso il controllo al chiamante
-         */
-        statep->reg_v0 = NOPROC;
-        // statep->pc_epc += WORDLEN;
-    }
+        current_p->p_s.reg_v0 = NOPROC; // Ritorno il valore di fallimento
     else
     {
         // Imposto i campi secondo i parametri ricevuti
@@ -44,10 +36,8 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
                 all_processes[i] = child;
         }
     }
-
-    // Vedi sopra
-    // statep->pc_epc += WORDLEN;
-    statep->reg_v0 = OK;
+    // Ritorno successo
+    current_p->p_s.reg_v0 = OK;
 }
 
 // Se il secondo parametro è 0 allora il bersaglio è il processo invocante
@@ -77,8 +67,6 @@ void Passeren(int *semaddr)
         insertBlocked(semaddr, current_p);
         soft_count++;
         current_p = NULL;
-        // Chiamo lo scheduler
-        scheduler();
     }
     else if (headBlocked(semaddr) != NULL)
     {
@@ -93,8 +81,6 @@ void Passeren(int *semaddr)
 
         // Blocco il processo corrente
         current_p = NULL;
-        // Chiamo lo scheduler
-        scheduler();
     }
     else
     {
@@ -111,7 +97,7 @@ pcb_PTR Verhogen(int *semaddr)
     if (*semaddr == 1)
     {
         klog_print("VER1\n");
-        // Blocco il processo corrente
+        // Sospendo il processo corrente
         if (current_p->p_prio == 1)
             insertProcQ(&high_ready_q, current_p);
         else
