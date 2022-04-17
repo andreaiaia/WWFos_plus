@@ -51,7 +51,7 @@ Per comodità è stata definita una Macro nell'header file che, preso come param
 Nel definire questa Macro la prima volta è emerso subito il problema che essa non riusciva a distinguere, nel caso il commandAddr fosse contenuto in un dispositivo terminale, se questo fosse associato ad un semaforo recv o ad uno transm, con la conseguenza che la macro avrebbe sempre restituito un indice massimo di 40, ignorando ben 8 semafori.
 Il modo più semplice per risolvere questo comportamento è stato modificare la macro in modo che dividesse per la metà della dimensione di un blocco di Registro dispositivo, in questo modo trova correttamente il semaforo da bloccare sul terminale, ma chiaramente questa modifica sballa i conti con gli indici. Questo errore viene risolto con un costrutto if-then-else che, nel caso l'indice trovato sia superiore a 63 (quindi avendo raddoppiato tutti equivarrebbe ad aver superato il 32esimo dispositivo), lo normalizza togliendo l'offset artificiosamente introdotto, in caso contrario per normalizzare basta dimezzare l'indice trovato e si ha il corretto indice di semaforo su cui eseguire la Passeren.
 
-### Implementazione dell'interruptHandler
+### Implementazione dell'Interrupt Handler
 
 L'interrupt handler è stato gestito in due fasi:
 
