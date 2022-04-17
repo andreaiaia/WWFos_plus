@@ -83,7 +83,7 @@ void nonTimerInterrupt(int line)
   unsigned int bitmap_word = device_regs->interrupt_dev[line - 3]; // tutor: nel campo deviceRegs->interrupt_dev trovate la interrupt device bitmap
   unsigned int device_status_code = 0;
   unsigned int mask = 1, i = 0, flag = 0;
-  int terminal_request = 0; // 0->receive, 1->transmission; per distinguere semaforo da usare
+  int terminal_request = 0; // 1->receive, 0->transmission; per distinguere semaforo da usare
 
   // calcolo n° del device che ha generato l'interrupt nella line
   while ((i < 8) & (flag == 0)) // scorro devices della line
@@ -102,13 +102,13 @@ void nonTimerInterrupt(int line)
         { // terminale ha priorità di trasmissione piu' alta rispetto a ricezione
           device_status_code = terminal_ptr->transm_status;
           terminal_ptr->transm_command = ACK;
-          terminal_request = 1;
+          terminal_request = 0;
         }
         else
         {
           device_status_code = terminal_ptr->recv_status;
           terminal_ptr->recv_command = ACK;
-          terminal_request = 0;
+          terminal_request = 1;
         }
       }
       else
