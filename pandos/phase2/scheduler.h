@@ -1,6 +1,7 @@
 #ifndef SCH_H
 #define SCH_H
-#include "sistema.h"
+#include "initial.h"
+
 //* Costanti */
 // Numero di semafori dei dispositivi
 #define DEVSEM_NUM 49

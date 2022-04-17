@@ -14,6 +14,7 @@ void scheduler()
         // Aggiungo il tempo trascorso al tempo impiegato dal processo
         klog_print("SC3\n");
         current_p->p_time = (current_p->p_time) + (finish - start);
+        LDST((PROCESSOR_SAVED_STATE));
     }
     klog_print("SC4\n");
     // Se la coda dei processi ad ALTA priorità è non-vuota

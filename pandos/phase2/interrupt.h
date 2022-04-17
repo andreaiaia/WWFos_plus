@@ -1,6 +1,6 @@
 #ifndef INT_H
 #define INT_H
-#include "sistema.h"
+#include "initial.h"
 #include "scheduler.h"
 #include "helpers.h"
 
