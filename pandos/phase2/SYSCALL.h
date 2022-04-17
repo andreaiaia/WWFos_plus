@@ -11,8 +11,7 @@
  * intera il numero risultante corrisponde all'indice del relativo semaforo
  * nell'array dei semafori. Una volta che so la posizione del semaforo è checkmate.
  */
-#define DEV_POSITION(T) ((int)T - DEV_REG_START) / (DEV_REG_SIZE / 2)
-
+#define DEV_POSITION(T) ((int)T - DEV_REG_START) / DEV_REG_SIZE
 /* Richiamo le variabili globali necessarie */
 extern int proc_count, soft_count, device_sem[DEVSEM_NUM];
 extern pcb_PTR current_p, yielded;
