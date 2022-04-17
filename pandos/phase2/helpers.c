@@ -16,6 +16,42 @@ void copy_state(state_t *original, state_t *dest)
     }
 }
 
+/**
+ * La funzione ritorna il processo sbloccato o
+ * NULL altrimenti
+ */
+pcb_PTR P(int *semaddr)
+{
+    pcb_PTR first = NULL;
+    klog_print("P\n");
+    if (*semaddr == 0)
+    {
+        klog_print("P1\n");
+        //* Blocco il processo corrente
+        // Aggiungo il processo corrente alla coda del semd
+        insertBlocked(semaddr, current_p);
+        soft_count++;
+    }
+    else if (headBlocked(semaddr) != NULL)
+    {
+        klog_print("P2\n");
+        first = removeBlocked(semaddr);
+        soft_count--;
+
+        if (first->p_prio == 1)
+            insertProcQ(&high_ready_q, first);
+        else
+            insertProcQ(&low_ready_q, first);
+    }
+    else
+    {
+        klog_print("P3\n");
+        (*semaddr)--;
+    }
+
+    return first;
+}
+
 /* Helpers per le SYSCALL */
 
 //* "Do you know how you make someone into a Dalek? Subtract Love, add Anger." ~ Steven Moffat
@@ -166,6 +202,8 @@ void PassUpOrDie(int excCode)
      * al livello di supporto (prossima fase del progetto).
      */
     klog_print("HELP6\n");
+    klog_print("HELP6BIS\n");
+    klog_print("HELP6TRIS\n");
     if (current_p->p_supportStruct == NULL)
     {
         klog_print("HELP7\n");

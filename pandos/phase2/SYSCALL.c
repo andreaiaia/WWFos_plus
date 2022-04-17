@@ -55,39 +55,9 @@ void Terminate_Process(int pid)
 void Passeren(int *semaddr)
 {
     klog_print("PASS\n");
-    if (semaddr == NULL)
-    {
-        klog_print("PASS1\n");
-        return;
-    }
-    else if (*semaddr == 0)
-    {
-        klog_print("PASS2\n");
-        //* Blocco il processo corrente
-        // Aggiungo il processo corrente alla coda del semd
-        insertBlocked(semaddr, current_p);
-        soft_count++;
+    pcb_PTR output = P(semaddr);
+    if (output != NULL)
         current_p = NULL;
-    }
-    else if (headBlocked(semaddr) != NULL)
-    {
-        klog_print("PASS3\n");
-        pcb_PTR first = removeBlocked(semaddr);
-        soft_count--;
-
-        if (first->p_prio == 1)
-            insertProcQ(&high_ready_q, first);
-        else
-            insertProcQ(&low_ready_q, first);
-
-        // Blocco il processo corrente
-        current_p = NULL;
-    }
-    else
-    {
-        klog_print("PASS4\n");
-        (*semaddr)--;
-    }
 }
 
 pcb_PTR Verhogen(int *semaddr)
@@ -140,7 +110,7 @@ void Do_IO_Device(int *commandAddr, int commandValue)
         dev_position = dev_position / 2;
 
     // Faccio PASSEREN su dispositivo trovato
-    Passeren(&(device_sem[dev_position]));
+    P(&(device_sem[dev_position]));
     klog_print("DOIO1\n");
     // Scrivo nel commandAddr il valore ricevuto
     *commandAddr = commandValue;
