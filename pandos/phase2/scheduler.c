@@ -14,6 +14,7 @@ void scheduler()
         // Aggiungo il tempo trascorso al tempo impiegato dal processo
         klog_print("SC3\n");
         current_p->p_time = (current_p->p_time) + (finish - start);
+        STCK(start);
         LDST(PROCESSOR_SAVED_STATE);
     }
     klog_print("SC4\n");
@@ -36,7 +37,6 @@ void scheduler()
         setTIMER(TIMESLICE);
         klog_print("SC7\n");
         load_new_proc(&low_ready_q);
-        klog_print("SC7.1\n");
     }
     // Se le code sono entrambe vuote
     else
