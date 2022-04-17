@@ -92,61 +92,61 @@ void syscallExceptionHandler(unsigned int syscallCode)
         case CREATEPROCESS:
             klog_print("HELP2.2\n");
             Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
-            post_syscall();
+            scheduler();
             break;
 
         case TERMPROCESS:
             klog_print("HELP2.3\n");
             Terminate_Process((int)(REG_A1_SS));
-            post_syscall();
+            scheduler();
             break;
 
         case PASSEREN:
             klog_print("HELP2.4\n");
             Passeren((int *)(REG_A1_SS));
-            post_syscall();
+            scheduler();
             break;
 
         case VERHOGEN:
             klog_print("HELP2.5\n");
             Verhogen((int *)(REG_A1_SS));
-            post_syscall();
+            scheduler();
             break;
 
         case DOIO:
             klog_print("HELP2.6\n");
             Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS);
-            post_syscall();
+            scheduler();
             break;
 
         case GETTIME:
             klog_print("HELP2.7\n");
             Get_CPU_Time();
-            post_syscall();
+            scheduler();
             break;
 
         case CLOCKWAIT:
             klog_print("HELP2.8\n");
             Wait_For_Clock();
-            post_syscall();
+            scheduler();
             break;
 
         case GETSUPPORTPTR:
             klog_print("HELP2.9\n");
             Get_Support_Data();
-            post_syscall();
+            scheduler();
             break;
 
         case GETPROCESSID:
             klog_print("HELP2.10\n");
             Get_Process_Id((int)(REG_A1_SS));
-            post_syscall();
+            scheduler();
             break;
 
         case YIELD:
             klog_print("HELP2.11\n");
             Yield();
-            post_syscall();
+            scheduler();
             break;
 
         default:
