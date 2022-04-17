@@ -3,8 +3,6 @@
 #include "initial.h"
 
 //* Costanti */
-// Numero di semafori dei dispositivi
-#define DEVSEM_NUM 49
 
 extern struct list_head high_ready_q;
 extern struct list_head low_ready_q;

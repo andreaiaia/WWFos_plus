@@ -17,7 +17,6 @@ void scheduler()
         STCK(start);
         LDST(PROCESSOR_SAVED_STATE);
     }
-    klog_print("SC4\n");
     // Se la coda dei processi ad ALTA priorità è non-vuota
     else if (!emptyProcQ(&high_ready_q))
     {
@@ -49,7 +48,7 @@ void scheduler()
             klog_print("SC9\n");
             // Imposto lo stato corrente per accettare interrupt
             // E disabilito il tutto il resto (quindi anche il PLT)
-            unsigned int waitingStatus = getSTATUS() | IECON | IMON;
+            unsigned int waitingStatus = (getSTATUS() | IECON | IEPON | IMON | TEBITON) ^ TEBITON;
             klog_print("SC10\n");
             setSTATUS(waitingStatus);
             klog_print("SC11\n");
