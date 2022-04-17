@@ -126,7 +126,8 @@ void nonTimerInterrupt(int line)
   klog_print_hex(sem_num);
   klog_print("\n");
   pcb_PTR tmp = Verhogen(&(device_sem[sem_num]));
-  tmp->p_s.reg_v0 = device_status_code;
+  if (tmp != NULL)
+    tmp->p_s.reg_v0 = device_status_code;
 
   scheduler();
 }
