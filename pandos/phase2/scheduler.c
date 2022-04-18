@@ -2,17 +2,14 @@
 
 void scheduler()
 {
-    klog_print("SC1\n");
+    klog_print("SH\n");
     // Se un processo è in corso
-    // if (current_p == NULL) klog_print("Current_p nullo\n");
-    // if (current_p != NULL) klog_print("Current_p non nullo\n");
     if (current_p != NULL && current_p->p_semAdd == NULL)
     {
         // Leggo il time of day
-        klog_print("SC2\n");
+        klog_print("SH_RUNNING\n");
         STCK(finish);
         // Aggiungo il tempo trascorso al tempo impiegato dal processo
-        klog_print("SC3\n");
         current_p->p_time = (current_p->p_time) + (finish - start);
         STCK(start);
         LDST(PROCESSOR_SAVED_STATE);
@@ -20,44 +17,47 @@ void scheduler()
     // Se la coda dei processi ad ALTA priorità è non-vuota
     else if (!emptyProcQ(&high_ready_q))
     {
-        klog_print("SC5\n");
+        klog_print("SH_HIGH\n");
         load_new_proc(&high_ready_q);
     }
     // Se la coda dei processi a BASSA priorità è non-vuota
     else if (!emptyProcQ(&low_ready_q))
     {
-        klog_print("SC6\n");
         if (yielded != NULL)
         {
-            klog_print("SC6.1\n");
+            klog_print("SH_YIELDED\n");
             insertProcQ(&high_ready_q, yielded);
         }
+        klog_print("SH_LOW\n");
         // Imposto il PLT su 5ms
         setTIMER(TIMESLICE);
-        klog_print("SC7\n");
         load_new_proc(&low_ready_q);
     }
     // Se le code sono entrambe vuote
     else
     {
-        klog_print("SC8\n");
+        klog_print("SH_BOTH_EMPTY\n");
+        klog_print_hex(proc_count);
+        klog_print("\n");
+        klog_print_hex(soft_count);
+        klog_print("\n");
         if (proc_count == 0)
             HALT(); // Spegne il computer
         else if (soft_count > 0)
         {
-            klog_print("SC9\n");
+            klog_print("SH_SB\n");
             // Imposto lo stato corrente per accettare interrupt
             // E disabilito il tutto il resto (quindi anche il PLT)
             unsigned int waitingStatus = (getSTATUS() | IECON | IEPON | IMON | TEBITON) ^ TEBITON;
-            klog_print("SC10\n");
+            klog_print("SH_SET_STATUS\n");
             setSTATUS(waitingStatus);
-            klog_print("SC11\n");
+            klog_print("SH_WAIT\n");
             WAIT(); // Aspettando un interrupt
             scheduler();
         }
         else
         {
-            klog_print("SC13\n");
+            klog_print("SH_GONNA_PANIK\n");
             // Siamo in deadlock
             PANIC();
         }
