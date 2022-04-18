@@ -128,7 +128,7 @@ void nonTimerInterrupt(int line)
           dev_status_code = terminal_ptr->recv_status;
           terminal_ptr->recv_command = ACK;
           term_is_recv = 1;
-          klog_print_hex((memaddr)terminal_ptr);
+          klog_print("ACK dato al term0");
 
         }
       }
@@ -150,6 +150,5 @@ void nonTimerInterrupt(int line)
   pcb_PTR tmp = Verhogen(&(device_sem[sem_num]));
   if (tmp != NULL)
     tmp->p_s.reg_v0 = dev_status_code; //! non sono sicuro - Nick.
-  INCREMENTO_PC;
   scheduler();
 }
