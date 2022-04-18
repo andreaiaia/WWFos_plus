@@ -67,6 +67,9 @@ void Passeren(int *semaddr)
         // Aggiungo il processo corrente alla coda del semd
         insertBlocked(semaddr, current_p);
         soft_count++;
+        klog_print("soft_count: ");
+        klog_print_hex(soft_count);
+        klog_print("\n");
     }
     else if (headBlocked(semaddr) != NULL)
     {
@@ -105,6 +108,7 @@ pcb_PTR Verhogen(int *semaddr)
         klog_print("VER2\n");
         first = removeBlocked(semaddr);
         soft_count--;
+        first->p_semAdd = NULL;
         if (first->p_prio == 1)
             insertProcQ(&high_ready_q, first);
         else
