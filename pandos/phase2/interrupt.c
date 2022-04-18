@@ -33,6 +33,7 @@ void PLTTimerInterrupt(int line)
   klog_print("PLT\n");
   if (current_p != NULL && current_p->p_semAdd == NULL)
   {
+    klog_print("PLT_IF\n");
     setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
 
     // copio stato processore nel pcb attuale
@@ -60,6 +61,7 @@ void intervalTimerInterrupt(int line)
     removed = removeBlocked(&(device_sem[DEVSEM_NUM - 1]));
     if (removed != NULL)
     {
+      klog_print("Ho sbloccato un proc\n");
       if (removed->p_prio == 1)
         insertProcQ(&high_ready_q, removed);
       else
@@ -72,7 +74,10 @@ void intervalTimerInterrupt(int line)
   // resetto pseudo-clock semaphore
   device_sem[DEVSEM_NUM - 1] = 0;
 
-  scheduler();
+  if (current_p != NULL)
+    LDST(PROCESSOR_SAVED_STATE);
+  else
+    scheduler();
 }
 
 // linee 3-7   (3.6.1 pandos)
