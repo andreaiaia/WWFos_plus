@@ -56,6 +56,7 @@ void scheduler()
             klog_print("SH_WAIT\n");
             current_p = NULL;
             WAIT(); // Aspettando un interrupt
+            INCREMENTO_PC;
             scheduler();
         }
         else
