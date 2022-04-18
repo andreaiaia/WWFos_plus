@@ -60,7 +60,6 @@ void scheduler()
             klog_print("SC13\n");
             // Siamo in deadlock
             PANIC();
-            klog_print("SC14\n");
         }
     }
 }
