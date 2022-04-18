@@ -69,13 +69,10 @@ void intervalTimerInterrupt(int line)
     }
   } while (removed != NULL);
 
-  // resetto pseudo-clock semaphore
+  // Azzero lo pseudo-clock semaphore
   device_sem[DEVSEM_NUM - 1] = 0;
 
-  if (current_p != NULL)
-    LDST(PROCESSOR_SAVED_STATE);
-  else
-    scheduler();
+  scheduler();
 }
 
 // linee 3-7   (3.6.1 pandos)
