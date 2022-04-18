@@ -112,7 +112,7 @@ void nonTimerInterrupt(int line)
       if (line == 7)
       {
         termreg_t *terminal_ptr = (termreg_t *)DEV_REG_ADDR(line, device_num); // calcolo indirizzo terminale
-        klog_print_hex(terminal_ptr);
+        klog_print_hex((memaddr)terminal_ptr);
         /**
          * Controllo prima se c'è un interrupt sulla linea di trasmissione,
          * in quanto questa ha la priorità sulla ricezione
@@ -128,7 +128,7 @@ void nonTimerInterrupt(int line)
           dev_status_code = terminal_ptr->recv_status;
           terminal_ptr->recv_command = ACK;
           term_is_recv = 1;
-          klog_print_hex(terminal_ptr);
+          klog_print_hex((memaddr)terminal_ptr);
         }
       }
       else
