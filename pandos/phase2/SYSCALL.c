@@ -140,6 +140,7 @@ void Do_IO_Device(int *commandAddr, int commandValue)
         dev_position /= 2;
 
     // Faccio PASSEREN su dispositivo trovato
+    klog_print("Dentro DOIO:");
     klog_print_hex(dev_position);
     klog_print("\n");
     Passeren(&(device_sem[dev_position]));

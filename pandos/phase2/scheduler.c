@@ -54,6 +54,7 @@ void scheduler()
             klog_print("SH_SET_STATUS\n");
             setSTATUS(waitingStatus);
             klog_print("SH_WAIT\n");
+            current_p = NULL;
             WAIT(); // Aspettando un interrupt
             scheduler();
         }
