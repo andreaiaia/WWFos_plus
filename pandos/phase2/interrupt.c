@@ -125,12 +125,12 @@ void nonTimerInterrupt(int line)
         else if (terminal_ptr->recv_status == READY) 
         {
           dev_status_code = terminal_ptr->recv_status;
-          terminal_ptr->recv_command = ACK;
+          //terminal_ptr->recv_command = ACK;
           term_is_recv = 1;
           klog_print("ACK dato al term0\n");
           terminal_ptr->recv_status = ACK;
-	        terminal_ptr->transm_status = ACK;
-	        terminal_ptr->transm_command = ACK;
+	        //terminal_ptr->transm_status = ACK;
+	        //terminal_ptr->transm_command = ACK;
 
         }
       }
