@@ -38,6 +38,9 @@ void scheduler()
     // Se le code sono entrambe vuote
     else
     {
+        unsigned int waitingStatus = (getSTATUS() | IECON | IEPON | IMON | TEBITON) ^ TEBITON;
+            klog_print("SH_SET_STATUS\n");
+            setSTATUS(waitingStatus);
         klog_print("SH_BOTH_EMPTY\n");
         klog_print_hex(proc_count);
         klog_print("\n");
@@ -65,9 +68,7 @@ void scheduler()
             PANIC();
         }
     }
-    unsigned int waitingStatus = (getSTATUS() | IECON | IEPON | IMON | TEBITON) ^ TEBITON;
-            klog_print("SH_SET_STATUS\n");
-            setSTATUS(waitingStatus);
+    
 }
 
 // Funzione per prendere un processo dalla coda passata e avviarne l'esecuzione
