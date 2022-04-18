@@ -66,8 +66,6 @@ void intervalTimerInterrupt(int line)
         insertProcQ(&high_ready_q, removed);
       else
         insertProcQ(&low_ready_q, removed);
-
-      soft_count--;
     }
   } while (removed != NULL);
 
