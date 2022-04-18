@@ -57,12 +57,9 @@ void intervalTimerInterrupt(int line)
   pcb_PTR removed = NULL;
   do
   {
-    STCK(finish);
     removed = removeBlocked(&(device_sem[DEVSEM_NUM - 1]));
     if (removed != NULL)
     {
-      removed->p_time += finish - start;
-
       if (removed->p_prio == 1)
         insertProcQ(&high_ready_q, removed);
       else
