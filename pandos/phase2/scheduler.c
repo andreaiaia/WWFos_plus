@@ -38,9 +38,7 @@ void scheduler()
     // Se le code sono entrambe vuote
     else
     {
-        unsigned int waitingStatus = (getSTATUS() | IECON | IEPON | IMON | TEBITON) ^ TEBITON;
-            klog_print("SH_SET_STATUS\n");
-            setSTATUS(waitingStatus);
+        
         klog_print("SH_BOTH_EMPTY\n");
         klog_print_hex(proc_count);
         klog_print("\n");
@@ -53,12 +51,14 @@ void scheduler()
             klog_print("SH_SB\n");
             // Imposto lo stato corrente per accettare interrupt
             // E disabilito il tutto il resto (quindi anche il PLT)
-/*            unsigned int waitingStatus = (getSTATUS() | IECON | IEPON | IMON | TEBITON) ^ TEBITON;
+            unsigned int waitingStatus = (getSTATUS() | IECON | IEPON | IMON | TEBITON) ^ TEBITON;
             klog_print("SH_SET_STATUS\n");
             setSTATUS(waitingStatus);
-            klog_print("SH_WAIT\n");*/
+            klog_print("SH_WAIT\n");
             current_p = NULL;
             WAIT(); // Aspettando un interrupt
+                        setSTATUS(waitingStatus);
+
             scheduler();
         }
         else
