@@ -1,12 +1,3 @@
-
-
-/*
-  ! COMANDI GIT
-  git add .
-  git commit -m "nome_commit"
-  git push
-*/
-
 #include "interrupt.h"
 
 #define UNSIGNED_MAX_32_INT 4294967295 // =0xFFFF.FFFF per ricaricare PLTTimer
@@ -60,17 +51,22 @@ void intervalTimerInterrupt(int line)
   LDIT(PSECOND); // carico Interval Timer con 100millisec
 
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
-  while (removeBlocked(&(device_sem[DEVSEM_NUM - 1])))
-    ;
+  do
+  {
+    pcb_PTR removed = removeBlocked(&(device_sem[DEVSEM_NUM - 1]));
+    if (removed != NULL)
+    {
+      if (removed->p_prio == 1)
+        insertProcQ(&high_ready_q, removed);
+      else
+        insertProcQ(&low_ready_q, removed);
+    }
+  } while (headBlocked(&(device_sem[DEVSEM_NUM - 1])) != NULL);
 
   // resetto pseudo-clock semaphore
   device_sem[DEVSEM_NUM - 1] = 0;
 
-  // se c'é un processo in esecuzione torno a quello altrimenti chiamo scheduler
-  if (current_p)
-    LDST((STATE_PTR)BIOSDATAPAGE);
-  else
-    scheduler();
+  scheduler();
 }
 
 // linee 3-7   (3.6.1 pandos)
