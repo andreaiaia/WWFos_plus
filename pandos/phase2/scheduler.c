@@ -13,6 +13,8 @@ void scheduler()
         current_p->p_time = (current_p->p_time) + (finish - start);
         STCK(start);
         LDST(PROCESSOR_SAVED_STATE);
+        klog_print("SH_carico un processio\n");
+
     }
     // Se la coda dei processi ad ALTA priorità è non-vuota
     else if (!emptyProcQ(&high_ready_q))
