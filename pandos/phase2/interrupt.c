@@ -128,8 +128,8 @@ void nonTimerInterrupt(int line)
           //terminal_ptr->recv_command = ACK;
           term_is_recv = 1;
           klog_print("ACK dato al term0\n");
-          terminal_ptr->recv_status = ACK;
-	        //terminal_ptr->transm_status = ACK;
+          //terminal_ptr->recv_status = ACK;
+	        terminal_ptr->transm_status = ACK;
 	        //terminal_ptr->transm_command = ACK;
 
         }
