@@ -51,9 +51,10 @@ void intervalTimerInterrupt(int line)
   LDIT(PSECOND); // carico Interval Timer con 100millisec
 
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
+  pcb_PTR removed;
   do
   {
-    pcb_PTR removed = removeBlocked(&(device_sem[DEVSEM_NUM - 1]));
+    removed = removeBlocked(&(device_sem[DEVSEM_NUM - 1]));
     if (removed != NULL)
     {
       if (removed->p_prio == 1)
@@ -61,7 +62,7 @@ void intervalTimerInterrupt(int line)
       else
         insertProcQ(&low_ready_q, removed);
     }
-  } while (headBlocked(&(device_sem[DEVSEM_NUM - 1])) != NULL);
+  } while (removed != NULL);
 
   // resetto pseudo-clock semaphore
   device_sem[DEVSEM_NUM - 1] = 0;
