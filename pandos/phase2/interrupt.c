@@ -47,7 +47,7 @@ void PLTTimerInterrupt(int line)
     insertProcQ(&low_ready_q, current_p);
     current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
-
+  
   scheduler();
 }
 
@@ -126,7 +126,8 @@ void nonTimerInterrupt(int line)
         else
         {
           dev_status_code = terminal_ptr->recv_status;
-          terminal_ptr->recv_command = ACK;
+          //terminal_ptr->recv_command = ACK; test
+          terminal_ptr->recv_status = ACK;
           term_is_recv = 1;
         }
       }
