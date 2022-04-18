@@ -112,25 +112,23 @@ void nonTimerInterrupt(int line)
       if (line == 7)
       {
         termreg_t *terminal_ptr = (termreg_t *)DEV_REG_ADDR(line, device_num); // calcolo indirizzo terminale
+
         /**
          * Controllo prima se c'è un interrupt sulla linea di trasmissione,
          * in quanto questa ha la priorità sulla ricezione
          */
-        if (terminal_ptr->transm_status == READY)
+        if (terminal_ptr->transm_status != READY)
         {
           dev_status_code = terminal_ptr->transm_status;
           terminal_ptr->transm_command = ACK;
-          term_is_recv = 0;
+          term_is_recv = 1;
         }
-        else if (terminal_ptr->recv_status == READY) 
+        else if (terminal_ptr->recv_status != READY) 
         {
           dev_status_code = terminal_ptr->recv_status;
-          //terminal_ptr->recv_command = ACK;
-          term_is_recv = 1;
+          terminal_ptr->recv_command = ACK;
+          term_is_recv = 0;
           klog_print("ACK dato al term0\n");
-          //terminal_ptr->recv_status = ACK;
-	        //terminal_ptr->transm_status = ACK;
-	        terminal_ptr->transm_command = ACK;
 
         }
       }
