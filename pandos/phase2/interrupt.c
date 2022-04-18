@@ -14,15 +14,18 @@ void interruptHandler()
   {
     if (getCAUSE() & CAUSE_IP(line))
     {
-      if (line == 1)
-        PLTTimerInterrupt(line);
-      else if (line == 2)
+      if (line == 1) {
+        PLTTimerInterrupt(line); 
+        break;
+      } else if (line == 2) {
         intervalTimerInterrupt(line);
-      else
+        break;
+      } else
       {
         klog_print_hex(line);
         klog_print("\n");
         nonTimerInterrupt(line);
+        break;
       }
     }
   }
@@ -144,7 +147,7 @@ void nonTimerInterrupt(int line)
   klog_print("\n");
   pcb_PTR tmp = Verhogen(&(device_sem[sem_num]));
   if (tmp != NULL)
-    tmp->p_s.reg_v0 = dev_status_code;
+    tmp->p_s.reg_v0 = dev_status_code; //! non sono sicuro - Nick.
 
   scheduler();
 }

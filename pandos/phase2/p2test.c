@@ -115,6 +115,7 @@ void print(char *msg)
         klog_print("p2test.115\n");
         devregtr value = PRINTCHR | (((devregtr)*s) << 8);
         status = SYSCALL(DOIO, (int)command, (int)value, 0);
+        klog_print("p2test.118\n");
         if ((status & TERMSTATMASK) != RECVD)
         {
             PANIC();
