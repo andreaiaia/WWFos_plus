@@ -3,7 +3,6 @@
 #include "initial.h"
 
 //* Costanti */
-
 extern struct list_head high_ready_q;
 extern struct list_head low_ready_q;
 extern pcb_PTR current_p, yielded;

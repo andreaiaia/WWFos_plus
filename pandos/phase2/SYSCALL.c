@@ -24,7 +24,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         insertChild(current_p, child);
 
         // Inserisco il processo nella coda corretta
-        if (prio)
+        if (prio == 1)
             insertProcQ(&high_ready_q, child);
         else
             insertProcQ(&low_ready_q, child);
