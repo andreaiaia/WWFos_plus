@@ -98,7 +98,7 @@ pcb_PTR Verhogen(int *semaddr)
     {
         klog_print("VER1\n");
         // Sospendo il processo corrente
-        copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+        //copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
         // Lo inserisco nella coda corretta
         if (current_p->p_prio == 1)
             insertProcQ(&high_ready_q, current_p);
