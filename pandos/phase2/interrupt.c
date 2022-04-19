@@ -50,6 +50,7 @@ void PLTTimerInterrupt(int line)
     insertProcQ(&low_ready_q, current_p);
     //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
+  copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));  // ! Messa da nick
 
   scheduler();
 }
