@@ -50,7 +50,7 @@ void PLTTimerInterrupt(int line)
     insertProcQ(&low_ready_q, current_p);
     current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
-  
+
   scheduler();
 }
 
@@ -159,8 +159,9 @@ void nonTimerInterrupt(int line)
   } else {
   LDST((STATE_PTR)PROCESSOR_SAVED_STATE);
   }*/
-  //copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s)); 
-  //insertProcQ(&low_ready_q, current_p);
-  //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
-  //scheduler();
+  // copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+  // insertProcQ(&low_ready_q, current_p);
+  // current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
+  // scheduler();
+  //  ? come mai non chiamiamo più lo scheduler?
 }
