@@ -140,6 +140,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
             PassUpOrDie(GENERALEXCEPT);
             break;
         }
+        copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
         scheduler();
     }
     // * Caso in cui la syscall non è lecita
