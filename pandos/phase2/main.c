@@ -107,8 +107,6 @@ int main()
 
     // Chiamo lo Scheduler
     scheduler();
-    // Questa roba non dovrebbe mai stamparla
-    klog_print("MAIN_END\n");
 
     return 0;
 }

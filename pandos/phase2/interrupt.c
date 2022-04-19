@@ -4,7 +4,6 @@
 
 void interruptHandler()
 {
-  klog_print("INT_H\n");
   /**
    * Scorro le linee di Cause.IP alla ricerca di un
    * pending interrupt, non guardo la linea 0 perché
@@ -26,8 +25,6 @@ void interruptHandler()
       }
       else
       {
-        klog_print_hex(line);
-        klog_print("\n");
         nonTimerInterrupt(line);
         break;
       }
@@ -37,10 +34,8 @@ void interruptHandler()
 
 void PLTTimerInterrupt(int line)
 {
-  klog_print("PLT\n");
   if (current_p != NULL && current_p->p_semAdd == NULL)
   {
-    klog_print("PLT_IF\n");
     setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
 
     // copio stato processore nel pcb attuale
@@ -57,7 +52,6 @@ void PLTTimerInterrupt(int line)
 // linea 2   (3.6.3 pandos)
 void intervalTimerInterrupt(int line)
 {
-  klog_print("INTTIMER\n");
   LDIT(PSECOND); // carico Interval Timer con 100millisec
 
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
@@ -67,7 +61,6 @@ void intervalTimerInterrupt(int line)
     removed = removeBlocked(&(device_sem[DEVSEM_NUM - 1]));
     if (removed != NULL)
     {
-      klog_print("Ho sbloccato un proc\n");
       if (removed->p_prio == 1)
         insertProcQ(&high_ready_q, removed);
       else
@@ -83,7 +76,6 @@ void intervalTimerInterrupt(int line)
 // linee 3-7   (3.6.1 pandos)
 void nonTimerInterrupt(int line)
 {
-  klog_print("NTI\n");
   int device_num = 0;
   devregarea_t *dev_regs = (devregarea_t *)RAMBASEADDR;
   /**
@@ -124,14 +116,12 @@ void nonTimerInterrupt(int line)
           dev_status_code = terminal_ptr->transm_status;
           terminal_ptr->transm_command = ACK;
           term_is_recv = 1;
-          klog_print("ACK dato al term0 transm\n");
         }
         else if (terminal_ptr->recv_status != READY)
         {
           dev_status_code = terminal_ptr->recv_status;
           terminal_ptr->recv_command = ACK;
           term_is_recv = 0;
-          klog_print("ACK dato al term0 rec\n");
         }
       }
       else
@@ -146,22 +136,9 @@ void nonTimerInterrupt(int line)
   }
   // Ora che ho identificato il dispositivo corretto, risalgo al semaforo associato
   int sem_num = 8 * (line - 3) + (line == 7 ? 2 * device_num : device_num) + term_is_recv;
-  klog_print("INT_");
-  klog_print_hex(sem_num);
-  klog_print("\n");
   pcb_PTR tmp = Verhogen(&(device_sem[sem_num]));
   if (tmp != NULL)
-    tmp->p_s.reg_v0 = dev_status_code; //! non sono sicuro - Nick.
-  // copio stato processore nel pcb attuale
-  klog_print("INT_stato del processore");
+    tmp->p_s.reg_v0 = dev_status_code;
+
   current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
-  /*if (current_p == NULL) {
-  scheduler();
-  } else {
-  LDST((STATE_PTR)PROCESSOR_SAVED_STATE);
-  }*/
-  // copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
-  // insertProcQ(&low_ready_q, current_p);
-  //scheduler();
-  //  ? come mai non chiamiamo più lo scheduler? fatti i cazzi tuoi
 }

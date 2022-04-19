@@ -1,9 +1,9 @@
 #include "SYSCALL.h"
-void placeholder() {
+void placeholder()
+{
 }
 void Create_Process(state_t *statep, int prio, support_t *supportp)
 {
-    klog_print("SYS_CREATE_PROCESS1\n");
     // Creo il processo figlio
     pcb_PTR child = allocPcb();
     // Se non è stato possibile allocare, ritorno errore
@@ -27,15 +27,14 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         // Inserisco il processo nella coda corretta
         if (prio)
             insertProcQ(&high_ready_q, child);
-        else {
-            klog_print("SYS_LOWQ INSERT\n");
+        else
             insertProcQ(&low_ready_q, child);
-        }
         // Incremento il conto dei processi
         proc_count++;
         for (int i = 0; i < MAXPROC; i++)
         {
-            if (all_processes[i] == NULL){
+            if (all_processes[i] == NULL)
+            {
                 all_processes[i] = child;
                 break;
             }
@@ -59,26 +58,17 @@ void Terminate_Process(int pid)
 
 void Passeren(int *semaddr)
 {
-    klog_print("PASS\n");
     if (semaddr == NULL)
-    {
-        klog_print("PASS1\n");
         return;
-    }
     else if (*semaddr == 0)
     {
-        klog_print("PASS2\n");
         //* Blocco il processo corrente
         // Aggiungo il processo corrente alla coda del semd
         insertBlocked(semaddr, current_p);
         soft_count++;
-        klog_print("soft_count: ");
-        klog_print_hex(soft_count);
-        klog_print("\n");
     }
     else if (headBlocked(semaddr) != NULL)
     {
-        klog_print("PASS3\n");
         pcb_PTR first = removeBlocked(semaddr);
         soft_count--;
 
@@ -88,21 +78,16 @@ void Passeren(int *semaddr)
             insertProcQ(&low_ready_q, first);
     }
     else
-    {
-        klog_print("PASS4\n");
         *semaddr = 0;
-    }
     copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
 }
 
 pcb_PTR Verhogen(int *semaddr)
 {
-    klog_print("VER\n");
     pcb_PTR first = NULL;
 
     if (*semaddr == 1)
     {
-        klog_print("VER1\n");
         // Sospendo il processo corrente
         copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
         // Lo inserisco nella coda corretta
@@ -113,7 +98,6 @@ pcb_PTR Verhogen(int *semaddr)
     }
     else if (headBlocked(semaddr) != NULL)
     {
-        klog_print("VER2\n");
         first = removeBlocked(semaddr);
         soft_count--;
         first->p_semAdd = NULL;
@@ -123,17 +107,13 @@ pcb_PTR Verhogen(int *semaddr)
             insertProcQ(&low_ready_q, first);
     }
     else
-    {
-        klog_print("VER3\n");
         *semaddr = 1;
-    }
-    klog_print("VER4\n");
+
     return first;
 }
 
 void Do_IO_Device(int *commandAddr, int commandValue)
 {
-    klog_print("DOIO\n");
     /**
      * Per trovare il dispositivo a cui è associato il
      * commandAddr ricevuto uso una macro che ho definito
@@ -148,11 +128,7 @@ void Do_IO_Device(int *commandAddr, int commandValue)
         dev_position /= 2;
 
     // Faccio PASSEREN su dispositivo trovato
-    klog_print("Dentro DOIO:");
-    klog_print_hex(dev_position);
-    klog_print("\n");
     Passeren(&(device_sem[dev_position]));
-    klog_print("DOIO1\n");
     // Scrivo nel commandAddr il valore ricevuto
     *commandAddr = commandValue;
 }
