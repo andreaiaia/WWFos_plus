@@ -186,7 +186,7 @@ void Yield()
     else
     {
         if (emptyProcQ(&high_ready_q))
-            byielded = current_p;
+            yielded = current_p;
         else
             insertProcQ(&high_ready_q, current_p);
     }
