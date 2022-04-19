@@ -120,14 +120,14 @@ void nonTimerInterrupt(int line)
          * Controllo prima se c'è un interrupt sulla linea di trasmissione,
          * in quanto questa ha la priorità sulla ricezione
          */
-        if (terminal_ptr->transm_status == READY)
+        if (terminal_ptr->transm_status != READY)
         {
           dev_status_code = terminal_ptr->transm_status;
           terminal_ptr->transm_command = ACK;
           term_is_recv = 1;
           klog_print("ACK dato al term0 transm\n");
         }
-        else if (terminal_ptr->recv_status == READY)
+        else if (terminal_ptr->recv_status != READY)
         {
           dev_status_code = terminal_ptr->recv_status;
           terminal_ptr->recv_command = ACK;
