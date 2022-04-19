@@ -77,7 +77,6 @@ void intervalTimerInterrupt(int line)
 
   // Azzero lo pseudo-clock semaphore
   device_sem[DEVSEM_NUM - 1] = 0;
-
   scheduler();
 }
 
