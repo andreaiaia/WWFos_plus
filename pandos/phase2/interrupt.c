@@ -152,5 +152,7 @@ void nonTimerInterrupt(int line)
   pcb_PTR tmp = Verhogen(&(device_sem[sem_num]));
   if (tmp != NULL)
     tmp->p_s.reg_v0 = dev_status_code; //! non sono sicuro - Nick.
+  // copio stato processore nel pcb attuale
+  copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
   scheduler();
 }
