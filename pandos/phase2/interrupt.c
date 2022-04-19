@@ -162,6 +162,6 @@ void nonTimerInterrupt(int line)
   // copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
   // insertProcQ(&low_ready_q, current_p);
   current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
-  //scheduler();
+  scheduler();
   //  ? come mai non chiamiamo più lo scheduler?
 }
