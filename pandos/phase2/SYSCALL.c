@@ -30,7 +30,6 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         else {
             klog_print("SYS_LOWQ INSERT\n");
             insertProcQ(&low_ready_q, child);
-            placeholder();
         }
         // Incremento il conto dei processi
         proc_count++;
@@ -70,7 +69,6 @@ void Passeren(int *semaddr)
     {
         klog_print("PASS2\n");
         //* Blocco il processo corrente
-        copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
         // Aggiungo il processo corrente alla coda del semd
         insertBlocked(semaddr, current_p);
         soft_count++;
@@ -94,6 +92,7 @@ void Passeren(int *semaddr)
         klog_print("PASS4\n");
         *semaddr = 0;
     }
+    copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
 }
 
 pcb_PTR Verhogen(int *semaddr)
