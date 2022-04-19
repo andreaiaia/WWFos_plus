@@ -48,7 +48,7 @@ void PLTTimerInterrupt(int line)
 
     // metto current process in "ready"
     insertProcQ(&low_ready_q, current_p);
-    //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
+    current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
   
   scheduler();
