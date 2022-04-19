@@ -1,5 +1,5 @@
 #include "SYSCALL.h"
-
+void placeholder();
 void Create_Process(state_t *statep, int prio, support_t *supportp)
 {
     klog_print("SYS_CREATE_PROCESS1\n");
@@ -24,11 +24,13 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         insertChild(current_p, child);
 
         // Inserisco il processo nella coda corretta
-        if (prio == 1)
+        if (prio)
             insertProcQ(&high_ready_q, child);
-        else
+        else {
+            klog_print("SYS_LOWQ INSERT\n");
             insertProcQ(&low_ready_q, child);
-
+            placeholder();
+        }
         // Incremento il conto dei processi
         proc_count++;
         for (int i = 0; i < MAXPROC; i++)
