@@ -78,5 +78,7 @@ void load_new_proc(struct list_head *queue)
     STCK(start);
     // Carico lo stato del processo sulla CPU
     klog_print("LOAD\n");
+        copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s)); // !Messa da nick per test.
+
     LDST(&(current_p->p_s));
 }
