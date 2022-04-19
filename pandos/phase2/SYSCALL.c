@@ -32,8 +32,10 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         proc_count++;
         for (int i = 0; i < MAXPROC; i++)
         {
-            if (all_processes[i] == NULL)
+            if (all_processes[i] == NULL){
                 all_processes[i] = child;
+                break;
+            }
         }
     }
     // Ritorno successo
