@@ -1,5 +1,6 @@
 #include "SYSCALL.h"
-void placeholder();
+void placeholder() {
+}
 void Create_Process(state_t *statep, int prio, support_t *supportp)
 {
     klog_print("SYS_CREATE_PROCESS1\n");
