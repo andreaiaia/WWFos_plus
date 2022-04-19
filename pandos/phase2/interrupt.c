@@ -48,7 +48,7 @@ void PLTTimerInterrupt(int line)
 
     // metto current process in "ready"
     insertProcQ(&low_ready_q, current_p);
-    current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
+    //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
 
   scheduler();
@@ -154,5 +154,7 @@ void nonTimerInterrupt(int line)
     tmp->p_s.reg_v0 = dev_status_code; //! non sono sicuro - Nick.
   // copio stato processore nel pcb attuale
   copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+  insertProcQ(&low_ready_q, current_p);
+  //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   scheduler();
 }
