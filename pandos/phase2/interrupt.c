@@ -14,13 +14,17 @@ void interruptHandler()
   {
     if (getCAUSE() & CAUSE_IP(line))
     {
-      if (line == 1) {
-        PLTTimerInterrupt(line); 
+      if (line == 1)
+      {
+        PLTTimerInterrupt(line);
         break;
-      } else if (line == 2) {
+      }
+      else if (line == 2)
+      {
         intervalTimerInterrupt(line);
         break;
-      } else
+      }
+      else
       {
         klog_print_hex(line);
         klog_print("\n");
@@ -44,10 +48,11 @@ void PLTTimerInterrupt(int line)
     copy_state(processor_state, &current_p->p_s);
 
     // metto current process in "ready"
+    copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
     insertProcQ(&low_ready_q, current_p);
     current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
-  
+
   scheduler();
 }
 
@@ -123,13 +128,12 @@ void nonTimerInterrupt(int line)
           terminal_ptr->transm_command = ACK;
           term_is_recv = 1;
         }
-        else if (terminal_ptr->recv_status != READY) 
+        else if (terminal_ptr->recv_status != READY)
         {
           dev_status_code = terminal_ptr->recv_status;
           terminal_ptr->recv_command = ACK;
           term_is_recv = 0;
           klog_print("ACK dato al term0\n");
-
         }
       }
       else
