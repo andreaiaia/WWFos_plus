@@ -140,9 +140,6 @@ void syscallExceptionHandler(unsigned int syscallCode)
             PassUpOrDie(GENERALEXCEPT);
             break;
         }
-        // ! questo non va bene qui perché alcune syscall impostano
-        // ! current_p a NULL, quindi qui si crea segfault
-        copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
         scheduler();
     }
     // * Caso in cui la syscall non è lecita
