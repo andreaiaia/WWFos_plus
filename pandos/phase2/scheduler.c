@@ -13,6 +13,8 @@ void scheduler()
         current_p->p_time = (current_p->p_time) + (finish - start);
         STCK(start);
         LDST(PROCESSOR_SAVED_STATE);
+        klog_print("SH_carico un processio\n");
+
     }
     // Se la coda dei processi ad ALTA priorità è non-vuota
     else if (!emptyProcQ(&high_ready_q))
@@ -36,6 +38,7 @@ void scheduler()
     // Se le code sono entrambe vuote
     else
     {
+        
         klog_print("SH_BOTH_EMPTY\n");
         klog_print_hex(proc_count);
         klog_print("\n");
@@ -52,6 +55,7 @@ void scheduler()
             klog_print("SH_SET_STATUS\n");
             setSTATUS(waitingStatus);
             klog_print("SH_WAIT\n");
+            current_p = NULL;
             WAIT(); // Aspettando un interrupt
             scheduler();
         }
@@ -62,6 +66,7 @@ void scheduler()
             PANIC();
         }
     }
+    
 }
 
 // Funzione per prendere un processo dalla coda passata e avviarne l'esecuzione

@@ -14,13 +14,17 @@ void interruptHandler()
   {
     if (getCAUSE() & CAUSE_IP(line))
     {
-      if (line == 1) {
-        PLTTimerInterrupt(line); 
+      if (line == 1)
+      {
+        PLTTimerInterrupt(line);
         break;
-      } else if (line == 2) {
+      }
+      else if (line == 2)
+      {
         intervalTimerInterrupt(line);
         break;
-      } else
+      }
+      else
       {
         klog_print_hex(line);
         klog_print("\n");
@@ -40,14 +44,13 @@ void PLTTimerInterrupt(int line)
     setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
 
     // copio stato processore nel pcb attuale
-    state_t *processor_state = PROCESSOR_SAVED_STATE;
-    copy_state(processor_state, &current_p->p_s);
+    copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
 
     // metto current process in "ready"
     insertProcQ(&low_ready_q, current_p);
     current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
-
+  
   scheduler();
 }
 
@@ -74,7 +77,6 @@ void intervalTimerInterrupt(int line)
 
   // Azzero lo pseudo-clock semaphore
   device_sem[DEVSEM_NUM - 1] = 0;
-
   scheduler();
 }
 
@@ -117,17 +119,19 @@ void nonTimerInterrupt(int line)
          * Controllo prima se c'è un interrupt sulla linea di trasmissione,
          * in quanto questa ha la priorità sulla ricezione
          */
-        if (terminal_ptr->transm_status == READY)
+        if (terminal_ptr->transm_status != READY)
         {
           dev_status_code = terminal_ptr->transm_status;
           terminal_ptr->transm_command = ACK;
-          term_is_recv = 0;
+          term_is_recv = 1;
+          klog_print("ACK dato al term0 transm\n");
         }
-        else
+        else if (terminal_ptr->recv_status != READY)
         {
           dev_status_code = terminal_ptr->recv_status;
           terminal_ptr->recv_command = ACK;
-          term_is_recv = 1;
+          term_is_recv = 0;
+          klog_print("ACK dato al term0 rec\n");
         }
       }
       else
@@ -142,12 +146,21 @@ void nonTimerInterrupt(int line)
   }
   // Ora che ho identificato il dispositivo corretto, risalgo al semaforo associato
   int sem_num = 8 * (line - 3) + (line == 7 ? 2 * device_num : device_num) + term_is_recv;
-
+  klog_print("INT_");
   klog_print_hex(sem_num);
   klog_print("\n");
   pcb_PTR tmp = Verhogen(&(device_sem[sem_num]));
   if (tmp != NULL)
     tmp->p_s.reg_v0 = dev_status_code; //! non sono sicuro - Nick.
-
+  // copio stato processore nel pcb attuale
+  klog_print("INT_stato del processore");
+  /*if (current_p == NULL) {
   scheduler();
+  } else {
+  LDST((STATE_PTR)PROCESSOR_SAVED_STATE);
+  }*/
+  //copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s)); 
+  //insertProcQ(&low_ready_q, current_p);
+  //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
+  //scheduler();
 }

@@ -99,6 +99,8 @@ pcb_PTR Verhogen(int *semaddr)
     {
         klog_print("VER1\n");
         // Sospendo il processo corrente
+        //copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+        // Lo inserisco nella coda corretta
         if (current_p->p_prio == 1)
             insertProcQ(&high_ready_q, current_p);
         else
@@ -143,6 +145,7 @@ void Do_IO_Device(int *commandAddr, int commandValue)
         dev_position /= 2;
 
     // Faccio PASSEREN su dispositivo trovato
+    klog_print("Dentro DOIO:");
     klog_print_hex(dev_position);
     klog_print("\n");
     Passeren(&(device_sem[dev_position]));
