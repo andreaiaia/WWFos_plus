@@ -44,11 +44,9 @@ void PLTTimerInterrupt(int line)
     setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
 
     // copio stato processore nel pcb attuale
-    state_t *processor_state = PROCESSOR_SAVED_STATE;
-    copy_state(processor_state, &current_p->p_s);
+    copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
 
     // metto current process in "ready"
-    copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
     insertProcQ(&low_ready_q, current_p);
     current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
