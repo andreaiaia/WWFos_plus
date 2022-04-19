@@ -2,6 +2,7 @@
 
 void Create_Process(state_t *statep, int prio, support_t *supportp)
 {
+    klog_print("SYS_CREATE_PROCESS1\n");
     // Creo il processo figlio
     pcb_PTR child = allocPcb();
     // Se non è stato possibile allocare, ritorno errore
