@@ -50,8 +50,7 @@ void PLTTimerInterrupt(int line)
     insertProcQ(&low_ready_q, current_p);
     //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
-  copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));  // ! Messa da nick
-
+  
   scheduler();
 }
 
@@ -121,13 +120,13 @@ void nonTimerInterrupt(int line)
          * Controllo prima se c'è un interrupt sulla linea di trasmissione,
          * in quanto questa ha la priorità sulla ricezione
          */
-        if (terminal_ptr->transm_status != READY)
+        if (terminal_ptr->transm_status == READY)
         {
           dev_status_code = terminal_ptr->transm_status;
           terminal_ptr->transm_command = ACK;
           term_is_recv = 1;
         }
-        else if (terminal_ptr->recv_status != READY)
+        else if (terminal_ptr->recv_status == READY)
         {
           dev_status_code = terminal_ptr->recv_status;
           terminal_ptr->recv_command = ACK;
