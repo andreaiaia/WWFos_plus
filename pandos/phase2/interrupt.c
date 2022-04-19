@@ -157,6 +157,6 @@ void nonTimerInterrupt(int line)
   klog_print("INT_qui non ci passa");
   copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s)); //!Qui non ci passa più
   insertProcQ(&low_ready_q, current_p);
-  current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
+  //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   scheduler();
 }
