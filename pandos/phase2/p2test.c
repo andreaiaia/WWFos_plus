@@ -235,6 +235,7 @@ void test()
     p10state.status = p10state.status | IEPBITON | CAUSEINTMASK | TEBITON;
     klog_print("TEST_236\n");
     /* create process p2 */
+    print("print furbetta messa da wifi\n");
     p2pid = SYSCALL(CREATEPROCESS, (int)&p2state, PROCESS_PRIO_LOW, (int)NULL); /* start p2     */
     klog_print("TEST_239\n");
     print("p2 was started\n");
