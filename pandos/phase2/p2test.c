@@ -233,7 +233,7 @@ void test()
     p10state.reg_sp = p9state.reg_sp - QPAGE;
     p10state.pc_epc = p10state.reg_t9 = (memaddr)p10;
     p10state.status = p10state.status | IEPBITON | CAUSEINTMASK | TEBITON;
-
+    klog_print("TEST_236\n");
     /* create process p2 */
     p2pid = SYSCALL(CREATEPROCESS, (int)&p2state, PROCESS_PRIO_LOW, (int)NULL); /* start p2     */
 
