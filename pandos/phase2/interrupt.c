@@ -38,21 +38,18 @@ void interruptHandler()
 void PLTTimerInterrupt(int line)
 {
   klog_print("PLT\n");
+  setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
   if (current_p != NULL && current_p->p_semAdd == NULL)
   {
     klog_print("PLT_IF\n");
-    setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
 
     // copio stato processore nel pcb attuale
     copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
 
     // metto current process in "ready"
     insertProcQ(&low_ready_q, current_p);
-    //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
-
   if (current_p == NULL) {
-  //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   scheduler();
   } else {
   LDST((STATE_PTR)PROCESSOR_SAVED_STATE);
