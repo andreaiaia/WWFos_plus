@@ -2,7 +2,7 @@
 
 void scheduler()
 {
-    setTIMER(0xFFFFFFFF);
+    //setTIMER(0xFFFFFFFF); //!usata solo per debug
     klog_print("SH\n");
     // Se un processo è in corso
     if (current_p != NULL && current_p->p_semAdd == NULL)
@@ -32,7 +32,7 @@ void scheduler()
         }
         klog_print("SH_LOW\n");
         // Imposto il PLT su 5ms
-        //setTIMER(TIMESLICE); //! temporaneamnten disabilitato
+        setTIMER(TIMESLICE); //! temporaneamnten disabilitato
         load_new_proc(&low_ready_q);
     }
     // Se le code sono entrambe vuote

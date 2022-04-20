@@ -153,7 +153,7 @@ void nonTimerInterrupt(int line)
   if (tmp != NULL)
     tmp->p_s.reg_v0 = dev_status_code; //! non sono sicuro - Nick.
   // copio stato processore nel pcb attuale
-  klog_print("INT_stato del processore");
+  klog_print("INT_stato del processore\n");
   current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   /*if (current_p == NULL) {
   scheduler();
