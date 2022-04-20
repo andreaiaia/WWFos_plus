@@ -233,19 +233,19 @@ void test()
     p10state.reg_sp = p9state.reg_sp - QPAGE;
     p10state.pc_epc = p10state.reg_t9 = (memaddr)p10;
     p10state.status = p10state.status | IEPBITON | CAUSEINTMASK | TEBITON;
-    klog_print("TEST_236\n");
+    //klog_print("TEST_236\n");
     /* create process p2 */
-    print("print furbetta messa da wifi\n");
+    //print("print furbetta messa da wifi\n");
     p2pid = SYSCALL(CREATEPROCESS, (int)&p2state, PROCESS_PRIO_LOW, (int)NULL); /* start p2     */
-    klog_print("TEST_239\n");
-    print("print furbetta messa da wifi2\n");
+    //klog_print("TEST_239\n");
+    //print("print furbetta messa da wifi2\n");
 
     print("p2 was started\n");
-    print("print furbetta messa da wifi3\n");
+    //print("print furbetta messa da wifi3\n");
     SYSCALL(VERHOGEN, (int)&sem_startp2, 0, 0); /* V(sem_startp2)   */
-    print("print furbetta messa da wifi4\n");
+    //print("print furbetta messa da wifi4\n");
     SYSCALL(VERHOGEN, (int)&sem_endp2, 0, 0); /* V(sem_endp2) (blocking V!)     */
-    print("print furbetta messa da wifi5\n");
+    //print("print furbetta messa da wifi5\n");
     /* make sure we really blocked */
     if (p1p2synch == 0)
     {
