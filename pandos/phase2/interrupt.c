@@ -39,7 +39,7 @@ void PLTTimerInterrupt(int line)
 {
   klog_print("PLT\n");
   setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
-  //copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+  copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
   insertProcQ(&low_ready_q, current_p);
   current_p= NULL;
   scheduler();
