@@ -32,6 +32,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
             insertProcQ(&low_ready_q, child);
         }
         // Incremento il conto dei processi
+        klog_print("SYS_PRE_PROC ++\n");
         proc_count++;
         for (int i = 0; i < MAXPROC; i++)
         {
@@ -44,7 +45,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
     }
     // Ritorno successo
     current_p->p_s.reg_v0 = child->p_pid;
-    LDST(PROCESSOR_SAVED_STATE);
+    klog_print("ho finito la createprocess()\n");
     //PROCESSOR_SAVED_STATE->reg_v0 = child->p_pid;
 }
 
