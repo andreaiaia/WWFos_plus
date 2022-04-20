@@ -51,7 +51,12 @@ void PLTTimerInterrupt(int line)
     //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
 
+  if (current_p == NULL) {
+  //current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   scheduler();
+  } else {
+  LDST((STATE_PTR)PROCESSOR_SAVED_STATE);
+  }
 }
 
 // linea 2   (3.6.3 pandos)
