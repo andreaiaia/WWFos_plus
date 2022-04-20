@@ -77,7 +77,11 @@ void intervalTimerInterrupt(int line)
 
   // Azzero lo pseudo-clock semaphore
   device_sem[DEVSEM_NUM - 1] = 0;
+  if (current_p == NULL) {
   scheduler();
+  } else {
+  LDST((STATE_PTR)PROCESSOR_SAVED_STATE);
+  }
 }
 
 // linee 3-7   (3.6.1 pandos)
