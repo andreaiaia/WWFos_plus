@@ -52,7 +52,7 @@ void PLTTimerInterrupt(int line)
   if (current_p == NULL) {
   scheduler();
   } else {
-  LDST((STATE_PTR)PROCESSOR_SAVED_STATE);
+  LDST(PROCESSOR_SAVED_STATE);
   }
 }
 
@@ -82,7 +82,7 @@ void intervalTimerInterrupt(int line)
   if (current_p == NULL) {
   scheduler();
   } else {
-  LDST((STATE_PTR)PROCESSOR_SAVED_STATE);
+  LDST(PROCESSOR_SAVED_STATE);
   }
 }
 
@@ -165,7 +165,7 @@ void nonTimerInterrupt(int line)
   scheduler();
   } else {   
   klog_print("INT_kariko stato");
-  LDST((STATE_PTR)PROCESSOR_SAVED_STATE);
+  LDST(PROCESSOR_SAVED_STATE);
   }
   // copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
   // insertProcQ(&low_ready_q, current_p);
