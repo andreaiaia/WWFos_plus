@@ -32,8 +32,7 @@ void scheduler()
         }
         klog_print("SH_LOW\n");
         // Imposto il PLT su 5ms
-        //setTIMER(TIMESLICE); //! temporaneamnten disabilitato
-        setTIMER(TIMESLICE*(*((cpu_t*) TIMESCALEADDR)));
+        setTIMER(TIMESLICE); //! temporaneamnten disabilitato
         load_new_proc(&low_ready_q);
     }
     // Se le code sono entrambe vuote
