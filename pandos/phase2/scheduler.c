@@ -55,8 +55,8 @@ void scheduler()
             unsigned int waitingStatus = (getSTATUS() | IECON | IEPON | IMON | TEBITON) ^ TEBITON;
             klog_print("SH_SET_STATUS\n");
             setTIMER(UNSIGNED_MAX_32_INT);
-            current_p = NULL; // ! questo non mi sembra corretto
             setSTATUS(waitingStatus);
+            current_p = NULL; // ! questo non mi sembra corretto
             klog_print("SH_WAIT\n");
             WAIT();           // Aspettando un interrupt
             scheduler();
