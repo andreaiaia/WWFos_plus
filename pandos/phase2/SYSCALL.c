@@ -44,6 +44,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
     }
     // Ritorno successo
     current_p->p_s.reg_v0 = child->p_pid;
+    LDST(PROCESSOR_SAVED_STATE);
     //PROCESSOR_SAVED_STATE->reg_v0 = child->p_pid;
 }
 
