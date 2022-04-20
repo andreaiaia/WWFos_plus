@@ -32,8 +32,8 @@ void scheduler()
         }
         klog_print("SH_LOW\n");
         // Imposto il PLT su 5ms
-        //setTIMER(TIMESLICE); //! temporaneamnten disabilitato
-        setTIMER(UNSIGNED_MAX_32_INT);
+        setTIMER(TIMESLICE); //! temporaneamnten disabilitato
+        //setTIMER(UNSIGNED_MAX_32_INT);
         load_new_proc(&low_ready_q);
     }
     // Se le code sono entrambe vuote
@@ -55,7 +55,7 @@ void scheduler()
             klog_print("SH_SET_STATUS\n");
             setSTATUS(waitingStatus);
             klog_print("SH_WAIT\n");
-            //current_p = NULL; // ! questo non mi sembra corretto
+            current_p = NULL; // ! questo non mi sembra corretto
             WAIT();           // Aspettando un interrupt
             scheduler();
         }

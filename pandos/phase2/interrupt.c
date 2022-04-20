@@ -38,20 +38,22 @@ void interruptHandler()
 void PLTTimerInterrupt(int line)
 {
   klog_print("PLT\n");
+  setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
   if (current_p != NULL && current_p->p_semAdd == NULL)
   {
     klog_print("PLT_IF\n");
-    setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
 
     // copio stato processore nel pcb attuale
     copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
 
     // metto current process in "ready"
     insertProcQ(&low_ready_q, current_p);
-    current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
   }
-
+  if (current_p == NULL) {
   scheduler();
+  } else {
+  LDST(PROCESSOR_SAVED_STATE);
+  }
 }
 
 // linea 2   (3.6.3 pandos)
@@ -77,7 +79,11 @@ void intervalTimerInterrupt(int line)
 
   // Azzero lo pseudo-clock semaphore
   device_sem[DEVSEM_NUM - 1] = 0;
+  if (current_p == NULL) {
   scheduler();
+  } else {
+  LDST(PROCESSOR_SAVED_STATE);
+  }
 }
 
 // linee 3-7   (3.6.1 pandos)
@@ -154,12 +160,13 @@ void nonTimerInterrupt(int line)
     tmp->p_s.reg_v0 = dev_status_code; //! non sono sicuro - Nick.
   // copio stato processore nel pcb attuale
   klog_print("INT_stato del processore\n");
-  current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
-  /*if (current_p == NULL) {
+  if (current_p == NULL) {
+  klog_print("INT_CURRENT P NULL");
   scheduler();
-  } else {
-  LDST((STATE_PTR)PROCESSOR_SAVED_STATE);
-  }*/
+  } else {   
+  klog_print("INT_kariko stato");
+  LDST(PROCESSOR_SAVED_STATE);
+  }
   // copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
   // insertProcQ(&low_ready_q, current_p);
   //scheduler();

@@ -43,7 +43,8 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         }
     }
     // Ritorno successo
-    current_p->p_s.reg_v0 = child->p_pid;
+    //current_p->p_s.reg_v0 = child->p_pid;
+    PROCESSOR_SAVED_STATE->reg_v0 = child->p_pid;
 }
 
 // Se il secondo parametro è 0 allora il bersaglio è il processo invocante
