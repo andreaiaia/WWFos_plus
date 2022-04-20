@@ -113,7 +113,7 @@ int emptyProcQ(struct list_head *head)
 */
 void insertProcQ(struct list_head *head, pcb_t *p)
 {
-	list_add_tail(&(p->p_list), head); // se utilizzo list_add non funziona
+	list_add_tail(&(p->p_list), head);
 }
 
 /*
