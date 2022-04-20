@@ -89,6 +89,7 @@ void Passeren(int *semaddr)
         klog_print("soft_count: ");
         klog_print_hex(soft_count);
         klog_print("\n");
+        copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
     }
     else if (headBlocked(semaddr) != NULL)
     {
@@ -107,7 +108,6 @@ void Passeren(int *semaddr)
         klog_print("PASS4\n");
         *semaddr = 0;
     }
-    copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
 }
 
 pcb_PTR Verhogen(int *semaddr)
