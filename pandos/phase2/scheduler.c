@@ -55,9 +55,9 @@ void scheduler()
             unsigned int waitingStatus = (getSTATUS() | IECON | IEPON | IMON | TEBITON) ^ TEBITON;
             klog_print("SH_SET_STATUS\n");
             setTIMER(UNSIGNED_MAX_32_INT);
-            //setSTATUS(waitingStatus);
-            setSTATUS(getSTATUS() | IMON | IECON); // ! PROPOSTO DA MANES
-            current_p = NULL; // ! questo non mi sembra corretto
+            setSTATUS(waitingStatus);
+            //setSTATUS(getSTATUS() | IMON | IECON); // ! PROPOSTO DA MANES
+            current_p = NULL; // ! MANES dice che va PRIMA di setstatus.
             klog_print("SH_WAIT\n");
             WAIT();           // Aspettando un interrupt
             scheduler();
