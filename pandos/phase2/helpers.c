@@ -170,6 +170,7 @@ void PassUpOrDie(int excCode)
     {
         klog_print("HELP7\n");
         Terminate_Process(0);
+        scheduler();
     }
     else
     {
