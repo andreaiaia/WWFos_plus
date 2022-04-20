@@ -166,6 +166,7 @@ void PassUpOrDie(int excCode)
      * al livello di supporto (prossima fase del progetto).
      */
     klog_print("HELP6\n");
+    placeholder();
     if (current_p->p_supportStruct == NULL)
     {
         klog_print("HELP7\n");
