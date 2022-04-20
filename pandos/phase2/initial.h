@@ -12,6 +12,8 @@
 #include "../phase1/pcb.h"
 
 //* HANDY DEFINES
+// = 0xFFFF.FFFF per ricaricare PLTTimer
+#define UNSIGNED_MAX_32_INT 4294967295 
 // Numero di semafori dei dispositivi
 #define DEVSEM_NUM 49
 // Macro per il Saved Status
