@@ -91,6 +91,7 @@ void Passeren(int *semaddr)
     {
         klog_print("PASS3\n");
         pcb_PTR first = removeBlocked(semaddr);
+        first->p_semAdd = NULL;
         soft_count--;
 
         if (first->p_prio == 1)
@@ -126,8 +127,8 @@ pcb_PTR Verhogen(int *semaddr)
     {
         klog_print("VER2\n");
         first = removeBlocked(semaddr);
-        soft_count--;
         first->p_semAdd = NULL;
+        soft_count--;
         if (first->p_prio == 1)
             insertProcQ(&high_ready_q, first);
         else
