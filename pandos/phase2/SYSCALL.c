@@ -107,7 +107,6 @@ void Passeren(int *semaddr)
     {
         klog_print("PASS4\n");
         *semaddr = 0;
-        copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
     }
 }
 
