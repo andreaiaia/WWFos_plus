@@ -154,7 +154,8 @@ void syscallExceptionHandler(unsigned int syscallCode)
         klog_print("HELP5\n");
     }
 }
-
+void placeholder() {
+}
 /* PassUpOrDie */
 
 void PassUpOrDie(int excCode)
