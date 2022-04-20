@@ -79,9 +79,9 @@ void Passeren(int *semaddr)
          * proc_q in cui possa trovarsi
          */
         if (current_p->p_prio == 1)
-            outProcQ(high_ready_q, current_p);
+            outProcQ(&high_ready_q, current_p);
         else
-            outProcQ(low_ready_q, current_p);
+            outProcQ(&low_ready_q, current_p);
 
         klog_print("soft_count: ");
         klog_print_hex(soft_count);
