@@ -39,21 +39,10 @@ void PLTTimerInterrupt(int line)
 {
   klog_print("PLT\n");
   setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
-  if (current_p != NULL && current_p->p_semAdd == NULL)
-  {
-    klog_print("PLT_IF\n");
-
-    // copio stato processore nel pcb attuale
-    copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
-
-    // metto current process in "ready"
-    insertProcQ(&low_ready_q, current_p);
-  }
-  if (current_p == NULL) {
+  copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+  insertProcQ(&low_ready_q, current_p);
+  current_p= NULL;
   scheduler();
-  } else {
-  LDST(PROCESSOR_SAVED_STATE);
-  }
 }
 
 // linea 2   (3.6.3 pandos)
