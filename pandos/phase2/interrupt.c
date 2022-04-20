@@ -155,11 +155,11 @@ void nonTimerInterrupt(int line)
   // copio stato processore nel pcb attuale
   klog_print("INT_stato del processore\n");
   current_p = NULL; // perché lo scheduler altrimenti continua ad eseguirlo
-  /*if (current_p == NULL) {
+  if (current_p == NULL) {
   scheduler();
   } else {
   LDST((STATE_PTR)PROCESSOR_SAVED_STATE);
-  }*/
+  }
   // copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
   // insertProcQ(&low_ready_q, current_p);
   //scheduler();
