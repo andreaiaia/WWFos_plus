@@ -56,7 +56,8 @@ void scheduler()
             klog_print("SH_SET_STATUS\n");
             setTIMER(UNSIGNED_MAX_32_INT);
             current_p = NULL; // ! questo non mi sembra corretto
-            setSTATUS(waitingStatus);
+            //setSTATUS(waitingStatus);
+            setSTATUS(getSTATUS() | IMON | IECON); // ! PROPOSTO DA MANES
             klog_print("SH_WAIT\n");
             WAIT();           // Aspettando un interrupt
             scheduler();
