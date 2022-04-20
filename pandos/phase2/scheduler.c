@@ -13,7 +13,7 @@ void scheduler()
         // Aggiungo il tempo trascorso al tempo impiegato dal processo
         current_p->p_time = (current_p->p_time) + (finish - start);
         STCK(start);
-        //LDST(PROCESSOR_SAVED_STATE);
+        LDST(PROCESSOR_SAVED_STATE);
         klog_print("SH_se_mi_leggi_e_un_problema\n");
     }
     // Se la coda dei processi ad ALTA priorità è non-vuota
