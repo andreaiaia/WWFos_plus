@@ -2,6 +2,7 @@
 
 void scheduler()
 {
+    setTIMER(0xFFFFFFFF);
     klog_print("SH\n");
     // Se un processo è in corso
     if (current_p != NULL && current_p->p_semAdd == NULL)
