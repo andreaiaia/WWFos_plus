@@ -26,7 +26,8 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         // Inserisco il processo nella coda corretta
         if (prio)
             insertProcQ(&high_ready_q, child);
-        else {
+        else
+        {
             klog_print("SYS_LOWQ INSERT\n");
             insertProcQ(&low_ready_q, child);
         }
@@ -34,7 +35,8 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         proc_count++;
         for (int i = 0; i < MAXPROC; i++)
         {
-            if (all_processes[i] == NULL){
+            if (all_processes[i] == NULL)
+            {
                 all_processes[i] = child;
                 break;
             }
@@ -70,7 +72,17 @@ void Passeren(int *semaddr)
         //* Blocco il processo corrente
         // Aggiungo il processo corrente alla coda del semd
         insertBlocked(semaddr, current_p);
+        // Incremento il conto dei processi bloccati
         soft_count++;
+        /**
+         * Rimuovo per sicurezza il processo da qualsiasi
+         * proc_q in cui possa trovarsi
+         */
+        if (current_p->p_prio == 1)
+            outProcQ(high_ready_q, current_p);
+        else
+            outProcQ(low_ready_q, current_p);
+
         klog_print("soft_count: ");
         klog_print_hex(soft_count);
         klog_print("\n");
