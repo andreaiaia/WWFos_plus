@@ -149,7 +149,9 @@ void syscallExceptionHandler(unsigned int syscallCode)
             PassUpOrDie(GENERALEXCEPT);
             break;
         }
+        klog_print("HELP_ CHIAMATA SCHEDULERO\n");
         scheduler();
+        klog_print("HELP_SE COMPAIO SO CAZZI AMARI\n");
     }
     // * Caso in cui la syscall non è lecita
     else
