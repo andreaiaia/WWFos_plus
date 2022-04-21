@@ -190,7 +190,7 @@ void Get_CPU_Time()
     // current_p->p_time + tempo trascorso dall'ultimo time slice
     STCK(elapsed);
     // Calcolo e ritorno il tempo trascorso trascorso da quando il processo è attivo
-    current_p->p_s.reg_v0 = (unsigned int)(current_p->p_time + (elapsed - start));
+    PROCESSOR_SAVED_STATE->reg_v0 = (unsigned int)(current_p->p_time + (elapsed - start));
 }
 
 int Wait_For_Clock()
@@ -200,15 +200,15 @@ int Wait_For_Clock()
 
 void Get_Support_Data()
 {
-    current_p->p_s.reg_v0 = (unsigned int)(current_p->p_supportStruct);
+    PROCESSOR_SAVED_STATE->reg_v0 = (unsigned int)(current_p->p_supportStruct);
 }
 
 void Get_Process_Id(int parent)
 {
     if (parent == 0)
-        current_p->p_s.reg_v0 = (unsigned int)(current_p->p_pid);
+        PROCESSOR_SAVED_STATE->reg_v0 = (unsigned int)(current_p->p_pid);
     else
-        current_p->p_s.reg_v0 = (unsigned int)((current_p->p_parent)->p_pid);
+        PROCESSOR_SAVED_STATE->reg_v0 = (unsigned int)((current_p->p_parent)->p_pid);
 }
 
 void Yield()

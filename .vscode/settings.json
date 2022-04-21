@@ -12,7 +12,8 @@
         "scheduler.h": "c",
         "exception.h": "c",
         "interrupt.h": "c",
-        "initial.h": "c"
+        "initial.h": "c",
+        "libumps.h": "c"
     },
     "peacock.color": "#1857a4",
     "workbench.colorCustomizations": {
