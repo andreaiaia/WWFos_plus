@@ -125,11 +125,19 @@ pcb_PTR Verhogen(int *semaddr)
         // Sospendo il processo corrente
         copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
         // Lo inserisco nella coda corretta
-        if (current_p->p_prio == 1)
+        /*if (current_p->p_prio == 1)
             insertProcQ(&high_ready_q, current_p);
         else
             insertProcQ(&low_ready_q, current_p);
+        */
+        insertBlocked(*semaddr, current_p);
+        if (current_p->p_prio == 1){
+            outProcQ(&high_ready_q, current_p);
+        } else {
+            outProcQ(&low_ready_q, current_p);
+        }
         current_p = NULL;
+
     }
     else if (headBlocked(semaddr) != NULL)
     {
