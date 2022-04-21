@@ -84,14 +84,16 @@ void syscallExceptionHandler(unsigned int syscallCode)
             INCREMENTO_PC;
             klog_print("HELP2.2 - create process\n");
             Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
-            LDST(PROCESSOR_SAVED_STATE);
+            //LDST(PROCESSOR_SAVED_STATE);
+            postSyscall();
             break;
 
         case TERMPROCESS:
             INCREMENTO_PC;
             klog_print("HELP2.3 - terminate process\n");
             if (Terminate_Process((int)(REG_A1_SS))){
-                LDST(PROCESSOR_SAVED_STATE);   
+                //LDST(PROCESSOR_SAVED_STATE);   
+                postSyscall();
             } else {
                 copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
             }
@@ -101,7 +103,8 @@ void syscallExceptionHandler(unsigned int syscallCode)
             INCREMENTO_PC;
             klog_print("HELP2.4 - passeren\n");
             if(Passeren((int *)(REG_A1_SS))){
-                LDST(PROCESSOR_SAVED_STATE);
+                //LDST(PROCESSOR_SAVED_STATE);
+                postSyscall();
             } else {
                 copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
             }
@@ -112,7 +115,8 @@ void syscallExceptionHandler(unsigned int syscallCode)
             klog_print("HELP2.5 - verhogen\n");
             Verhogen((int *)(REG_A1_SS));
             if (current_p != NULL) {
-                LDST(PROCESSOR_SAVED_STATE);
+                //LDST(PROCESSOR_SAVED_STATE);
+                postSyscall();
             }
             break;
 
@@ -121,7 +125,8 @@ void syscallExceptionHandler(unsigned int syscallCode)
             klog_print("HELP2.6 - DoIo cane\n");
             if(Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS)){
               soft_count--;
-              LDST(PROCESSOR_SAVED_STATE);
+              //LDST(PROCESSOR_SAVED_STATE);
+              postSyscall();  
             } else {
                 copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
                 soft_count++;
@@ -132,7 +137,8 @@ void syscallExceptionHandler(unsigned int syscallCode)
             INCREMENTO_PC;
             klog_print("HELP2.7 - gettime\n");
             Get_CPU_Time();
-            LDST(PROCESSOR_SAVED_STATE);
+            //LDST(PROCESSOR_SAVED_STATE);
+            postSyscall();
             break;
 
         case CLOCKWAIT:
@@ -140,7 +146,8 @@ void syscallExceptionHandler(unsigned int syscallCode)
             klog_print("HELP2.8 - clock wait\n");
             if(Wait_For_Clock()) {
                 soft_count--;
-                LDST(PROCESSOR_SAVED_STATE);
+                //LDST(PROCESSOR_SAVED_STATE);
+                postSyscall();
             } else {
                 copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
                 soft_count++;
@@ -151,14 +158,16 @@ void syscallExceptionHandler(unsigned int syscallCode)
             INCREMENTO_PC;
             klog_print("HELP2.9 - getsupportptr\n");
             Get_Support_Data();
-            LDST(PROCESSOR_SAVED_STATE);
+            //LDST(PROCESSOR_SAVED_STATE);
+            postSyscall();
             break;
 
         case GETPROCESSID:
             INCREMENTO_PC;
             klog_print("HELP2.10 - getprocID\n");
             Get_Process_Id((int)(REG_A1_SS));
-            LDST(PROCESSOR_SAVED_STATE);
+            //LDST(PROCESSOR_SAVED_STATE);
+            postSyscall();
             break;
 
         case YIELD:
@@ -228,4 +237,12 @@ void PassUpOrDie(int excCode)
         klog_print("HELP10 - caricato contesto in proc attivo\n");
     }
     klog_print("HELPEND - fine passupordie\n");
+}
+
+void postSyscall() {
+    STCK(finish);
+    // Aggiungo il tempo trascorso al tempo impiegato dal processo
+    current_p->p_time = (current_p->p_time) + (finish - start);
+    STCK(start);
+    LDST(PROCESSOR_SAVED_STATE);
 }
