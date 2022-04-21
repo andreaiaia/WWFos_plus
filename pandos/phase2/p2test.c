@@ -421,7 +421,6 @@ void p4()
 
     SYSCALL(PASSEREN, (int)&sem_blkp4, 0, 0); /* P(sem_blkp4)     */
 
-QUI
     SYSCALL(PASSEREN, (int)&sem_synp4, 0, 0); /* P(sem_synp4)     */
 
     /* start another incarnation of p4 running, and wait for  */
