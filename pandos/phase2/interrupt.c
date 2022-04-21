@@ -52,7 +52,7 @@ void intervalTimerInterrupt(int line)
 
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
   pcb_PTR removed = NULL;
-  //klog_print("INT_TIMER_INT ho creato pcb\n");
+  klog_print("INT_TIMER_INT ho creato pcb\n");
   do
   { 
     removed = removeBlocked(&(device_sem[DEVSEM_NUM - 1]));
