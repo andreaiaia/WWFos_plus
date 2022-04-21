@@ -4,9 +4,22 @@ void scheduler()
 {
     // setTIMER(0xFFFFFFFF); //!usata solo per debug
     klog_print("SH - entro\n");
+    if (current_p != NULL && current_p->p_semAdd == NULL)
+    {
+        // Leggo il time of day
+        klog_print("SH_RUNNING\n");
+        STCK(finish);
+        // Aggiungo il tempo trascorso al tempo impiegato dal processo
+        current_p->p_time = (current_p->p_time) + (finish - start);
+        STCK(start);
+        LDST(PROCESSOR_SAVED_STATE);
+        klog_print("SH_se_mi_leggi_e_un_problema\n");
+    }
+    // Se la coda dei processi ad ALTA priorità è non-vuota
+    else
     if (!emptyProcQ(&high_ready_q))
     {
-        klog_print("SH_HIGH - c'é proc in high q\n");
+        klog_print("SH_HIGH - ce proc in high q\n");
         load_new_proc(&high_ready_q);
     }
     // Se la coda dei processi a BASSA priorità è non-vuota
@@ -17,7 +30,7 @@ void scheduler()
             klog_print("SH yielded != NULL\n");
             insertProcQ(&high_ready_q, yielded);
         }
-        klog_print("SH - c'é proc in low q\n");
+        klog_print("SH - ce proc in low q\n");
         // Imposto il PLT su 5ms
         setTIMER(TIMESLICE);
         // setTIMER(MAX_TIME);
@@ -42,6 +55,7 @@ void scheduler()
             klog_print("SH - setState accetto interrupt\n");
             setTIMER(MAX_TIME);
             setSTATUS(waitingStatus);
+            current_p = NULL;
             klog_print("SH - vado in Wait\n");
             WAIT(); // Aspettando un interrupt
             scheduler();
