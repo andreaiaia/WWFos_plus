@@ -19,7 +19,6 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
          * quindi gli do il suo indirizzo di memoria
          */
         child->p_pid = (memaddr)&child;
-
         // Associo il process appena creato al suo processo padre
         insertChild(current_p, child);
 
@@ -44,9 +43,9 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         }
     }
     // Ritorno successo
-    current_p->p_s.reg_v0 = child->p_pid;
+    //current_p->p_s.reg_v0 = child->p_pid;
     klog_print("SYS_CREATE_PROC - fine create_process\n");
-    //PROCESSOR_SAVED_STATE->reg_v0 = child->p_pid;
+    PROCESSOR_SAVED_STATE->reg_v0 = child->p_pid;
 }
 
 // Se il secondo parametro è 0 allora il bersaglio è il processo invocante
