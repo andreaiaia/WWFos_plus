@@ -237,6 +237,193 @@ void test()
     //klog_print("TEST_236\n");
     /* create process p2 */
     //print("print furbetta messa da wifi\n");
+
+    p9pid = SYSCALL(CREATEPROCESS, (int)&p9state, PROCESS_PRIO_LOW, (int)NULL); /* start p7		*/
+
+    SYSCALL(PASSEREN, (int)&sem_endp5, 0, 0); /* P(sem_endp5)		*/
+
+    print("p1 knows p5 ended\n");
+
+    SYSCALL(PASSEREN, (int)&sem_blkp4, 0, 0); /* P(sem_blkp4)		*/
+
+    /* now for a more rigorous check of process termination */
+    for (p8inc = 0; p8inc < 4; p8inc++)
+    {
+        /* Reset semaphores */
+        sem_blkp8 = 0;
+        sem_endp8 = 0;
+        for (int i = 0; i < NOLEAVES; i++)
+        {
+            sem_endcreate[i] = 0;
+        }
+
+        p8pid = SYSCALL(CREATEPROCESS, (int)&p8rootstate, PROCESS_PRIO_LOW, (int)NULL);
+
+        SYSCALL(PASSEREN, (int)&sem_endp8, 0, 0);
+    }
+
+    print("p1 finishes OK -- TTFN\n");
+    *((memaddr *)BADADDR) = 0; /* terminate p1 */
+
+    /* should not reach this point, since p1 just got a program trap */
+    print("error: p1 still alive after progtrap & no trap vector\n");
+    PANIC(); /* PANIC !!!     */
+}
+/* p2 -- semaphore and cputime-SYS test process */
+void p2()
+{
+    int i;                /* just to waste time  */
+    cpu_t now1, now2;     /* times of day        */
+    cpu_t cpu_t1, cpu_t2; /* cpu time used       */
+
+    SYSCALL(PASSEREN, (int)&sem_startp2, 0, 0); /* P(sem_startp2)   */
+
+    print("p2 starts\n");
+
+    int pid = SYSCALL(GETPROCESSID, 0, 0, 0);
+    if (pid != p2pid)
+    {
+        print("Inconsistent process id for p2!\n");
+        PANIC();
+    }
+
+    /* initialize all semaphores in the s[] array */
+    for (i = 0; i <= MAXSEM; i++)
+    {
+        s[i] = 0;
+    }
+
+    /* V, then P, all of the semaphores in the s[] array */
+    for (i = 0; i <= MAXSEM; i++)
+    {
+        SYSCALL(VERHOGEN, (int)&s[i], 0, 0); /* V(S[I]) */
+        SYSCALL(PASSEREN, (int)&s[i], 0, 0); /* P(S[I]) */
+        if (s[i] != 0)
+            print("error: p2 bad v/p pairs\n");
+    }
+    print("p2 v's successfully\n");
+
+    /* test of SYS6 */
+
+    STCK(now1);                         /* time of day   */
+    cpu_t1 = SYSCALL(GETTIME, 0, 0, 0); /* CPU time used */
+
+    /* delay for several milliseconds */
+    for (i = 1; i < LOOPNUM; i++)
+        ;
+
+    cpu_t2 = SYSCALL(GETTIME, 0, 0, 0); /* CPU time used */
+    STCK(now2);                         /* time of day  */
+
+    if (((now2 - now1) >= (cpu_t2 - cpu_t1)) && ((cpu_t2 - cpu_t1) >= (MINLOOPTIME / (*((cpu_t *)TIMESCALEADDR)))))
+    {
+        print("p2 is OK\n");
+    }
+    else
+    {
+        if ((now2 - now1) < (cpu_t2 - cpu_t1))
+            print("error: more cpu time than real time\n");
+        if ((cpu_t2 - cpu_t1) < (MINLOOPTIME / (*((cpu_t *)TIMESCALEADDR))))
+            print("error: not enough cpu time went by\n");
+        print("p2 blew it!\n");
+    }
+
+    p1p2synch = 1; /* p1 will check this */
+
+    SYSCALL(PASSEREN, (int)&sem_endp2, 0, 0); /* P(sem_endp2)    unblocking P ! */
+
+    SYSCALL(TERMPROCESS, 0, 0, 0); /* terminate p2 */
+
+    /* just did a SYS2, so should not get to this point */
+    print("error: p2 didn't terminate\n");
+    PANIC(); /* PANIC!           */
+}
+
+/* p3 -- clock semaphore test process */
+void p3()
+{
+    cpu_t time1, time2;
+    cpu_t cpu_t1, cpu_t2; /* cpu time used       */
+    int i;
+
+    time1 = 0;
+    time2 = 0;
+
+    /* loop until we are delayed at least half of clock V interval */
+    while (time2 - time1 < (CLOCKINTERVAL >> 1))
+    {
+        STCK(time1); /* time of day     */
+        //SYSCALL(CLOCKWAIT, 0, 0, 0);
+        STCK(time2); /* new time of day */
+    }
+
+    print("p3 - CLOCKWAIT OK\n");
+
+    /* now let's check to see if we're really charge for CPU
+       time correctly */
+    cpu_t1 = SYSCALL(GETTIME, 0, 0, 0);
+
+    for (i = 0; i < CLOCKLOOP; i++)
+    {
+        //SYSCALL(CLOCKWAIT, 0, 0, 0);
+    }
+
+    cpu_t2 = SYSCALL(GETTIME, 0, 0, 0);
+
+    if (cpu_t2 - cpu_t1 < (MINCLOCKLOOP / (*((cpu_t *)TIMESCALEADDR))))
+    {
+        print("error: p3 - CPU time incorrectly maintained\n");
+    }
+    else
+    {
+        print("p3 - CPU time correctly maintained\n");
+    }
+
+    int pid = SYSCALL(GETPROCESSID, 0, 0, 0);
+    if (pid != p3pid)
+    {
+        print("Inconsistent process id for p3!\n");
+        PANIC();
+    }
+
+    SYSCALL(VERHOGEN, (int)&sem_endp3, 0, 0); /* V(sem_endp3)        */
+
+    SYSCALL(TERMPROCESS, 0, 0, 0); /* terminate p3    */
+
+    /* just did a SYS2, so should not get to this point */
+    print("error: p3 didn't terminate\n");
+    PANIC(); /* PANIC            */
+}
+
+/* p4 -- termination test process */
+void p4()
+{
+    switch (p4inc)
+    {
+    case 1:
+        print("first incarnation of p4 starts\n");
+        p4inc++;
+        break;
+
+    case 2:
+        print("second incarnation of p4 starts\n");
+        break;
+    }
+
+    int pid = SYSCALL(GETPROCESSID, 0, 0, 0);
+    if (pid != p4pid)
+    {
+        print("Inconsistent process id for p4!\n");
+        PANIC();
+    }
+
+    SYSCALL(VERHOGEN, (int)&sem_synp4, 0, 0); /* V(sem_synp4)     */
+
+    SYSCALL(PASSEREN, (int)&sem_blkp4, 0, 0); /* P(sem_blkp4)     */
+
+QUI
+    SYSCALL(PASSEREN, (int)&sem_synp4, 0, 0); /* P(sem_synp4)     */
+
     /* start another incarnation of p4 running, and wait for  */
     /* a V(sem_synp4). the new process will block at the P(sem_blkp4),*/
     /* and eventually, the parent p4 will terminate, killing  */
