@@ -76,58 +76,67 @@ void syscallExceptionHandler(unsigned int syscallCode)
     if (((PROCESSOR_SAVED_STATE->status & STATUS_KUp) != STATUS_KUp))
     {
         klog_print("HELP2 - check ker. mode: ON\n");
-        INCREMENTO_PC;
         // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
         // ! klog_print("HELP2.1 - \n");   ho rimosso questo perché ridondante
         switch (syscallCode)
         {
         case CREATEPROCESS:
+            INCREMENTO_PC;
             klog_print("HELP2.2 - create process\n");
             Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
             break;
 
         case TERMPROCESS:
+            INCREMENTO_PC;
             klog_print("HELP2.3 - terminate process\n");
             Terminate_Process((int)(REG_A1_SS));
             break;
 
         case PASSEREN:
+            INCREMENTO_PC;
             klog_print("HELP2.4 - passeren\n");
             Passeren((int *)(REG_A1_SS));
             break;
 
         case VERHOGEN:
+            INCREMENTO_PC;
             klog_print("HELP2.5 - verhogen\n");
             Verhogen((int *)(REG_A1_SS));
             break;
 
         case DOIO:
+            INCREMENTO_PC;
             klog_print("HELP2.6 - DoIo cane\n");
             Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS);
             break;
 
         case GETTIME:
+            INCREMENTO_PC;
             klog_print("HELP2.7 - gettime\n");
             Get_CPU_Time();
             break;
 
         case CLOCKWAIT:
+            INCREMENTO_PC;
             klog_print("HELP2.8 - clock wait\n");
             Wait_For_Clock();
             break;
 
         case GETSUPPORTPTR:
+            INCREMENTO_PC;
             klog_print("HELP2.9 - getsupportptr\n");
             Get_Support_Data();
             break;
 
         case GETPROCESSID:
+            INCREMENTO_PC;
             klog_print("HELP2.10 - getprocID\n");
             Get_Process_Id((int)(REG_A1_SS));
             break;
 
         case YIELD:
+            INCREMENTO_PC;
             klog_print("HELP2.11 - yield\n");
             Yield();
             break;
