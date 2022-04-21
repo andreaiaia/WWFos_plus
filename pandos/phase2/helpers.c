@@ -95,7 +95,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
                 //LDST(PROCESSOR_SAVED_STATE);   
                 postSyscall();
             } else {
-                copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+                scheduler();
             }
             break;
 
