@@ -194,6 +194,7 @@ void Get_CPU_Time()
 
 int Wait_For_Clock()
 {
+    soft_count++;
     return(Passeren(&(device_sem[48])));
 }
 

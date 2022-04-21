@@ -59,6 +59,7 @@ void intervalTimerInterrupt(int line)
     //klog_print("INT_TIMER_INT ho rimosso\n");
     if (removed != NULL)
     {
+      soft_count--;
       klog_print("Ho sbloccato un proc\n");
       if (removed->p_prio == 1)
         insertProcQ(&high_ready_q, removed);
