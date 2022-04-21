@@ -238,12 +238,6 @@ void test()
     /* create process p2 */
     //print("print furbetta messa da wifi\n");
 
-    SYSCALL(PASSEREN, (int)&sem_endp5, 0, 0); /* P(sem_endp5)		*/
-
-    print("p1 knows p5 ended\n");
-
-    SYSCALL(PASSEREN, (int)&sem_blkp4, 0, 0); /* P(sem_blkp4)		*/
-
     /* now for a more rigorous check of process termination */
     for (p8inc = 0; p8inc < 4; p8inc++)
     {
@@ -418,6 +412,7 @@ void p4()
     SYSCALL(VERHOGEN, (int)&sem_synp4, 0, 0); /* V(sem_synp4)     */
 
     SYSCALL(PASSEREN, (int)&sem_blkp4, 0, 0); /* P(sem_blkp4)     */
+
 
     SYSCALL(PASSEREN, (int)&sem_synp4, 0, 0); /* P(sem_synp4)     */
 
