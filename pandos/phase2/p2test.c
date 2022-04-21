@@ -308,7 +308,6 @@ void test()
     print("error: p1 still alive after progtrap & no trap vector\n");
     PANIC(); /* PANIC !!!     */
 }
-void placeholder();
 /* p2 -- semaphore and cputime-SYS test process */
 void p2()
 {
@@ -341,7 +340,6 @@ void p2()
         if (s[i] != 0)
             print("error: p2 bad v/p pairs\n");
     }
-    placeholder();
     print("p2 v's successfully\n");
 
     /* test of SYS6 */
