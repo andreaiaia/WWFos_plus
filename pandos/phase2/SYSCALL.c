@@ -205,13 +205,17 @@ void Get_Support_Data()
 
 void Get_Process_Id(int parent)
 {
-    if (parent == 0)
+    if (parent == 0) {
         PROCESSOR_SAVED_STATE->reg_v0 = (int)(current_p->p_pid);
+        klog_print("SYS_ PID SE STESSO\n");
+    }
     else
         if (current_p->p_parent){        
             PROCESSOR_SAVED_STATE->reg_v0 = (int)((current_p->p_parent)->p_pid);
+            klog_print("SYS_ PID con padre\n");
         } else {
             PROCESSOR_SAVED_STATE->reg_v0 = 0;
+            klog_print("SYS_ SPID = 0 non ha papa\n");
         }
 }
 
