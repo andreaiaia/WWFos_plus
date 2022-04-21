@@ -46,7 +46,7 @@ void PLTTimerInterrupt(int line)
 // linea 2   (3.6.3 pandos)
 void intervalTimerInterrupt(int line)
 {
-  klog_print("INTTIMER\n");
+  klog_print("INT_TIMER_INTERRUPT\n");
   LDIT(PSECOND); // carico Interval Timer con 100millisec
 
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
@@ -154,12 +154,12 @@ void nonTimerInterrupt(int line)
   klog_print("NTI copio stato processore\n");
   if (current_p == NULL)
   {
-    klog_print("NTI current_p == NULL");
+    klog_print("NTI current_p == NULL\n");
     scheduler();
   }
   else
   {
-    klog_print("NTI kariko stato");
+    klog_print("NTI kariko stato\n");
     LDST(PROCESSOR_SAVED_STATE);
   }
   // copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));

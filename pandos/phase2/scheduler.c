@@ -4,7 +4,7 @@ void scheduler()
 {
     // setTIMER(0xFFFFFFFF); //!usata solo per debug
     klog_print("SH - entro\n");
-    if (current_p != NULL && current_p->p_semAdd == NULL)
+    /*if (current_p != NULL && current_p->p_semAdd == NULL)
     {
         // Leggo il time of day
         klog_print("SH_RUNNING\n");
@@ -16,7 +16,7 @@ void scheduler()
         klog_print("SH_se_mi_leggi_e_un_problema\n");
     }
     // Se la coda dei processi ad ALTA priorità è non-vuota
-    else
+    else*/
     if (!emptyProcQ(&high_ready_q))
     {
         klog_print("SH_HIGH - ce proc in high q\n");
