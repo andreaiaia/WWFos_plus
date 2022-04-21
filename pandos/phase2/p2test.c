@@ -238,8 +238,6 @@ void test()
     /* create process p2 */
     //print("print furbetta messa da wifi\n");
 
-    p9pid = SYSCALL(CREATEPROCESS, (int)&p9state, PROCESS_PRIO_LOW, (int)NULL); /* start p7		*/
-
     SYSCALL(PASSEREN, (int)&sem_endp5, 0, 0); /* P(sem_endp5)		*/
 
     print("p1 knows p5 ended\n");
@@ -421,6 +419,7 @@ void p4()
 
     SYSCALL(PASSEREN, (int)&sem_blkp4, 0, 0); /* P(sem_blkp4)     */
 
+QUI
     SYSCALL(PASSEREN, (int)&sem_synp4, 0, 0); /* P(sem_synp4)     */
 
     /* start another incarnation of p4 running, and wait for  */
