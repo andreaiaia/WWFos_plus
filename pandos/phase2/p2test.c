@@ -110,12 +110,13 @@ void print(char *msg)
     devregtr status;
 
     SYSCALL(PASSEREN, (int)&sem_term_mut, 0, 0); /* P(sem_term_mut) */
+    klog_print("p2test.113\n");
     while (*s != EOS)
     {
-        klog_print("p2test.115\n");
+        klog_print("p2test.116\n");
         devregtr value = PRINTCHR | (((devregtr)*s) << 8);
         status = SYSCALL(DOIO, (int)command, (int)value, 0);
-        klog_print("p2test.118\n");
+        klog_print("p2test.119\n");
         if ((status & TERMSTATMASK) != RECVD)
         {
             PANIC();

@@ -4,7 +4,6 @@ void scheduler()
 {
     // setTIMER(0xFFFFFFFF); //!usata solo per debug
     klog_print("SH\n");
-    // Se un processo è in corso
     if (!emptyProcQ(&high_ready_q))
     {
         klog_print("SH_HIGH\n");
@@ -21,7 +20,7 @@ void scheduler()
         klog_print("SH_LOW\n");
         // Imposto il PLT su 5ms
         setTIMER(TIMESLICE);
-        // setTIMER(UNSIGNED_MAX_32_INT);
+        // setTIMER(MAX_TIME);
         load_new_proc(&low_ready_q);
     }
     // Se le code sono entrambe vuote
@@ -39,8 +38,9 @@ void scheduler()
             klog_print("SH_SB\n");
             // Imposto lo stato corrente per accettare interrupt
             // E disabilito il tutto il resto (quindi anche il PLT)
-            unsigned int waitingStatus = (getSTATUS() | IECON | IEPON | IMON | TEBITON) ^ TEBITON;
+            unsigned int waitingStatus = getSTATUS() | IECON | IEPON | IMON;
             klog_print("SH_SET_STATUS\n");
+            setTIMER(MAX_TIME);
             setSTATUS(waitingStatus);
             klog_print("SH_WAIT\n");
             WAIT(); // Aspettando un interrupt

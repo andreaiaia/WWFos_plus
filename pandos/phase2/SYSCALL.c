@@ -32,6 +32,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
             insertProcQ(&low_ready_q, child);
         }
         // Incremento il conto dei processi
+        klog_print("SYS_PRE_PROC ++\n");
         proc_count++;
         for (int i = 0; i < MAXPROC; i++)
         {
@@ -43,8 +44,9 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         }
     }
     // Ritorno successo
-    //current_p->p_s.reg_v0 = child->p_pid;
-    PROCESSOR_SAVED_STATE->reg_v0 = child->p_pid;
+    current_p->p_s.reg_v0 = child->p_pid;
+    klog_print("ho finito la createprocess()\n");
+    //PROCESSOR_SAVED_STATE->reg_v0 = child->p_pid;
 }
 
 // Se il secondo parametro è 0 allora il bersaglio è il processo invocante
@@ -87,6 +89,7 @@ void Passeren(int *semaddr)
         klog_print("soft_count: ");
         klog_print_hex(soft_count);
         klog_print("\n");
+        copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
     }
     else if (headBlocked(semaddr) != NULL)
     {
@@ -105,7 +108,6 @@ void Passeren(int *semaddr)
         klog_print("PASS4\n");
         *semaddr = 0;
     }
-    copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
 }
 
 pcb_PTR Verhogen(int *semaddr)

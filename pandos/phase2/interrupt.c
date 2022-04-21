@@ -1,7 +1,5 @@
 #include "interrupt.h"
 
-#define UNSIGNED_MAX_32_INT 4294967295 // = 0xFFFF.FFFF per ricaricare PLTTimer
-
 void interruptHandler()
 {
   klog_print("INT_H\n");
@@ -38,10 +36,10 @@ void interruptHandler()
 void PLTTimerInterrupt(int line)
 {
   klog_print("PLT\n");
-  setTIMER(UNSIGNED_MAX_32_INT); // ricarico timer
+  setTIMER(MAX_TIME); // ricarico timer
   copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
   insertProcQ(&low_ready_q, current_p);
-  current_p= NULL;
+  current_p = NULL;
   scheduler();
 }
 
@@ -68,10 +66,13 @@ void intervalTimerInterrupt(int line)
 
   // Azzero lo pseudo-clock semaphore
   device_sem[DEVSEM_NUM - 1] = 0;
-  if (current_p == NULL) {
-  scheduler();
-  } else {
-  LDST(PROCESSOR_SAVED_STATE);
+  if (current_p == NULL)
+  {
+    scheduler();
+  }
+  else
+  {
+    LDST(PROCESSOR_SAVED_STATE);
   }
 }
 
@@ -149,15 +150,18 @@ void nonTimerInterrupt(int line)
     tmp->p_s.reg_v0 = dev_status_code; //! non sono sicuro - Nick.
   // copio stato processore nel pcb attuale
   klog_print("INT_stato del processore\n");
-  if (current_p == NULL) {
-  klog_print("INT_CURRENT P NULL");
-  scheduler();
-  } else {   
-  klog_print("INT_kariko stato");
-  LDST(PROCESSOR_SAVED_STATE);
+  if (current_p == NULL)
+  {
+    klog_print("INT_CURRENT P NULL");
+    scheduler();
+  }
+  else
+  {
+    klog_print("INT_kariko stato");
+    LDST(PROCESSOR_SAVED_STATE);
   }
   // copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
   // insertProcQ(&low_ready_q, current_p);
-  //scheduler();
+  // scheduler();
   //  ? come mai non chiamiamo più lo scheduler? fatti i cazzi tuoi
 }
