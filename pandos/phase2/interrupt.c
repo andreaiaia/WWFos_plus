@@ -42,18 +42,22 @@ void PLTTimerInterrupt(int line)
   current_p = NULL;
   scheduler();
 }
-
+void cosetta();
 // linea 2   (3.6.3 pandos)
 void intervalTimerInterrupt(int line)
 {
-  klog_print("INT_TIMER_INTERRUPT\n");
+  klog_print("INT_TIMER_INT\n");
+  cosetta();
   LDIT(PSECOND); // carico Interval Timer con 100millisec
+  klog_print("INT_TIMER_INT ho caricato timer\n");
 
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
   pcb_PTR removed = NULL;
+  klog_print("INT_TIMER_INT ho creato pcb\n");
   do
-  {
+  { 
     removed = removeBlocked(&(device_sem[DEVSEM_NUM - 1]));
+    klog_print("INT_TIMER_INT ho rimosso\n");
     if (removed != NULL)
     {
       klog_print("Ho sbloccato un proc\n");
