@@ -47,7 +47,7 @@ void Exterminate(pcb_PTR process)
             pcb_PTR child = removeChild(process);
             Terminate_Process(child->p_pid);
         }
-        Terminate_Process(0); // Infine termino il processo originale
+        Terminate_Process(process->p_pid); // Infine termino il processo originale
     }
 }
 
@@ -65,7 +65,6 @@ pcb_PTR find_process(int pid)
             }
         }
     }
-
     return NULL;
 }
 
@@ -85,60 +84,89 @@ void syscallExceptionHandler(unsigned int syscallCode)
             INCREMENTO_PC;
             klog_print("HELP2.2 - create process\n");
             Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
+            LDST(PROCESSOR_SAVED_STATE);
             break;
 
         case TERMPROCESS:
             INCREMENTO_PC;
             klog_print("HELP2.3 - terminate process\n");
-            Terminate_Process((int)(REG_A1_SS));
+            if (Terminate_Process((int)(REG_A1_SS))){
+                LDST(PROCESSOR_SAVED_STATE);   
+            } else {
+                copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+            }
             break;
 
         case PASSEREN:
             INCREMENTO_PC;
             klog_print("HELP2.4 - passeren\n");
-            Passeren((int *)(REG_A1_SS));
+            if(Passeren((int *)(REG_A1_SS))){
+                LDST(PROCESSOR_SAVED_STATE);
+            } else {
+                copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+            }
             break;
 
         case VERHOGEN:
             INCREMENTO_PC;
             klog_print("HELP2.5 - verhogen\n");
             Verhogen((int *)(REG_A1_SS));
+            if (current_p != NULL) {
+                LDST(PROCESSOR_SAVED_STATE);
+            }
             break;
 
         case DOIO:
             INCREMENTO_PC;
             klog_print("HELP2.6 - DoIo cane\n");
-            Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS);
+            if(Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS)){
+              soft_count--;
+              LDST(PROCESSOR_SAVED_STATE);
+            } else {
+                copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+                soft_count++;
+            }
             break;
 
         case GETTIME:
             INCREMENTO_PC;
             klog_print("HELP2.7 - gettime\n");
             Get_CPU_Time();
+            LDST(PROCESSOR_SAVED_STATE);
             break;
 
         case CLOCKWAIT:
             INCREMENTO_PC;
             klog_print("HELP2.8 - clock wait\n");
-            Wait_For_Clock();
+            if(Wait_For_Clock()) {
+                soft_count--;
+                LDST(PROCESSOR_SAVED_STATE);
+            } else {
+                copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+                soft_count++;
+            }
             break;
 
         case GETSUPPORTPTR:
             INCREMENTO_PC;
             klog_print("HELP2.9 - getsupportptr\n");
             Get_Support_Data();
+            LDST(PROCESSOR_SAVED_STATE);
             break;
 
         case GETPROCESSID:
             INCREMENTO_PC;
             klog_print("HELP2.10 - getprocID\n");
             Get_Process_Id((int)(REG_A1_SS));
+            LDST(PROCESSOR_SAVED_STATE);
             break;
 
         case YIELD:
             INCREMENTO_PC;
             klog_print("HELP2.11 - yield\n");
             Yield();
+            copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+            current_p = NULL;
             break;
 
         default:

@@ -23,18 +23,18 @@ void Create_Process(state_t *statep, int prio, support_t *supportp);
 /** Quando invocata, la SYS2 termina il processo indicato
  * dal secondo parametro insieme a tutta la sua progenie.
  */
-void Terminate_Process(int pid);
+int Terminate_Process(int pid);
 
 // SYSCALL sui semafori
-void Passeren(int *semaddr);
+int Passeren(int *semaddr);
 pcb_PTR Verhogen(int *semaddr);
 
-void Do_IO_Device(int *commandAddr, int commandValue);
+int Do_IO_Device(int *commandAddr, int commandValue);
 
 void Get_CPU_Time();
 
 void Get_Process_Id(int parent);
-void Wait_For_Clock();
+int Wait_For_Clock();
 
 void Get_Support_Data();
 void Yield();

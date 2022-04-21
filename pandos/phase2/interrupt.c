@@ -10,7 +10,7 @@ void interruptHandler()
    */
   for (int line = 1; line < N_INTERRUPT_LINES; line++)
   {
-    if (getCAUSE() & CAUSE_IP(line))
+    if ((PROCESSOR_SAVED_STATE->cause) & CAUSE_IP(line))
     {
       if (line == 1)
       {
@@ -146,8 +146,10 @@ void nonTimerInterrupt(int line)
   klog_print_hex(sem_num);
   klog_print("\n");
   pcb_PTR tmp = Verhogen(&(device_sem[sem_num]));
-  if (tmp != NULL)
-    tmp->p_s.reg_v0 = dev_status_code; //! non sono sicuro - Nick.
+  if (tmp != NULL){
+    tmp->p_s.reg_v0 = dev_status_code; 
+    soft_count--;
+    }
   // copio stato processore nel pcb attuale
   klog_print("NTI copio stato processore\n");
   if (current_p == NULL)

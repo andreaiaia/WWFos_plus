@@ -50,24 +50,27 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
 }
 
 // Se il secondo parametro è 0 allora il bersaglio è il processo invocante
-void Terminate_Process(int pid)
+int Terminate_Process(int pid)
 {
-    if (pid == 0)
+    if (pid == 0) {
         Exterminate(current_p); // Termina il current_p
+        return(0);
+    }
     else
     {
         pcb_PTR to_terminate = find_process(pid);
         Exterminate(to_terminate); // Termina il proc con il corrispondente pid
+        return(1);
     }
 }
 
-void Passeren(int *semaddr)
+int Passeren(int *semaddr)
 {
     klog_print("PASS - entro\n");
     if (semaddr == NULL)
     {
         klog_print("PASS1 - sem == NULL\n");
-        return;
+        return(1);
     }
     else if (*semaddr == 0)
     {
@@ -76,7 +79,7 @@ void Passeren(int *semaddr)
         // Aggiungo il processo corrente alla coda del semd
         insertBlocked(semaddr, current_p);
         // Incremento il conto dei processi bloccati
-        soft_count++;
+        //soft_count++; // !modifica per manes
         /**
          * Rimuovo per sicurezza il processo da qualsiasi
          * proc_q in cui possa trovarsi
@@ -89,24 +92,25 @@ void Passeren(int *semaddr)
         klog_print("soft_count: ");
         klog_print_hex(soft_count);
         klog_print("\n");
-        copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+        return(0);
     }
     else if (headBlocked(semaddr) != NULL)
     {
         klog_print("PASS3 - sem != 0 (proc in ready)\n");
         pcb_PTR first = removeBlocked(semaddr);
         first->p_semAdd = NULL;
-        soft_count--;
-
+        //soft_count--; // ! modifica per manes
         if (first->p_prio == 1)
             insertProcQ(&high_ready_q, first);
         else
             insertProcQ(&low_ready_q, first);
+        return(1);
     }
     else
     {
         klog_print("PASS4 - metto sem a 0\n");
         *semaddr = 0;
+        return(1);
     }
 }
 
@@ -125,13 +129,14 @@ pcb_PTR Verhogen(int *semaddr)
             insertProcQ(&high_ready_q, current_p);
         else
             insertProcQ(&low_ready_q, current_p);
+        current_p = NULL;
     }
     else if (headBlocked(semaddr) != NULL)
     {
         klog_print("VER2 - semaddr == 0 (metto in ready)\n");
         first = removeBlocked(semaddr);
         first->p_semAdd = NULL;
-        soft_count--;
+        //soft_count--; // !spostato nell'interrupt h di alex
         if (first->p_prio == 1)
             insertProcQ(&high_ready_q, first);
         else
@@ -146,7 +151,7 @@ pcb_PTR Verhogen(int *semaddr)
     return first;
 }
 
-void Do_IO_Device(int *commandAddr, int commandValue)
+int Do_IO_Device(int *commandAddr, int commandValue)
 {
     klog_print("DOIO - entro\n");
     /**
@@ -155,21 +160,20 @@ void Do_IO_Device(int *commandAddr, int commandValue)
      * in SYSCALL.h
      */
     int dev_position = DEV_POSITION(commandAddr);
-
     // Distinguo fra terminal dev e tutti gli altri dispositivi
     if (dev_position > 63)
         dev_position -= 32;
     else
         dev_position /= 2;
-
     // Faccio PASSEREN su dispositivo trovato
     klog_print("DOIO - faccio passeren: ");
     klog_print_hex(dev_position);
     klog_print("\n");
-    Passeren(&(device_sem[dev_position]));
+    int retValue = Passeren(&(device_sem[dev_position]));
     klog_print("DOIO1 - fatta passeren\n");
     // Scrivo nel commandAddr il valore ricevuto
     *commandAddr = commandValue;
+    return (retValue);
 }
 
 void Get_CPU_Time()
@@ -181,9 +185,9 @@ void Get_CPU_Time()
     current_p->p_s.reg_v0 = (unsigned int)(current_p->p_time + (elapsed - start));
 }
 
-void Wait_For_Clock()
+int Wait_For_Clock()
 {
-    Passeren(&(device_sem[48]));
+    return(Passeren(&(device_sem[48])));
 }
 
 void Get_Support_Data()
@@ -210,6 +214,4 @@ void Yield()
         else
             insertProcQ(&high_ready_q, current_p);
     }
-    copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
-    current_p = NULL;
 }
