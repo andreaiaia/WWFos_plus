@@ -130,7 +130,7 @@ pcb_PTR Verhogen(int *semaddr)
         else
             insertProcQ(&low_ready_q, current_p);
         */
-        insertBlocked(*semaddr, current_p);
+        insertBlocked(semaddr, current_p);
         if (current_p->p_prio == 1){
             outProcQ(&high_ready_q, current_p);
         } else {
