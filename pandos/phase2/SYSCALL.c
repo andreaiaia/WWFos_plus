@@ -206,9 +206,9 @@ void Get_Support_Data()
 void Get_Process_Id(int parent)
 {
     if (parent == 0)
-        PROCESSOR_SAVED_STATE->reg_v0 = (int)(current_p->p_pid);
+        current_p->p_s.reg_v0 = (int)(current_p->p_pid);
     else
-        PROCESSOR_SAVED_STATE->reg_v0 = (int)((current_p->p_parent)->p_pid);
+        current_p->p_s.reg_v0= (int)((current_p->p_parent)->p_pid);
 }
 
 void Yield()
