@@ -2,17 +2,17 @@
 
 void exceptionHandler()
 {
-    klog_print("EXH\n");
+    klog_print("EXH - Entro\n");
     // * Exception code 0 -> Si passa il controllo al device interrupt handler
     if (DECODED_EXCEPTION_CAUSE == 0)
     {
-        klog_print("EXH_INT\n");
+        klog_print("EXH_INT - Interrupt handler\n");
         interruptHandler();
     }
     // * Exception code 1-3 -> Si passa il controllo al TLB exception handler (PassUpOrDie PGFAULTEXCEPT)
     else if ((DECODED_EXCEPTION_CAUSE >= 1) && (DECODED_EXCEPTION_CAUSE <= 3))
     {
-        klog_print("EXH_TLB\n");
+        klog_print("EXH_TLB - PassUpOrDie(1-3)\n");
         PassUpOrDie(PGFAULTEXCEPT);
     }
     // * Exception code 4-7 9-12 -> Si passa il controllo al Program Trap exception handler (PassUpOrDie GENERALEXCEPT)

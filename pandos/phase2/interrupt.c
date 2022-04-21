@@ -2,7 +2,7 @@
 
 void interruptHandler()
 {
-  klog_print("INT_H\n");
+  klog_print("INT_H - entro\n");
   /**
    * Scorro le linee di Cause.IP alla ricerca di un
    * pending interrupt, non guardo la linea 0 perché
@@ -79,7 +79,7 @@ void intervalTimerInterrupt(int line)
 // linee 3-7   (3.6.1 pandos)
 void nonTimerInterrupt(int line)
 {
-  klog_print("NTI\n");
+  klog_print("NTI - nonTimerInterrupt\n");
   int device_num = 0;
   devregarea_t *dev_regs = (devregarea_t *)RAMBASEADDR;
   /**
@@ -142,22 +142,22 @@ void nonTimerInterrupt(int line)
   }
   // Ora che ho identificato il dispositivo corretto, risalgo al semaforo associato
   int sem_num = 8 * (line - 3) + (line == 7 ? 2 * device_num : device_num) + term_is_recv;
-  klog_print("INT_");
+  klog_print("NTI sem_linea: ");
   klog_print_hex(sem_num);
   klog_print("\n");
   pcb_PTR tmp = Verhogen(&(device_sem[sem_num]));
   if (tmp != NULL)
     tmp->p_s.reg_v0 = dev_status_code; //! non sono sicuro - Nick.
   // copio stato processore nel pcb attuale
-  klog_print("INT_stato del processore\n");
+  klog_print("NTI copio stato processore\n");
   if (current_p == NULL)
   {
-    klog_print("INT_CURRENT P NULL");
+    klog_print("NTI current_p == NULL");
     scheduler();
   }
   else
   {
-    klog_print("INT_kariko stato");
+    klog_print("NTI kariko stato");
     LDST(PROCESSOR_SAVED_STATE);
   }
   // copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
