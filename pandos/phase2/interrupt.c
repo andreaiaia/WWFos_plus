@@ -75,7 +75,8 @@ void intervalTimerInterrupt(int line)
   }
   else
   {
-    LDST(PROCESSOR_SAVED_STATE);
+    //LDST(PROCESSOR_SAVED_STATE);
+    postSyscall();
   }
 }
 
@@ -163,7 +164,8 @@ void nonTimerInterrupt(int line)
   else
   {
     klog_print("NTI kariko stato\n");
-    LDST(PROCESSOR_SAVED_STATE);
+    //LDST(PROCESSOR_SAVED_STATE);
+    postSyscall();
   }
   // copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
   // insertProcQ(&low_ready_q, current_p);
