@@ -252,11 +252,11 @@ void test()
     {
         print("error: p1/p2 synchronization bad\n");
     }
-    void piazzato();
+    void placeholder();
     p3pid = SYSCALL(CREATEPROCESS, (int)&p3state, PROCESS_PRIO_LOW, (int)NULL); /* start p3     */
 
     print("p3 is started\n");
-    piazzato();
+    placeholder();
     SYSCALL(PASSEREN, (int)&sem_endp3, 0, 0); /* P(sem_endp3)     */
 
     //SYSCALL(CREATEPROCESS, (int)&hp_p1state, PROCESS_PRIO_HIGH, (int)NULL);
