@@ -248,7 +248,7 @@ void test()
     SYSCALL(VERHOGEN, (int)&sem_endp2, 0, 0); /* V(sem_endp2) (blocking V!)     */
     //print("print furbetta messa da wifi5\n");
     /* make sure we really blocked */
-    if (p1p2synch == 0)
+    if (p1p2synch == 1)
     {
         print("error: p1/p2 synchronization bad\n");
     }
