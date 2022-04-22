@@ -623,8 +623,8 @@ void p8root() {
 
     SYSCALL(VERHOGEN, (int)&sem_endp8, 0, 0);
 
-    SYSCALL(TERMPROCESS, 0, 0, 0);
     placeholder();
+    SYSCALL(TERMPROCESS, 0, 0, 0);
 }
 
 /*child1 & child2 -- create two sub-processes each*/
