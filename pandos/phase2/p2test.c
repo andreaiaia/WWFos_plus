@@ -603,7 +603,9 @@ void p7() {
     print("error: p7 alive after program trap with no trap vector\n");
     PANIC();
 }
-
+void placeholder() {
+    
+}
 
 /* p8root -- test of termination of subtree of processes              */
 /* create a subtree of processes, wait for the leaves to block, signal*/
