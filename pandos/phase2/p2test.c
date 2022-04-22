@@ -256,7 +256,7 @@ void test() {
     SYSCALL(CREATEPROCESS, (int)&hp_p2state, PROCESS_PRIO_HIGH, (int)NULL);
     
     p4pid = SYSCALL(CREATEPROCESS, (int)&p4state, PROCESS_PRIO_LOW, (int)NULL); /* start p4     */
-    print("p4 creato\n");
+    //print("p4 creato\n");
     pFiveSupport.sup_exceptContext[GENERALEXCEPT].stackPtr = (int)p5Stack;
     pFiveSupport.sup_exceptContext[GENERALEXCEPT].status   = ALLOFF | IEPBITON | CAUSEINTMASK | TEBITON;
     pFiveSupport.sup_exceptContext[GENERALEXCEPT].pc       = (memaddr)p5gen;
