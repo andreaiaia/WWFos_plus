@@ -88,9 +88,7 @@ int Passeren(int *semaddr)
         else
             outProcQ(&low_ready_q, current_p);
 
-        klog_print("soft_count: ");
-        klog_print_hex(soft_count);
-        klog_print("\n");
+      
         return(0);
     }
     else if (headBlocked(semaddr) != NULL)

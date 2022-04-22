@@ -108,6 +108,9 @@ void syscallExceptionHandler(unsigned int syscallCode)
             } else {
                 copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
             }
+            klog_print("soft_count: ");
+            klog_print_hex(soft_count);
+            klog_print("\n");
             break;
 
         case VERHOGEN:
