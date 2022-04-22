@@ -279,6 +279,7 @@ void test() {
 
     /* now for a more rigorous check of process termination */
     for (p8inc = 0; p8inc < 4; p8inc++) {
+        placeholder();
         /* Reset semaphores */ 
         sem_blkp8 = 0;
         sem_endp8 = 0;
@@ -623,7 +624,7 @@ void p8root() {
     klog_print("test: before verhogen\n");
     SYSCALL(VERHOGEN, (int)&sem_endp8, 0, 0);
 
-    placeholder();
+    //placeholder();
     SYSCALL(TERMPROCESS, 0, 0, 0);
     klog_print("p8root: se mi leggi incazzati\n");
 }
