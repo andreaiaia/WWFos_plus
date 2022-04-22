@@ -62,7 +62,7 @@ pcb_PTR find_process(int pid)
     {
         for (int i = 0; i < MAXPROC; i++) 
         {
-            if ((all_processes) && (all_processes[i]->p_pid == pid))
+            if ((all_processes[i]) && (all_processes[i]->p_pid == pid))
             {
                 return all_processes[i];
             }
