@@ -18,7 +18,7 @@
 #include "pandos_const.h"
 #include "pandos_types.h"
 #include <umps/libumps.h>
-extern int klog_print();
+#include "initial.h"
 typedef unsigned int devregtr;
 
 /* hardware constants */
