@@ -55,6 +55,7 @@ int Terminate_Process(int pid)
 {
     if (pid == 0) {
         Exterminate(current_p); // Termina il current_p
+        current_p = NULL;
         return(0);
     }
     else
