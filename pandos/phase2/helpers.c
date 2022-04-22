@@ -46,7 +46,7 @@ void Exterminate(pcb_PTR process)
         }
         else {
             outProcQ(&low_ready_q, process);
-        }
+        } // ! Possibile ottimizzazione col flag in base a risultato outprocq
         // Togliamo il processo dalla coda del semaforo
         outBlocked(process);
         // Decremento il conto dei processi attivi
