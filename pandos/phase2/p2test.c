@@ -369,44 +369,44 @@ void p2() {
 
 /* p3 -- clock semaphore test process */
 void p3() {
-    cpu_t time1, time2;
-    cpu_t cpu_t1, cpu_t2; /* cpu time used       */
-    int   i;
+    // cpu_t time1, time2;
+    // cpu_t cpu_t1, cpu_t2; /* cpu time used       */
+    // int   i;
 
-    time1 = 0;
-    time2 = 0;
+    // time1 = 0;
+    // time2 = 0;
 
-    /* loop until we are delayed at least half of clock V interval */
-    while (time2 - time1 < (CLOCKINTERVAL >> 1)) {
-        STCK(time1); /* time of day     */
-        //SYSCALL(CLOCKWAIT, 0, 0, 0);
-        STCK(time2); /* new time of day */
-    }
+    // /* loop until we are delayed at least half of clock V interval */
+    // while (time2 - time1 < (CLOCKINTERVAL >> 1)) {
+    //     STCK(time1); /* time of day     */
+    //     //SYSCALL(CLOCKWAIT, 0, 0, 0);
+    //     STCK(time2); /* new time of day */
+    // }
 
-    print("p3 - CLOCKWAIT OK\n");
+    // print("p3 - CLOCKWAIT OK\n");
 
-    /* now let's check to see if we're really charge for CPU
-       time correctly */
-    cpu_t1 = SYSCALL(GETTIME, 0, 0, 0);
+    // /* now let's check to see if we're really charge for CPU
+    //    time correctly */
+    // cpu_t1 = SYSCALL(GETTIME, 0, 0, 0);
 
-    for (i = 0; i < CLOCKLOOP; i++) {
-        //SYSCALL(CLOCKWAIT, 0, 0, 0);
-    }
+    // for (i = 0; i < CLOCKLOOP; i++) {
+    //     //SYSCALL(CLOCKWAIT, 0, 0, 0);
+    // }
 
-    cpu_t2 = SYSCALL(GETTIME, 0, 0, 0);
+    // cpu_t2 = SYSCALL(GETTIME, 0, 0, 0);
 
-    if (cpu_t2 - cpu_t1 < (MINCLOCKLOOP / (*((cpu_t *)TIMESCALEADDR)))) {
-        print("error: p3 - CPU time incorrectly maintained\n");
-    } else {
-        print("p3 - CPU time correctly maintained\n");
-    }
+    // if (cpu_t2 - cpu_t1 < (MINCLOCKLOOP / (*((cpu_t *)TIMESCALEADDR)))) {
+    //     print("error: p3 - CPU time incorrectly maintained\n");
+    // } else {
+    //     print("p3 - CPU time correctly maintained\n");
+    // }
 
-    int pid = SYSCALL(GETPROCESSID, 0, 0, 0);
-    if (pid != p3pid) {
-        print("Inconsistent process id for p3!\n");
-        PANIC();
-    }
-
+    // int pid = SYSCALL(GETPROCESSID, 0, 0, 0);
+    // if (pid != p3pid) {
+    //     print("Inconsistent process id for p3!\n");
+    //     PANIC();
+    // }
+    print("prima della verhogen\n");
     SYSCALL(VERHOGEN, (int)&sem_endp3, 0, 0); /* V(sem_endp3)        */
 
     SYSCALL(TERMPROCESS, 0, 0, 0); /* terminate p3    */
