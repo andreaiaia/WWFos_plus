@@ -618,7 +618,6 @@ void p8root() {
     SYSCALL(CREATEPROCESS, (int)&child2state, PROCESS_PRIO_LOW, (int)NULL);
     klog_print("test: after Create 2\n");
     for (grandchild = 0; grandchild < NOLEAVES; grandchild++) {
-        klog_print("test: doin passeren\n");
         SYSCALL(PASSEREN, (int)&sem_endcreate[grandchild], 0, 0);
     }
     klog_print("test: before verhogen\n");
