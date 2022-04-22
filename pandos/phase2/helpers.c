@@ -57,7 +57,7 @@ pcb_PTR find_process(int pid)
         return current_p;
     else
     {
-        for (int i = 0; i < MAXPROC; i++)
+        for (int i = 0; i < MAXPROC-1; i++) // ! il -1 mi pare sia doveroso
         {
             if (all_processes[i]->p_pid == pid)
             {
