@@ -29,12 +29,13 @@ void Exterminate(pcb_PTR process)
          * altro processo, lo rimuove dalla lista dei figli del padre
          */
         outChild(process);
-        // Termino il processo corrente
-        freePcb(process);
-        // Togliamo il processo dalla coda del semaforo
-        if (outBlocked(process)) {
-            soft_count--; // !come fare per farlo solo per le robe dei device?
+        for (int i=0; i < DEVSEM_NUM; i++) {
+            if (process->p_semAdd == &device_sem[i]) {
+                soft_count--;
+            }
         }
+        // Togliamo il processo dalla coda del semaforo
+        outBlocked(process);
         // Decremento il conto dei processi attivi
         proc_count--;
         for (int i = 0; i < MAXPROC; i++)
@@ -42,6 +43,8 @@ void Exterminate(pcb_PTR process)
             if (all_processes[i] == process)
                 all_processes[i] = NULL;
         }
+        // Termino il processo corrente
+        freePcb(process);
     }
     else
     {
@@ -61,7 +64,7 @@ pcb_PTR find_process(int pid)
         return current_p;
     else
     {
-        for (int i = 0; i < MAXPROC-1; i++) // ! il -1 mi pare sia doveroso
+        for (int i = 0; i < MAXPROC; i++) 
         {
             if (all_processes[i]->p_pid == pid)
             {
