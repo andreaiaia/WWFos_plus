@@ -21,9 +21,16 @@ void copy_state(state_t *original, state_t *dest)
 //* "Do you know how you make someone into a Dalek? Subtract Love, add Anger." ~ Steven Moffat
 void Exterminate(pcb_PTR process)
 {
-    // Controlla se il processo ha figli
-    if (emptyChild(process))
+    // Controlla se il processo non ha figli
+    if (!emptyChild(process))
     {
+        // Termina tutti i figli
+        while (!emptyChild(process))
+        {
+            pcb_PTR child = removeChild(process);
+            Exterminate(child);
+        }
+    }
         /**
          * Nel caso il processo corrente sia figlio di qualche
          * altro processo, lo rimuove dalla lista dei figli del padre
@@ -45,17 +52,6 @@ void Exterminate(pcb_PTR process)
         }
         // Termino il processo corrente
         freePcb(process);
-    }
-    else
-    {
-        // Termina tutti i figli
-        while (!emptyChild(process))
-        {
-            pcb_PTR child = removeChild(process);
-            Terminate_Process(child->p_pid);
-        }
-        Terminate_Process(process->p_pid); // Infine termino il processo originale
-    }
 }
 
 pcb_PTR find_process(int pid)
@@ -66,7 +62,7 @@ pcb_PTR find_process(int pid)
     {
         for (int i = 0; i < MAXPROC; i++) 
         {
-            if (all_processes[i]->p_pid == pid)
+            if ((all_processes) && (all_processes[i]->p_pid == pid))
             {
                 return all_processes[i];
             }
