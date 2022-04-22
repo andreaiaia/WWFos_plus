@@ -31,6 +31,10 @@ void Exterminate(pcb_PTR process)
         outChild(process);
         // Termino il processo corrente
         freePcb(process);
+        // Togliamo il processo dalla coda del semaforo
+        if (outBlocked(process)) {
+            soft_count--; // !come fare per farlo solo per le robe dei device?
+        }
         // Decremento il conto dei processi attivi
         proc_count--;
         for (int i = 0; i < MAXPROC; i++)
