@@ -623,8 +623,8 @@ void p8root() {
     klog_print("test: before verhogen\n");
     SYSCALL(VERHOGEN, (int)&sem_endp8, 0, 0);
 
-    placeholder();
     SYSCALL(TERMPROCESS, 0, 0, 0);
+    placeholder();
 }
 
 /*child1 & child2 -- create two sub-processes each*/
