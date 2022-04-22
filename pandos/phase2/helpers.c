@@ -41,6 +41,12 @@ void Exterminate(pcb_PTR process)
                 soft_count--;
             }
         }
+        if (process->p_prio) {
+            outProcQ(&high_ready_q, process);
+        }
+        else {
+            outProcQ(&low_ready_q, process);
+        }
         // Togliamo il processo dalla coda del semaforo
         outBlocked(process);
         // Decremento il conto dei processi attivi
