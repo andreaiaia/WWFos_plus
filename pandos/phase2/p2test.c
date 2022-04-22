@@ -612,11 +612,11 @@ void p8root() {
     int grandchild;
 
     print("p8root starts\n");
-
+    klog_print("test: before CREATE");
     SYSCALL(CREATEPROCESS, (int)&child1state, PROCESS_PRIO_LOW, (int)NULL);
-
+    klog_print("test: before CREATE 2");
     SYSCALL(CREATEPROCESS, (int)&child2state, PROCESS_PRIO_LOW, (int)NULL);
-
+    klog_print("test: after Create 2");
     for (grandchild = 0; grandchild < NOLEAVES; grandchild++) {
         SYSCALL(PASSEREN, (int)&sem_endcreate[grandchild], 0, 0);
     }
