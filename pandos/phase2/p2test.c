@@ -17,9 +17,8 @@
 
 #include "pandos_const.h"
 #include "pandos_types.h"
-#include <umps3/umps/libumps.h>
-#include "initial.h"
-extern void placeholder();
+#include <umps/libumps.h>
+
 typedef unsigned int devregtr;
 
 /* hardware constants */
@@ -232,51 +231,51 @@ void test() {
     p10state.pc_epc = p10state.reg_t9 = (memaddr)p10;
     p10state.status                   = p10state.status | IEPBITON | CAUSEINTMASK | TEBITON;
 
-    /* create process p2 */
-    p2pid = SYSCALL(CREATEPROCESS, (int)&p2state, PROCESS_PRIO_LOW, (int)NULL); /* start p2     */
-
-    print("p2 was started\n");
-
-    SYSCALL(VERHOGEN, (int)&sem_startp2, 0, 0); /* V(sem_startp2)   */
-
-    SYSCALL(VERHOGEN, (int)&sem_endp2, 0, 0); /* V(sem_endp2) (blocking V!)     */
-
-    /* make sure we really blocked */
-    if (p1p2synch == 0) {
-        print("error: p1/p2 synchronization bad\n");
-    }
-
-    p3pid = SYSCALL(CREATEPROCESS, (int)&p3state, PROCESS_PRIO_LOW, (int)NULL); /* start p3     */
-
-    print("p3 is started\n");
-
-    SYSCALL(PASSEREN, (int)&sem_endp3, 0, 0); /* P(sem_endp3)     */
-
-    // SYSCALL(CREATEPROCESS, (int)&hp_p1state, PROCESS_PRIO_HIGH, (int)NULL);
-    // SYSCALL(CREATEPROCESS, (int)&hp_p2state, PROCESS_PRIO_HIGH, (int)NULL);
-
-    // p4pid = SYSCALL(CREATEPROCESS, (int)&p4state, PROCESS_PRIO_LOW, (int)NULL); /* start p4     */
-
-    pFiveSupport.sup_exceptContext[GENERALEXCEPT].stackPtr = (int)p5Stack;
-    pFiveSupport.sup_exceptContext[GENERALEXCEPT].status   = ALLOFF | IEPBITON | CAUSEINTMASK | TEBITON;
-    pFiveSupport.sup_exceptContext[GENERALEXCEPT].pc       = (memaddr)p5gen;
-    pFiveSupport.sup_exceptContext[PGFAULTEXCEPT].stackPtr = p5Stack;
-    pFiveSupport.sup_exceptContext[PGFAULTEXCEPT].status   = ALLOFF | IEPBITON | CAUSEINTMASK | TEBITON;
-    pFiveSupport.sup_exceptContext[PGFAULTEXCEPT].pc       = (memaddr)p5mm;
-
-    // SYSCALL(CREATEPROCESS, (int)&p5state, PROCESS_PRIO_LOW, (int)&(pFiveSupport)); /* start p5     */
-
-    SYSCALL(CREATEPROCESS, (int)&p6state, PROCESS_PRIO_LOW, (int)NULL); /* start p6		*/
-
-    SYSCALL(CREATEPROCESS, (int)&p7state, PROCESS_PRIO_LOW, (int)NULL); /* start p7		*/
-
-    p9pid = SYSCALL(CREATEPROCESS, (int)&p9state, PROCESS_PRIO_LOW, (int)NULL); /* start p7		*/
-
-    // SYSCALL(PASSEREN, (int)&sem_endp5, 0, 0); /* P(sem_endp5)		*/
-
-    print("p1 knows p5 ended\n");
-
-    // SYSCALL(PASSEREN, (int)&sem_blkp4, 0, 0); /* P(sem_blkp4)		*/
+    ///* create process p2 */
+    //p2pid = SYSCALL(CREATEPROCESS, (int)&p2state, PROCESS_PRIO_LOW, (int)NULL); /* start p2     */
+    //
+    //print("p2 was started\n");
+    //
+    //SYSCALL(VERHOGEN, (int)&sem_startp2, 0, 0); /* V(sem_startp2)   */
+    //
+    //SYSCALL(VERHOGEN, (int)&sem_endp2, 0, 0); /* V(sem_endp2) (blocking V!)     */
+    //
+    ///* make sure we really blocked */
+    //if (p1p2synch == 0) {
+    //    print("error: p1/p2 synchronization bad\n");
+    //}
+    //
+    //p3pid = SYSCALL(CREATEPROCESS, (int)&p3state, PROCESS_PRIO_LOW, (int)NULL); /* start p3     */
+    //
+    //print("p3 is started\n");
+    //
+    //SYSCALL(PASSEREN, (int)&sem_endp3, 0, 0); /* P(sem_endp3)     */
+    //
+    //SYSCALL(CREATEPROCESS, (int)&hp_p1state, PROCESS_PRIO_HIGH, (int)NULL);
+    //SYSCALL(CREATEPROCESS, (int)&hp_p2state, PROCESS_PRIO_HIGH, (int)NULL);
+    //
+    //p4pid = SYSCALL(CREATEPROCESS, (int)&p4state, PROCESS_PRIO_LOW, (int)NULL); /* start p4     */
+    //
+    //pFiveSupport.sup_exceptContext[GENERALEXCEPT].stackPtr = (int)p5Stack;
+    //pFiveSupport.sup_exceptContext[GENERALEXCEPT].status   = ALLOFF | IEPBITON | CAUSEINTMASK | TEBITON;
+    //pFiveSupport.sup_exceptContext[GENERALEXCEPT].pc       = (memaddr)p5gen;
+    //pFiveSupport.sup_exceptContext[PGFAULTEXCEPT].stackPtr = p5Stack;
+    //pFiveSupport.sup_exceptContext[PGFAULTEXCEPT].status   = ALLOFF | IEPBITON | CAUSEINTMASK | TEBITON;
+    //pFiveSupport.sup_exceptContext[PGFAULTEXCEPT].pc       = (memaddr)p5mm;
+    //
+    //SYSCALL(CREATEPROCESS, (int)&p5state, PROCESS_PRIO_LOW, (int)&(pFiveSupport)); /* start p5     */
+    //
+    //SYSCALL(CREATEPROCESS, (int)&p6state, PROCESS_PRIO_LOW, (int)NULL); /* start p6		*/
+    //
+    //SYSCALL(CREATEPROCESS, (int)&p7state, PROCESS_PRIO_LOW, (int)NULL); /* start p7		*/
+    //
+    //p9pid = SYSCALL(CREATEPROCESS, (int)&p9state, PROCESS_PRIO_LOW, (int)NULL); /* start p7		*/
+    //
+    //SYSCALL(PASSEREN, (int)&sem_endp5, 0, 0); /* P(sem_endp5)		*/
+    //
+    //print("p1 knows p5 ended\n");
+    //
+    //SYSCALL(PASSEREN, (int)&sem_blkp4, 0, 0); /* P(sem_blkp4)		*/
 
     /* now for a more rigorous check of process termination */
     for (p8inc = 0; p8inc < 4; p8inc++) {
@@ -511,7 +510,7 @@ void p5mm() {
     } else {
         print("Correct Support Structure Address\n");
     }
-    placeholder();
+
     pFiveSupport.sup_exceptState[PGFAULTEXCEPT].status =
         pFiveSupport.sup_exceptState[PGFAULTEXCEPT].status | KUPBITON; /* user mode on 	*/
     pFiveSupport.sup_exceptState[PGFAULTEXCEPT].pc_epc = (memaddr)p5b; /* return to p5b()	*/
@@ -708,7 +707,7 @@ void p10() {
     }
 
     SYSCALL(TERMPROCESS, ppid, 0, 0);
-    placeholder();
+
     print("Error: p10 didn't die with its parent!\n");
     PANIC();
 }
