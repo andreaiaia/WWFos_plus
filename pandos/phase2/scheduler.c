@@ -17,7 +17,7 @@ void scheduler()
         {
             klog_print("SH yielded != NULL\n");
             insertProcQ(&high_ready_q, yielded);
-            yielded = NULL;
+            yielded = NULL; // ! Unico contributo di Alex, signor tutor
         }
         klog_print("SH - ce proc in low q\n");
         // Imposto il PLT su 5ms
