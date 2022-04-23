@@ -719,6 +719,7 @@ void p10() {
 void hp_p1() {
     print("hp_p1 starts\n");
 
+    placeholder();
     for (int i = 0; i < 100; i++) {
         SYSCALL(YIELD, 0, 0, 0);
     }
@@ -735,7 +736,6 @@ void hp_p2() {
         SYSCALL(CLOCKWAIT, 0, 0, 0);
     }
 
-    placeholder();
     SYSCALL(TERMPROCESS, 0, 0, 0);
     print("Error: hp_p2 didn't die!\n");
     PANIC();
