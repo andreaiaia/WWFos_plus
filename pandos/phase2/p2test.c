@@ -568,7 +568,7 @@ void p5b() {
     }
 
     /* if p4 and offspring are really dead, this will increment sem_blkp4 */
-
+    print("siamo a riga 571\n");
     SYSCALL(VERHOGEN, (int)&sem_blkp4, 0, 0); /* V(sem_blkp4) */
     SYSCALL(VERHOGEN, (int)&sem_endp5, 0, 0); /* V(sem_endp5) */
 
