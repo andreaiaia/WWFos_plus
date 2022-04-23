@@ -44,7 +44,7 @@ void scheduler()
             // E disabilito il tutto il resto (quindi anche il PLT)
             unsigned int waitingStatus = getSTATUS() | IECON | IEPON | IMON;
             klog_print("SH - setState accetto interrupt\n");
-            setTIMER(MAX_TIME * *((memaddr *)TIMESCALEADDR));
+            setTIMER(MAX_TIME);
             current_p = NULL;
             setSTATUS(waitingStatus);
             klog_print("SH - vado in Wait\n");
