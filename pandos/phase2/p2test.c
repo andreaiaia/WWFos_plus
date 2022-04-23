@@ -17,8 +17,8 @@
 
 #include "pandos_const.h"
 #include "pandos_types.h"
-#include <umps/libumps.h>
-#include "initial.h"
+#include <umps3/umps/libumps.h>
+
 typedef unsigned int devregtr;
 
 /* hardware constants */
@@ -134,7 +134,6 @@ void uTLB_RefillHandler() {
     LDST((state_t *)0x0FFFF000);
 }
 
-extern void placeholder();
 
 /*********************************************************************/
 /*                                                                   */
@@ -234,48 +233,48 @@ void test() {
 
     /* create process p2 */
     p2pid = SYSCALL(CREATEPROCESS, (int)&p2state, PROCESS_PRIO_LOW, (int)NULL); /* start p2     */
-    
+
     print("p2 was started\n");
-    
+
     SYSCALL(VERHOGEN, (int)&sem_startp2, 0, 0); /* V(sem_startp2)   */
-    
+
     SYSCALL(VERHOGEN, (int)&sem_endp2, 0, 0); /* V(sem_endp2) (blocking V!)     */
-    
+
     /* make sure we really blocked */
     if (p1p2synch == 0) {
-       print("error: p1/p2 synchronization bad\n");
+        print("error: p1/p2 synchronization bad\n");
     }
-    
+
     p3pid = SYSCALL(CREATEPROCESS, (int)&p3state, PROCESS_PRIO_LOW, (int)NULL); /* start p3     */
-    
+
     print("p3 is started\n");
-    
+
     SYSCALL(PASSEREN, (int)&sem_endp3, 0, 0); /* P(sem_endp3)     */
-    //print("p3 finito\n");
+
     SYSCALL(CREATEPROCESS, (int)&hp_p1state, PROCESS_PRIO_HIGH, (int)NULL);
     SYSCALL(CREATEPROCESS, (int)&hp_p2state, PROCESS_PRIO_HIGH, (int)NULL);
-    
+
     p4pid = SYSCALL(CREATEPROCESS, (int)&p4state, PROCESS_PRIO_LOW, (int)NULL); /* start p4     */
-    print("p4 creato\n");
+
     pFiveSupport.sup_exceptContext[GENERALEXCEPT].stackPtr = (int)p5Stack;
     pFiveSupport.sup_exceptContext[GENERALEXCEPT].status   = ALLOFF | IEPBITON | CAUSEINTMASK | TEBITON;
     pFiveSupport.sup_exceptContext[GENERALEXCEPT].pc       = (memaddr)p5gen;
     pFiveSupport.sup_exceptContext[PGFAULTEXCEPT].stackPtr = p5Stack;
     pFiveSupport.sup_exceptContext[PGFAULTEXCEPT].status   = ALLOFF | IEPBITON | CAUSEINTMASK | TEBITON;
     pFiveSupport.sup_exceptContext[PGFAULTEXCEPT].pc       = (memaddr)p5mm;
-    
+
     SYSCALL(CREATEPROCESS, (int)&p5state, PROCESS_PRIO_LOW, (int)&(pFiveSupport)); /* start p5     */
-    
+
     SYSCALL(CREATEPROCESS, (int)&p6state, PROCESS_PRIO_LOW, (int)NULL); /* start p6		*/
-    
+
     SYSCALL(CREATEPROCESS, (int)&p7state, PROCESS_PRIO_LOW, (int)NULL); /* start p7		*/
-    
+
     p9pid = SYSCALL(CREATEPROCESS, (int)&p9state, PROCESS_PRIO_LOW, (int)NULL); /* start p7		*/
-    
+
     SYSCALL(PASSEREN, (int)&sem_endp5, 0, 0); /* P(sem_endp5)		*/
-    
+
     print("p1 knows p5 ended\n");
-    
+
     SYSCALL(PASSEREN, (int)&sem_blkp4, 0, 0); /* P(sem_blkp4)		*/
 
     /* now for a more rigorous check of process termination */
@@ -405,7 +404,7 @@ void p3() {
         print("Inconsistent process id for p3!\n");
         PANIC();
     }
-    //print("prima della verhogen\n");
+
     SYSCALL(VERHOGEN, (int)&sem_endp3, 0, 0); /* V(sem_endp3)        */
 
     SYSCALL(TERMPROCESS, 0, 0, 0); /* terminate p3    */
@@ -605,6 +604,7 @@ void p7() {
     PANIC();
 }
 
+
 /* p8root -- test of termination of subtree of processes              */
 /* create a subtree of processes, wait for the leaves to block, signal*/
 /* the root process, and then terminate                               */
@@ -612,20 +612,18 @@ void p8root() {
     int grandchild;
 
     print("p8root starts\n");
-    klog_print("test: before CREATE\n");
+
     SYSCALL(CREATEPROCESS, (int)&child1state, PROCESS_PRIO_LOW, (int)NULL);
-    klog_print("test: before CREATE 2\n");
+
     SYSCALL(CREATEPROCESS, (int)&child2state, PROCESS_PRIO_LOW, (int)NULL);
-    klog_print("test: after Create 2\n");
+
     for (grandchild = 0; grandchild < NOLEAVES; grandchild++) {
         SYSCALL(PASSEREN, (int)&sem_endcreate[grandchild], 0, 0);
     }
-    klog_print("test: before verhogen\n");
+
     SYSCALL(VERHOGEN, (int)&sem_endp8, 0, 0);
 
-    //placeholder();
     SYSCALL(TERMPROCESS, 0, 0, 0);
-    klog_print("p8root: se mi leggi incazzati\n");
 }
 
 /*child1 & child2 -- create two sub-processes each*/
@@ -721,6 +719,7 @@ void hp_p1() {
     for (int i = 0; i < 100; i++) {
         SYSCALL(YIELD, 0, 0, 0);
     }
+
     SYSCALL(TERMPROCESS, 0, 0, 0);
     print("Error: hp_p1 didn't die!\n");
     PANIC();
