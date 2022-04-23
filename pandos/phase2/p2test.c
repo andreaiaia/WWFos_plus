@@ -377,11 +377,11 @@ void p3() {
     time2 = 0;
 
     /* loop until we are delayed at least half of clock V interval */
-    while (time2 - time1 < (CLOCKINTERVAL >> 1)) {
-        STCK(time1); /* time of day     */
-        //SYSCALL(CLOCKWAIT, 0, 0, 0);
-        STCK(time2); /* new time of day */
-    }
+    // while (time2 - time1 < (CLOCKINTERVAL >> 1)) {
+    //     STCK(time1); /* time of day     */
+    //     SYSCALL(CLOCKWAIT, 0, 0, 0);
+    //     STCK(time2); /* new time of day */
+    // }
 
     print("p3 - CLOCKWAIT OK\n");
 
