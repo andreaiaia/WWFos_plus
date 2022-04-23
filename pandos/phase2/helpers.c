@@ -44,16 +44,13 @@ void Exterminate(pcb_PTR process)
                 flag=0;
             } 
         }
-        // Se flag è 1, l'if a riga 42 non ha trovato corrispondenza con un semaforo di tipo device
-        if (flag && process->p_semAdd != NULL) {
-            *(process->p_semAdd) = 1;
-        }
         if (process->p_prio) {
             outProcQ(&high_ready_q, process);
         }
         else {
             outProcQ(&low_ready_q, process);
         } // ! Possibile ottimizzazione col flag in base a risultato outprocq
+
         // Togliamo il processo dalla coda del semaforo
         outBlocked(process);
         // Decremento il conto dei processi attivi
@@ -62,6 +59,13 @@ void Exterminate(pcb_PTR process)
         {
             if (all_processes[i] == process)
                 all_processes[i] = NULL;
+        }
+        // Se flag è 1, l'if a riga 42 non ha trovato corrispondenza con un semaforo di tipo device
+        if (flag) {
+            // Se il semaforo non sta bloccando altri processi, incremento il suo valore.
+                if (!headBlocked(process->p_semAdd)) {
+                *(process->p_semAdd) = 1;
+                }
         }
         // Termino il processo corrente
         freePcb(process);
