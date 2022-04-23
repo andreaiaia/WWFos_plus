@@ -18,7 +18,8 @@
 #include "pandos_const.h"
 #include "pandos_types.h"
 #include <umps3/umps/libumps.h>
-
+#include "initial.h"
+extern void placeholder();
 typedef unsigned int devregtr;
 
 /* hardware constants */
