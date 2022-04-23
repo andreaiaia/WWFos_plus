@@ -21,8 +21,8 @@ void scheduler()
         }
         klog_print("SH - ce proc in low q\n");
         // Imposto il PLT su 5ms
-        setTIMER(TIMESLICE * *((memaddr *)TIMESCALEADDR));
-        // setTIMER(MAX_TIME);
+        //setTIMER(TIMESLICE * *((memaddr *)TIMESCALEADDR)); //!DA RIABILITARE
+        setTIMER(MAX_TIME);
         load_new_proc(&low_ready_q);
     }
     // Se le code sono entrambe vuote

@@ -379,7 +379,7 @@ void p3() {
     /* loop until we are delayed at least half of clock V interval */
     while (time2 - time1 < (CLOCKINTERVAL >> 1)) {
         STCK(time1); /* time of day     */
-        SYSCALL(CLOCKWAIT, 0, 0, 0);
+        //SYSCALL(CLOCKWAIT, 0, 0, 0);
         STCK(time2); /* new time of day */
     }
 
@@ -390,7 +390,7 @@ void p3() {
     cpu_t1 = SYSCALL(GETTIME, 0, 0, 0);
 
     for (i = 0; i < CLOCKLOOP; i++) {
-        SYSCALL(CLOCKWAIT, 0, 0, 0);
+        //SYSCALL(CLOCKWAIT, 0, 0, 0);
     }
 
     cpu_t2 = SYSCALL(GETTIME, 0, 0, 0);
@@ -563,7 +563,7 @@ void p5b() {
     time2 = 0;
     while (time2 - time1 < (CLOCKINTERVAL >> 1)) {
         STCK(time1);
-        SYSCALL(CLOCKWAIT, 0, 0, 0);
+        //SYSCALL(CLOCKWAIT, 0, 0, 0);
         STCK(time2);
     }
 
@@ -731,9 +731,9 @@ void hp_p1() {
 void hp_p2() {
     print("hp_p2 starts\n");
 
-    for (int i = 0; i < 10; i++) {
-        SYSCALL(CLOCKWAIT, 0, 0, 0);
-    }
+    // for (int i = 0; i < 10; i++) {
+    //     //SYSCALL(CLOCKWAIT, 0, 0, 0);
+    // }
 
     SYSCALL(TERMPROCESS, 0, 0, 0);
     print("Error: hp_p2 didn't die!\n");
