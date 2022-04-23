@@ -231,19 +231,19 @@ void test() {
     p10state.pc_epc = p10state.reg_t9 = (memaddr)p10;
     p10state.status                   = p10state.status | IEPBITON | CAUSEINTMASK | TEBITON;
 
-    ///* create process p2 */
-    //p2pid = SYSCALL(CREATEPROCESS, (int)&p2state, PROCESS_PRIO_LOW, (int)NULL); /* start p2     */
-    //
-    //print("p2 was started\n");
-    //
-    //SYSCALL(VERHOGEN, (int)&sem_startp2, 0, 0); /* V(sem_startp2)   */
-    //
-    //SYSCALL(VERHOGEN, (int)&sem_endp2, 0, 0); /* V(sem_endp2) (blocking V!)     */
-    //
-    ///* make sure we really blocked */
-    //if (p1p2synch == 0) {
-    //    print("error: p1/p2 synchronization bad\n");
-    //}
+    /* create process p2 */
+    p2pid = SYSCALL(CREATEPROCESS, (int)&p2state, PROCESS_PRIO_LOW, (int)NULL); /* start p2     */
+    
+    print("p2 was started\n");
+    
+    SYSCALL(VERHOGEN, (int)&sem_startp2, 0, 0); /* V(sem_startp2)   */
+    
+    SYSCALL(VERHOGEN, (int)&sem_endp2, 0, 0); /* V(sem_endp2) (blocking V!)     */
+    
+    /* make sure we really blocked */
+    if (p1p2synch == 0) {
+       print("error: p1/p2 synchronization bad\n");
+    }
     //
     //p3pid = SYSCALL(CREATEPROCESS, (int)&p3state, PROCESS_PRIO_LOW, (int)NULL); /* start p3     */
     //
