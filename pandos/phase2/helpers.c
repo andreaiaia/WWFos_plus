@@ -242,6 +242,7 @@ void PassUpOrDie(int excCode)
     {
         klog_print("HELP7 - supportStruct == NULL\n");
         Terminate_Process(0);
+        scheduler();
     }
     else
     {
