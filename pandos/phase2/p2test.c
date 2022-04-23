@@ -554,7 +554,7 @@ void p5a() {
 /* should generate a program trap (Address error) */
 void p5b() {
     cpu_t time1, time2;
-
+    print("siamo a riga 557\n");
     SYSCALL(1, 0, 0, 0);
     SYSCALL(PASSEREN, (int)&sem_endp4, 0, 0); /* P(sem_endp4)*/
 
