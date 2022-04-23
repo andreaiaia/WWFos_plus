@@ -21,7 +21,7 @@ void scheduler()
         }
         klog_print("SH - ce proc in low q\n");
         // Imposto il PLT su 5ms
-        setTIMER(TIMESLICE);
+        setTIMER(TIMESLICE * *((memaddr *)TIMESCALEADDR));
         // setTIMER(MAX_TIME);
         load_new_proc(&low_ready_q);
     }
@@ -44,7 +44,7 @@ void scheduler()
             // E disabilito il tutto il resto (quindi anche il PLT)
             unsigned int waitingStatus = getSTATUS() | IECON | IEPON | IMON;
             klog_print("SH - setState accetto interrupt\n");
-            setTIMER(MAX_TIME);
+            setTIMER(MAX_TIME * *((memaddr *)TIMESCALEADDR));
             current_p = NULL;
             setSTATUS(waitingStatus);
             klog_print("SH - vado in Wait\n");
