@@ -251,12 +251,12 @@ void test() {
     print("p3 is started\n");
     
     SYSCALL(PASSEREN, (int)&sem_endp3, 0, 0); /* P(sem_endp3)     */
-    print("p3 finito\n");
-    // SYSCALL(CREATEPROCESS, (int)&hp_p1state, PROCESS_PRIO_HIGH, (int)NULL);
-    // SYSCALL(CREATEPROCESS, (int)&hp_p2state, PROCESS_PRIO_HIGH, (int)NULL);
+    //print("p3 finito\n");
+    SYSCALL(CREATEPROCESS, (int)&hp_p1state, PROCESS_PRIO_HIGH, (int)NULL);
+    SYSCALL(CREATEPROCESS, (int)&hp_p2state, PROCESS_PRIO_HIGH, (int)NULL);
     
     p4pid = SYSCALL(CREATEPROCESS, (int)&p4state, PROCESS_PRIO_LOW, (int)NULL); /* start p4     */
-    print("p4 creato\n");
+    //print("p4 creato\n");
     pFiveSupport.sup_exceptContext[GENERALEXCEPT].stackPtr = (int)p5Stack;
     pFiveSupport.sup_exceptContext[GENERALEXCEPT].status   = ALLOFF | IEPBITON | CAUSEINTMASK | TEBITON;
     pFiveSupport.sup_exceptContext[GENERALEXCEPT].pc       = (memaddr)p5gen;
@@ -377,11 +377,11 @@ void p3() {
     time2 = 0;
 
     /* loop until we are delayed at least half of clock V interval */
-    // while (time2 - time1 < (CLOCKINTERVAL >> 1)) {
-    //     STCK(time1); /* time of day     */
-    //     SYSCALL(CLOCKWAIT, 0, 0, 0);
-    //     STCK(time2); /* new time of day */
-    // }
+    while (time2 - time1 < (CLOCKINTERVAL >> 1)) {
+        STCK(time1); /* time of day     */
+        SYSCALL(CLOCKWAIT, 0, 0, 0);
+        STCK(time2); /* new time of day */
+    }
 
     print("p3 - CLOCKWAIT OK\n");
 
@@ -390,7 +390,7 @@ void p3() {
     cpu_t1 = SYSCALL(GETTIME, 0, 0, 0);
 
     for (i = 0; i < CLOCKLOOP; i++) {
-        //SYSCALL(CLOCKWAIT, 0, 0, 0);
+        SYSCALL(CLOCKWAIT, 0, 0, 0);
     }
 
     cpu_t2 = SYSCALL(GETTIME, 0, 0, 0);
@@ -406,7 +406,7 @@ void p3() {
         print("Inconsistent process id for p3!\n");
         PANIC();
     }
-    print("prima della verhogen\n");
+    //print("prima della verhogen\n");
     SYSCALL(VERHOGEN, (int)&sem_endp3, 0, 0); /* V(sem_endp3)        */
 
     SYSCALL(TERMPROCESS, 0, 0, 0); /* terminate p3    */
@@ -563,7 +563,7 @@ void p5b() {
     time2 = 0;
     while (time2 - time1 < (CLOCKINTERVAL >> 1)) {
         STCK(time1);
-        //SYSCALL(CLOCKWAIT, 0, 0, 0);
+        SYSCALL(CLOCKWAIT, 0, 0, 0);
         STCK(time2);
     }
 
@@ -733,7 +733,7 @@ void hp_p2() {
     print("hp_p2 starts\n");
 
     for (int i = 0; i < 10; i++) {
-        //SYSCALL(CLOCKWAIT, 0, 0, 0);
+        SYSCALL(CLOCKWAIT, 0, 0, 0);
     }
 
     SYSCALL(TERMPROCESS, 0, 0, 0);
