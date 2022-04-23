@@ -47,7 +47,7 @@ void PLTTimerInterrupt(int line)
 void intervalTimerInterrupt(int line)
 {
   klog_print("INT_TIMER_INT\n");
-  LDIT(PSECOND); //! disabilito i PLT carico Interval Timer con 100millisec 
+  LDIT(PSECOND); 
   //klog_print("INT_TIMER_INT ho caricato timer\n");
 
   // sblocco tutti i pcb bloccati nel Pseudo-clock semaphore
@@ -60,7 +60,7 @@ void intervalTimerInterrupt(int line)
     if (removed != NULL)
     {
       soft_count--;
-      klog_print("Ho sbloccato un proc\n");
+      klog_print("INT_H: Ho sbloccato un proc\n");
       if (removed->p_prio == 1)
         insertProcQ(&high_ready_q, removed);
       else
@@ -69,7 +69,7 @@ void intervalTimerInterrupt(int line)
   } while (removed != NULL);
 
   // Azzero lo pseudo-clock semaphore
-  device_sem[DEVSEM_NUM - 1] = 0;
+  device_sem[DEVSEM_NUM - 1] = 0; //! sei sicuro andre?
   if (current_p == NULL)
   {
     scheduler();
