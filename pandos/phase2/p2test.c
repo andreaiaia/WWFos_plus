@@ -451,7 +451,7 @@ void p4() {
     SYSCALL(PASSEREN, (int)&sem_synp4, 0, 0); /* wait for it       */
 
     print("p4 is OK\n");
-
+    placeholder();
     SYSCALL(VERHOGEN, (int)&sem_endp4, 0, 0); /* V(sem_endp4)          */
 
     SYSCALL(TERMPROCESS, 0, 0, 0); /* terminate p4      */
