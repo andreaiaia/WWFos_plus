@@ -36,10 +36,17 @@ void Exterminate(pcb_PTR process)
          * altro processo, lo rimuove dalla lista dei figli del padre
          */
         outChild(process);
+        //Flag usato come guardia, nel caso Flag venga azzerato, il semaforo era di tipo DEVICE.
+        int flag = 1;
         for (int i=0; i < DEVSEM_NUM; i++) {
             if (process->p_semAdd == &device_sem[i]) {
                 soft_count--;
-            }
+                flag=0;
+            } 
+        }
+        // Se flag è 1, l'if a riga 42 non ha trovato corrispondenza con un semaforo di tipo device
+        if (flag && process->p_semAdd != NULL) {
+            *(process->p_semAdd) = 1;
         }
         if (process->p_prio) {
             outProcQ(&high_ready_q, process);
