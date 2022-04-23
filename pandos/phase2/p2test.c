@@ -252,7 +252,7 @@ void test() {
     
     SYSCALL(PASSEREN, (int)&sem_endp3, 0, 0); /* P(sem_endp3)     */
     //print("p3 finito\n");
-    //SYSCALL(CREATEPROCESS, (int)&hp_p1state, PROCESS_PRIO_HIGH, (int)NULL);
+    SYSCALL(CREATEPROCESS, (int)&hp_p1state, PROCESS_PRIO_HIGH, (int)NULL);
     SYSCALL(CREATEPROCESS, (int)&hp_p2state, PROCESS_PRIO_HIGH, (int)NULL);
     
     p4pid = SYSCALL(CREATEPROCESS, (int)&p4state, PROCESS_PRIO_LOW, (int)NULL); /* start p4     */
@@ -280,7 +280,6 @@ void test() {
 
     /* now for a more rigorous check of process termination */
     for (p8inc = 0; p8inc < 4; p8inc++) {
-        placeholder();
         /* Reset semaphores */ 
         sem_blkp8 = 0;
         sem_endp8 = 0;
@@ -721,7 +720,6 @@ void hp_p1() {
 
     for (int i = 0; i < 100; i++) {
         SYSCALL(YIELD, 0, 0, 0);
-        placeholder();
     }
     SYSCALL(TERMPROCESS, 0, 0, 0);
     print("Error: hp_p1 didn't die!\n");

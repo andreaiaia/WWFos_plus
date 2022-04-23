@@ -2,21 +2,9 @@
 
 void scheduler()
 {
-    // setTIMER(0xFFFFFFFF); //!usata solo per debug
     klog_print("SH - entro\n");
-    /*if (current_p != NULL && current_p->p_semAdd == NULL)
-    {
-        // Leggo il time of day
-        klog_print("SH_RUNNING\n");
-        STCK(finish);
-        // Aggiungo il tempo trascorso al tempo impiegato dal processo
-        current_p->p_time = (current_p->p_time) + (finish - start);
-        STCK(start);
-        LDST(PROCESSOR_SAVED_STATE);
-        klog_print("SH_se_mi_leggi_e_un_problema\n");
-    }
     // Se la coda dei processi ad ALTA priorità è non-vuota
-    else*/ //! guarda questo if andrea
+    //! guarda questo if andrea
     if (!emptyProcQ(&high_ready_q))
     {
         klog_print("SH_HIGH - ce proc in high q\n");
@@ -29,6 +17,7 @@ void scheduler()
         {
             klog_print("SH yielded != NULL\n");
             insertProcQ(&high_ready_q, yielded);
+            yielded = NULL;
         }
         klog_print("SH - ce proc in low q\n");
         // Imposto il PLT su 5ms
