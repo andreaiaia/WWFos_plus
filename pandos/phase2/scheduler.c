@@ -16,7 +16,7 @@ void scheduler()
         klog_print("SH_se_mi_leggi_e_un_problema\n");
     }
     // Se la coda dei processi ad ALTA priorità è non-vuota
-    else*/
+    else*/ //! guarda questo if andrea
     if (!emptyProcQ(&high_ready_q))
     {
         klog_print("SH_HIGH - ce proc in high q\n");
@@ -25,7 +25,7 @@ void scheduler()
     // Se la coda dei processi a BASSA priorità è non-vuota
     else if (!emptyProcQ(&low_ready_q))
     {
-        if (yielded != NULL)
+        if (yielded != NULL) // ! perché è qui?
         {
             klog_print("SH yielded != NULL\n");
             insertProcQ(&high_ready_q, yielded);
