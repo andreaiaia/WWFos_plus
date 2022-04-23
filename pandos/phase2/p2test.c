@@ -266,10 +266,12 @@ void test() {
     SYSCALL(CREATEPROCESS, (int)&p5state, PROCESS_PRIO_LOW, (int)&(pFiveSupport)); /* start p5     */
 
     SYSCALL(CREATEPROCESS, (int)&p6state, PROCESS_PRIO_LOW, (int)NULL); /* start p6		*/
+    print("p6 dovrebbe essere morto\n");
 
     SYSCALL(CREATEPROCESS, (int)&p7state, PROCESS_PRIO_LOW, (int)NULL); /* start p7		*/
 
     p9pid = SYSCALL(CREATEPROCESS, (int)&p9state, PROCESS_PRIO_LOW, (int)NULL); /* start p7		*/
+    print("post creazione p9\n");
 
     SYSCALL(PASSEREN, (int)&sem_endp5, 0, 0); /* P(sem_endp5)		*/
 
@@ -543,7 +545,7 @@ void p5() {
 
 void p5a() {
     /* generage a TLB exception after a TLB-Refill event */
-
+    print("chiamiamo una TLB EXCEPCTION DOPO TLB REFILL EVENT\n");
     p5MemLocation  = (memaddr *)0x80000000;
     *p5MemLocation = 42;
 }
