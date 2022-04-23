@@ -428,28 +428,28 @@ void p4() {
         case 2: print("second incarnation of p4 starts\n"); break;
     }
 
-
+    print("riga 431\n");
     int pid = SYSCALL(GETPROCESSID, 0, 0, 0);
     if (pid != p4pid) {
         print("Inconsistent process id for p4!\n");
         PANIC();
     }
-
+    print("riga 437\n");
     SYSCALL(VERHOGEN, (int)&sem_synp4, 0, 0); /* V(sem_synp4)     */
-
+    print("riga 439\n");
     SYSCALL(PASSEREN, (int)&sem_blkp4, 0, 0); /* P(sem_blkp4)     */
-
+    print("riga 441\n");
     SYSCALL(PASSEREN, (int)&sem_synp4, 0, 0); /* P(sem_synp4)     */
-
+    print("riga 443\n");
     /* start another incarnation of p4 running, and wait for  */
     /* a V(sem_synp4). the new process will block at the P(sem_blkp4),*/
     /* and eventually, the parent p4 will terminate, killing  */
     /* off both p4's.                                         */
-
+    print("riga 448\n");
     p4state.reg_sp -= QPAGE; /* give another page  */
-
+    print("riga 450\n");
     p4pid = SYSCALL(CREATEPROCESS, (int)&p4state, PROCESS_PRIO_LOW, 0); /* start a new p4    */
-
+    print("riga 452\n");
     SYSCALL(PASSEREN, (int)&sem_synp4, 0, 0); /* wait for it       */
 
     print("p4 is OK\n");
