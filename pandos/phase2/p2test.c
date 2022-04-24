@@ -706,9 +706,7 @@ void p10() {
         PANIC();
     }
 
-    SYSCALL(TERMPROCESS, ppid, 0, 0); //! ORiginale
-   // SYSCALL(TERMPROCESS, 0, 0, 0);
-
+    SYSCALL(TERMPROCESS, ppid, 0, 0);
 
     print("Error: p10 didn't die with its parent!\n");
     PANIC();
