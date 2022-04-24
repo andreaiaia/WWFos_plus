@@ -7,7 +7,6 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
     pcb_PTR child = allocPcb();
     // Se non è stato possibile allocare, ritorno errore
     if (child == NULL) {
-        HALT();
         PROCESSOR_SAVED_STATE->reg_v0 = NOPROC; // Ritorno il valore di fallimento
     }
     else
