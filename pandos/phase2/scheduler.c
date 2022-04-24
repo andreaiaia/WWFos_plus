@@ -53,7 +53,7 @@ void scheduler()
         }
         else if (soft_count == 0)
         {
-            //klog_print("SH - aaaaa panicdeadlock\n");
+            klog_print("SH - aaaaa panicdeadlock\n");
             // Siamo in deadlock
             //HALT();
             PANIC();
