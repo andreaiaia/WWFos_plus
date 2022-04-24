@@ -146,6 +146,7 @@ pcb_PTR Verhogen(int *semaddr)
         } else {
             outProcQ(&low_ready_q, current_p);
         }*/
+        //! da qui
         int flag=1;
         for (int i=0; i < DEVSEM_NUM; i++) {
             if (semaddr == &device_sem[i]) {
@@ -153,6 +154,7 @@ pcb_PTR Verhogen(int *semaddr)
             } 
         }
         if (flag) compl_soft++;
+        // ! a qui, duplicata 4 volte con compl_soft-- in 2 è da togliere.
         current_p = NULL;
 
     }
