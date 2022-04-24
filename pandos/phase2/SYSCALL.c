@@ -1,5 +1,5 @@
 #include "SYSCALL.h"
-
+static int compl_soft=0;
 void Create_Process(state_t *statep, int prio, support_t *supportp)
 {
     //klog_print("SYS_CREATE_PROC - entro\n");
@@ -89,6 +89,13 @@ int Passeren(int *semaddr)
             outProcQ(&high_ready_q, current_p);
         else
             outProcQ(&low_ready_q, current_p);*/
+        int flag=1;
+        for (int i=0; i < DEVSEM_NUM; i++) {
+            if (semaddr == &device_sem[i]) {
+                flag=0;
+            } 
+        }
+        if (flag) compl_soft++;
         return(0);
     }
     else if (headBlocked(semaddr) != NULL)
@@ -132,6 +139,13 @@ pcb_PTR Verhogen(int *semaddr)
         } else {
             outProcQ(&low_ready_q, current_p);
         }*/
+        int flag=1;
+        for (int i=0; i < DEVSEM_NUM; i++) {
+            if (semaddr == &device_sem[i]) {
+                flag=0;
+            } 
+        }
+        if (flag) compl_soft++;
         current_p = NULL;
 
     }
