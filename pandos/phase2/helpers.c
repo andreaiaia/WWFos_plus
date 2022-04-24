@@ -146,14 +146,17 @@ void syscallExceptionHandler(unsigned int syscallCode)
         case DOIO:
             INCREMENTO_PC;
             //klog_print("HELP2.6 - DoIo cane\n");
-            if(Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS)){
+            /*if(Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS)){
               soft_count--;
               //LDST(PROCESSOR_SAVED_STATE);
               postSyscall();  
             } else {
                 copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
                 soft_count++;
-            }
+            }*/
+            (Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS));
+            copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+            soft_count++;
             break;
 
         case GETTIME:
@@ -167,14 +170,17 @@ void syscallExceptionHandler(unsigned int syscallCode)
         case CLOCKWAIT:
             INCREMENTO_PC;
             //klog_print("HELP2.8 - clock wait\n");
-            if(Wait_For_Clock()) {
+            /*if(Wait_For_Clock()) {
                 soft_count--;
                 //LDST(PROCESSOR_SAVED_STATE);
                 postSyscall();
             } else {
                 copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
                 soft_count++;
-            }
+            }*/
+            Wait_For_Clock();
+            copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
+            soft_count++;
             break;
 
         case GETSUPPORTPTR:
