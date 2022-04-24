@@ -24,7 +24,7 @@ void interruptHandler()
       }
       else
       {
-        klog_print_hex(line);
+        //klog_print_hex(line);
         //klog_print("\n");
         nonTimerInterrupt(line);
         break;
@@ -148,7 +148,7 @@ void nonTimerInterrupt(int line)
   // Ora che ho identificato il dispositivo corretto, risalgo al semaforo associato
   int sem_num = 8 * (line - 3) + (line == 7 ? 2 * device_num : device_num) + term_is_recv;
   //klog_print("NTI sem_linea: ");
-  klog_print_hex(sem_num);
+  //klog_print_hex(sem_num);
   //klog_print("\n");
   pcb_PTR tmp = Verhogen(&(device_sem[sem_num]));
   if (tmp != NULL){

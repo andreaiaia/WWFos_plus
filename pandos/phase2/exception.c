@@ -20,7 +20,7 @@ void exceptionHandler()
     else if (((DECODED_EXCEPTION_CAUSE >= 4) && (DECODED_EXCEPTION_CAUSE <= 7)) || ((DECODED_EXCEPTION_CAUSE >= 9) && (DECODED_EXCEPTION_CAUSE <= 12)))
     {
         //klog_print("EXH_TRAP: ");
-        klog_print_hex(DECODED_EXCEPTION_CAUSE);
+        //klog_print_hex(DECODED_EXCEPTION_CAUSE);
         //klog_print("\n");
         PassUpOrDie(GENERALEXCEPT);
         scheduler();

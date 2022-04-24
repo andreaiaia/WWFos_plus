@@ -29,9 +29,9 @@ void scheduler()
     else
     {
         //klog_print("SH - code vuote\n");
-        klog_print_hex(proc_count);
+        //klog_print_hex(proc_count);
         //klog_print("\n");
-        klog_print_hex(soft_count);
+        //klog_print_hex(soft_count);
         //klog_print("\n");
         if (proc_count == 0){
             klog_print("SH: Spengo tutto amici\n");

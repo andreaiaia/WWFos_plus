@@ -174,7 +174,7 @@ int Do_IO_Device(int *commandAddr, int commandValue)
         dev_position /= 2;
     // Faccio PASSEREN su dispositivo trovato
     //klog_print("DOIO - faccio passeren: ");
-    klog_print_hex(dev_position);
+    //klog_print_hex(dev_position);
     //klog_print("\n");
     int retValue = Passeren(&(device_sem[dev_position]));
     //klog_print("DOIO1 - fatta passeren\n");
