@@ -19,7 +19,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
          * Devo dare un ID univoco al processo,
          * quindi gli do il suo indirizzo di memoria
          */
-        child->p_pid = (memaddr)&child;
+        child->p_pid = (memaddr)child;
         // Associo il process appena creato al suo processo padre
         insertChild(current_p, child);
 
