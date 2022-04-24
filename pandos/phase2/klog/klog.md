@@ -54,7 +54,7 @@ static void next_line(void) {
 Last, the actual print function that puts a message into the buffer:
 
 ``` C
-void klog_print(char *str) {
+void //klog_print(char *str) {
     while (*str != '\0') {
         if (*str == '\n') {
             next_line();
@@ -73,13 +73,13 @@ This does little more than copying the parameter string into the next available 
 With this little library we can print some information, for example after initializing the system:
 
 ``` C
-    klog_print("Trying to allocate the root process\n");
+    //klog_print("Trying to allocate the root process\n");
     pcb_t *p = allocPcb();
     if (p == NULL) {
-        klog_print("Allocation failed!\n");
+        //klog_print("Allocation failed!\n");
         PANIC();
     } else {
-        klog_print("Root process allocated successfully\n");
+        //klog_print("Root process allocated successfully\n");
     }
 ```
 
@@ -120,7 +120,7 @@ char         klog_buffer[KLOG_LINES][KLOG_LINE_SIZE] = {0};     // Actual buffer
 
 
 // Print str to klog
-void klog_print(char *str) {
+void //klog_print(char *str) {
     while (*str != '\0') {
         // If there is a newline skip to the next one
         if (*str == '\n') {

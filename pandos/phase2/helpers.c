@@ -90,19 +90,19 @@ pcb_PTR find_process(int pid)
 
 void syscallExceptionHandler(unsigned int syscallCode)
 {
-    klog_print("HELP1 - entro syscallExcHandler\n");
+    //klog_print("HELP1 - entro syscallExcHandler\n");
     // * Verifico che il processo chiamante della Syscall sia in KernelMode e che abbia chiamato una Syscall (rega0 < 0)
     if (((PROCESSOR_SAVED_STATE->status & STATUS_KUp) != STATUS_KUp))
     {
-        klog_print("HELP2 - check ker. mode: ON\n");
+        //klog_print("HELP2 - check ker. mode: ON\n");
         // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
-        // ! klog_print("HELP2.1 - \n");   ho rimosso questo perché ridondante
+        // ! //klog_print("HELP2.1 - \n");   ho rimosso questo perché ridondante
         switch (syscallCode)
         {
         case CREATEPROCESS:
             INCREMENTO_PC;
-            klog_print("HELP2.2 - create process\n");
+            //klog_print("HELP2.2 - create process\n");
             Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
             //LDST(PROCESSOR_SAVED_STATE);
             postSyscall();
@@ -110,7 +110,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case TERMPROCESS:
             INCREMENTO_PC;
-            klog_print("HELP2.3 - terminate process\n");
+            //klog_print("HELP2.3 - terminate process\n");
             if (Terminate_Process((int)(REG_A1_SS))){
                 //LDST(PROCESSOR_SAVED_STATE);   
                 postSyscall();
@@ -121,21 +121,21 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case PASSEREN:
             INCREMENTO_PC;
-            klog_print("HELP2.4 - passeren\n");
+            //klog_print("HELP2.4 - passeren\n");
             if(Passeren((int *)(REG_A1_SS))){
                 //LDST(PROCESSOR_SAVED_STATE);
                 postSyscall();
             } else {
                 copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
             }
-            klog_print("soft_count: ");
+            //klog_print("soft_count: ");
             klog_print_hex(soft_count);
-            klog_print("\n");
+            //klog_print("\n");
             break;
 
         case VERHOGEN:
             INCREMENTO_PC;
-            klog_print("HELP2.5 - verhogen\n");
+            //klog_print("HELP2.5 - verhogen\n");
             Verhogen((int *)(REG_A1_SS));
             if (current_p != NULL) {
                 //LDST(PROCESSOR_SAVED_STATE);
@@ -145,7 +145,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case DOIO:
             INCREMENTO_PC;
-            klog_print("HELP2.6 - DoIo cane\n");
+            //klog_print("HELP2.6 - DoIo cane\n");
             if(Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS)){
               soft_count--;
               //LDST(PROCESSOR_SAVED_STATE);
@@ -158,7 +158,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case GETTIME:
             INCREMENTO_PC;
-            klog_print("HELP2.7 - gettime\n");
+            //klog_print("HELP2.7 - gettime\n");
             Get_CPU_Time();
             //LDST(PROCESSOR_SAVED_STATE);
             postSyscall();
@@ -166,7 +166,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case CLOCKWAIT:
             INCREMENTO_PC;
-            klog_print("HELP2.8 - clock wait\n");
+            //klog_print("HELP2.8 - clock wait\n");
             if(Wait_For_Clock()) {
                 soft_count--;
                 //LDST(PROCESSOR_SAVED_STATE);
@@ -179,7 +179,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case GETSUPPORTPTR:
             INCREMENTO_PC;
-            klog_print("HELP2.9 - getsupportptr\n");
+            //klog_print("HELP2.9 - getsupportptr\n");
             Get_Support_Data();
             //LDST(PROCESSOR_SAVED_STATE);
             postSyscall();
@@ -187,7 +187,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case GETPROCESSID:
             INCREMENTO_PC;
-            klog_print("HELP2.10 - getprocID\n");
+            //klog_print("HELP2.10 - getprocID\n");
             Get_Process_Id((int)(REG_A1_SS));
             //LDST(PROCESSOR_SAVED_STATE);
             postSyscall();
@@ -195,34 +195,34 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case YIELD:
             INCREMENTO_PC;
-            klog_print("HELP2.11 - yield\n");
+            //klog_print("HELP2.11 - yield\n");
             Yield();
             copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
             current_p = NULL;
             break;
 
         default:
-            klog_print("HELP2.12 - default case\n");
+            //klog_print("HELP2.12 - default case\n");
             // * Imposto il bit RI
             PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
             // * Simulo una TRAP
             PassUpOrDie(GENERALEXCEPT);
             break;
         }
-        klog_print("HELP_ CHIAMATA SCHEDULERO\n");
+        //klog_print("HELP_ CHIAMATA SCHEDULERO\n");
         scheduler();
-        klog_print("HELP_SE COMPAIO SO CAZZI AMARI\n");
+        //klog_print("HELP_SE COMPAIO SO CAZZI AMARI\n");
     }
     // * Caso in cui la syscall non è lecita
     else
     {
-        klog_print("HELP3 - syscall illecita\n");
+        //klog_print("HELP3 - syscall illecita\n");
         // * Imposto il bit RI
         PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
         // * Simulo una TRAP
-        klog_print("HELP3.1 - chiamo passupordie\n");
+        //klog_print("HELP3.1 - chiamo passupordie\n");
         PassUpOrDie(GENERALEXCEPT);
-        klog_print("HELP3.2 - passupordie fatta\n");
+        //klog_print("HELP3.2 - passupordie fatta\n");
     }
 }
 void placeholder() {
@@ -237,28 +237,28 @@ void PassUpOrDie(int excCode)
      * Altrimenti si esegue la "Pass Up" e si inoltra la richiesta
      * al livello di supporto (prossima fase del progetto).
      */
-    klog_print("HELP6 - Entro PassUpOrDie\n");
+    //klog_print("HELP6 - Entro PassUpOrDie\n");
     if (current_p->p_supportStruct == NULL)
     {
-        klog_print("HELP7 - supportStruct == NULL\n");
+        //klog_print("HELP7 - supportStruct == NULL\n");
         Terminate_Process(0);
         scheduler();
     }
     else
     {
-        klog_print("HELP8 - supportStruct != NULL\n");
+        //klog_print("HELP8 - supportStruct != NULL\n");
         // Copio l'exception state
         copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_supportStruct->sup_exceptState[excCode]));
-        klog_print("HELP9 - copiato excState\n");
+        //klog_print("HELP9 - copiato excState\n");
         // Copio stack pointer, status e program counter
         unsigned int stack_ptr = current_p->p_supportStruct->sup_exceptContext[excCode].stackPtr;
         unsigned int status = current_p->p_supportStruct->sup_exceptContext[excCode].status;
         unsigned int pc = current_p->p_supportStruct->sup_exceptContext[excCode].pc;
         // Carico il nuovo contesto nel processo attivo
         LDCXT(stack_ptr, status, pc);
-        klog_print("HELP10 - caricato contesto in proc attivo\n");
+        //klog_print("HELP10 - caricato contesto in proc attivo\n");
     }
-    klog_print("HELPEND - fine passupordie\n");
+    //klog_print("HELPEND - fine passupordie\n");
 }
 
 void postSyscall() {

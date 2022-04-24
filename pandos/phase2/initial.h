@@ -36,7 +36,7 @@ extern void uTLB_RefillHandler();
 // La funzione test si trova nel file di test fornito
 extern void test();
 // Funzione utile per il debugging
-extern void klog_print(char *);
+extern void //klog_print(char *);
 extern void klog_print_hex(unsigned int);
 
 #endif
