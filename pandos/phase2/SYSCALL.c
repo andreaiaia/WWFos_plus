@@ -108,6 +108,13 @@ int Passeren(int *semaddr)
             insertProcQ(&high_ready_q, first);
         else
             insertProcQ(&low_ready_q, first);
+                      int flag=1;
+        for (int i=0; i < DEVSEM_NUM; i++) {
+            if (semaddr == &device_sem[i]) {
+                flag=0;
+            } 
+        }
+        if (flag) compl_soft--;
         return(1);
     }
     else
@@ -153,6 +160,13 @@ pcb_PTR Verhogen(int *semaddr)
     {
         //klog_print("VER2 - semaddr == 0 (metto in ready)\n");
         first = removeBlocked(semaddr);
+                int flag=1;
+        for (int i=0; i < DEVSEM_NUM; i++) {
+            if (semaddr == &device_sem[i]) {
+                flag=0;
+            } 
+        }
+        if (flag) compl_soft--;
         first->p_semAdd = NULL;
         //soft_count--; // !spostato nell'interrupt h di alex
         if (first->p_prio == 1)
