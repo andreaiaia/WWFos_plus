@@ -34,7 +34,7 @@ void scheduler()
         klog_print_hex(soft_count);
         //klog_print("\n");
         if (proc_count == 0){
-            //klog_print("SH: Spengo tutto amici\n");
+            klog_print("SH: Spengo tutto amici\n");
             HALT(); // Spegne il computer
         }
         else if (soft_count > 0)
