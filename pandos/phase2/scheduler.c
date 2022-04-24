@@ -48,7 +48,7 @@ void scheduler()
             setTIMER(MAX_TIME);
             current_p = NULL;
             setSTATUS(waitingStatus);
-            //klog_print("SH - vado in Wait\n");
+            klog_print("SH - vado in Wait\n");
             WAIT(); // Aspettando un interrupt
             scheduler();
         }
