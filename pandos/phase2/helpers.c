@@ -41,7 +41,7 @@ void Exterminate(pcb_PTR process)
         for (int i=0; i < DEVSEM_NUM; i++) {
             if (process->p_semAdd == &device_sem[i]) {
                 soft_count--;
-                flag=0;
+                //flag=0;
             } 
         }
         if (process->p_prio) {
