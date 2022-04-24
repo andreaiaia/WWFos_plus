@@ -16,7 +16,7 @@ unsigned int klog_char_index = 0;                   // Index of the current char
 char klog_buffer[KLOG_LINES][KLOG_LINE_SIZE] = {0}; // Actual buffer, to be traced in uMPS3
 
 // Print str to klog
-void //klog_print(char *str)
+void klog_print(char *str)
 {
     while (*str != '\0')
     {
