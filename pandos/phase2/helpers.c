@@ -92,7 +92,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 {
     //klog_print("HELP1 - entro syscallExcHandler\n");
     // * Verifico che il processo chiamante della Syscall sia in KernelMode e che abbia chiamato una Syscall (rega0 < 0)
-    if (((PROCESSOR_SAVED_STATE->status & STATUS_KUp) != STATUS_KUp))
+    if (((PROCESSOR_SAVED_STATE->status & STATUS_KUp) != STATUS_KUp) && ((int)syscallCode < 0) )
     {
         //klog_print("HELP2 - check ker. mode: ON\n");
         // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
@@ -214,6 +214,9 @@ void syscallExceptionHandler(unsigned int syscallCode)
         //klog_print("HELP_SE COMPAIO SO CAZZI AMARI\n");
     }
     // * Caso in cui la syscall non è lecita
+    else if ((int)syscallCode > 0) {
+        PassUpOrDie(GENERALEXCEPT);
+    } 
     else
     {
         //klog_print("HELP3 - syscall illecita\n");
