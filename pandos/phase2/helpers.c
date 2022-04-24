@@ -129,7 +129,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
                 copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
             }
             //klog_print("soft_count: ");
-            klog_print_hex(soft_count);
+            //klog_print_hex(soft_count);
             //klog_print("\n");
             break;
 
@@ -154,7 +154,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
                 copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
                 soft_count++;
             }*/
-            (Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS));
+            Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS);
             copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
             soft_count++;
             break;
