@@ -61,12 +61,12 @@ void Exterminate(pcb_PTR process)
                 all_processes[i] = NULL;
         }
         // Se flag è 1, l'if a riga 42 non ha trovato corrispondenza con un semaforo di tipo device
-        if (flag) {
+        /*if (flag) {
             // Se il semaforo non sta bloccando altri processi, incremento il suo valore.
                 if (!headBlocked(process->p_semAdd)) {
                 *(process->p_semAdd) = 1;
                 }
-        }
+        }*/
         // Termino il processo corrente
         freePcb(process);
 }
