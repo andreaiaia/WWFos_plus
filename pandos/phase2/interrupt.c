@@ -39,7 +39,7 @@ void PLTTimerInterrupt(int line)
   setTIMER(MAX_TIME); // ricarico timer
   copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
   insertProcQ(&low_ready_q, current_p);
-  current_p = NULL;
+  //current_p = NULL;
   scheduler();
 }
 
