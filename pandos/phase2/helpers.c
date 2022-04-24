@@ -102,7 +102,7 @@ void Exterminate(pcb_PTR proc)
 
     /* terminate every proc child */
     while (!emptyChild(proc)) {
-        kill(removeChild(proc));
+        Exterminate(removeChild(proc));
     }
 
     freePcb(proc);
