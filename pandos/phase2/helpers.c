@@ -1,5 +1,7 @@
 #include "helpers.h"
 
+void placeholder() {
+}
 /* Helpers Generici */
 
 void copy_state(state_t *original, state_t *dest)
@@ -283,8 +285,6 @@ void syscallExceptionHandler(unsigned int syscallCode)
         PassUpOrDie(GENERALEXCEPT);
         //klog_print("HELP3.2 - passupordie fatta\n");
     }
-}
-void placeholder() {
 }
 /* PassUpOrDie */
 
