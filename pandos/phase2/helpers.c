@@ -115,7 +115,6 @@ void Exterminate(pcb_PTR process)
 pcb_PTR find_process(int pid)
 {
     klog_print("find process\n");
-    HALT();
     if (current_p->p_pid == pid)
         return current_p;
     else
