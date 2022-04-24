@@ -35,7 +35,7 @@ void interruptHandler()
 
 void PLTTimerInterrupt(int line)
 {
-  //klog_print("PLT\n");
+  klog_print("PLT\n");
   setTIMER(MAX_TIME); // ricarico timer
   copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
   insertProcQ(&low_ready_q, current_p);
@@ -46,7 +46,7 @@ void PLTTimerInterrupt(int line)
 // linea 2   (3.6.3 pandos)
 void intervalTimerInterrupt(int line)
 {
-  //klog_print("INT_TIMER_INT\n");
+  klog_print("INT_TIMER_INT\n");
   LDIT(PSECOND); 
   ////klog_print("INT_TIMER_INT ho caricato timer\n");
 
@@ -84,7 +84,7 @@ void intervalTimerInterrupt(int line)
 // linee 3-7   (3.6.1 pandos)
 void nonTimerInterrupt(int line)
 {
-  //klog_print("NTI - nonTimerInterrupt\n");
+  klog_print("NTI - nonTimerInterrupt\n");
   int device_num = 0;
   devregarea_t *dev_regs = (devregarea_t *)RAMBASEADDR;
   /**
