@@ -200,7 +200,8 @@ void syscallExceptionHandler(unsigned int syscallCode)
             // }
             Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS);
             copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
-            klog_print("Soft count\n");
+            if (soft_count < 0) placeholder();
+            klog_print("doio: Soft count\n");
             klog_print_hex((int)soft_count);
             klog_print("\n");
             soft_count++;
