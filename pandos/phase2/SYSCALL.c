@@ -28,7 +28,7 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
             insertProcQ(&high_ready_q, child);
         else
         {
-            //klog_print("SYS_CREATE_PROC - insertProcQ\n");
+            klog_print("SYS_CREATE_PROC - insertProcQ\n");
             insertProcQ(&low_ready_q, child);
         }
         // Incremento il conto dei processi
