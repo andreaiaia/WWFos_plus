@@ -55,7 +55,7 @@ void scheduler()
         {
             //klog_print("SH - aaaaa panicdeadlock\n");
             // Siamo in deadlock
-            HALT();
+            //HALT();
             PANIC();
         }
     }

@@ -69,7 +69,7 @@ void intervalTimerInterrupt(int line)
   } while (removed != NULL);
 
   // Azzero lo pseudo-clock semaphore
-  device_sem[DEVSEM_NUM - 1] = 0; //! sei sicuro andre?
+  device_sem[DEVSEM_NUM - 1] = 0; 
   if (current_p == NULL)
   {
     scheduler();
@@ -154,6 +154,7 @@ void nonTimerInterrupt(int line)
   if (tmp != NULL){
     tmp->p_s.reg_v0 = dev_status_code; 
     soft_count--;
+    HALT();
     }
   // copio stato processore nel pcb attuale
   //klog_print("NTI copio stato processore\n");
