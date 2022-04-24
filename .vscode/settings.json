@@ -13,7 +13,8 @@
         "exception.h": "c",
         "interrupt.h": "c",
         "initial.h": "c",
-        "libumps.h": "c"
+        "libumps.h": "c",
+        "type_traits": "c"
     },
     "peacock.color": "#1857a4",
     "workbench.colorCustomizations": {

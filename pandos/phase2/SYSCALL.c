@@ -85,12 +85,10 @@ int Passeren(int *semaddr)
          * Rimuovo per sicurezza il processo da qualsiasi
          * proc_q in cui possa trovarsi
          */
-        if (current_p->p_prio == 1)
+        /*if (current_p->p_prio == 1)
             outProcQ(&high_ready_q, current_p);
         else
-            outProcQ(&low_ready_q, current_p);
-
-      
+            outProcQ(&low_ready_q, current_p);*/
         return(0);
     }
     else if (headBlocked(semaddr) != NULL)
@@ -117,7 +115,6 @@ pcb_PTR Verhogen(int *semaddr)
 {
     //klog_print("VER - entro\n");
     pcb_PTR first = NULL;
-
     if (*semaddr == 1)
     {
         //klog_print("VER1 - semaddr == 1 (sospendo current_p)\n");
@@ -130,11 +127,11 @@ pcb_PTR Verhogen(int *semaddr)
             insertProcQ(&low_ready_q, current_p);
         */
         insertBlocked(semaddr, current_p);
-        if (current_p->p_prio == 1){
+        /*if (current_p->p_prio == 1){
             outProcQ(&high_ready_q, current_p);
         } else {
             outProcQ(&low_ready_q, current_p);
-        }
+        }*/
         current_p = NULL;
 
     }
