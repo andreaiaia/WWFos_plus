@@ -56,6 +56,7 @@ void intervalTimerInterrupt(int line)
   do
   { 
     removed = removeBlocked(&(device_sem[DEVSEM_NUM - 1]));
+    //! qui ci eravamo dimenticati un semaforo a null
     ////klog_print("INT_TIMER_INT ho rimosso\n");
     if (removed != NULL)
     {

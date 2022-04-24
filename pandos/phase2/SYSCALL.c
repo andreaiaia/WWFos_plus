@@ -102,7 +102,7 @@ int Passeren(int *semaddr)
     {
         //klog_print("PASS3 - sem != 0 (proc in ready)\n");
         pcb_PTR first = removeBlocked(semaddr);
-        first->p_semAdd = NULL;
+        first->p_semAdd = NULL; //! Superflui per modifiche fatte in phase1
         //soft_count--; // ! modifica per manes
         if (first->p_prio == 1)
             insertProcQ(&high_ready_q, first);
@@ -167,7 +167,7 @@ pcb_PTR Verhogen(int *semaddr)
             } 
         }
         if (flag) compl_soft--;
-        first->p_semAdd = NULL;
+        first->p_semAdd = NULL; //! Superflui per modifiche fatte in phase1
         //soft_count--; // !spostato nell'interrupt h di alex
         if (first->p_prio == 1)
             insertProcQ(&high_ready_q, first);
