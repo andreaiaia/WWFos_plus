@@ -719,7 +719,7 @@ void hp_p1() {
     print("hp_p1 starts\n");
 
     for (int i = 0; i < 100; i++) {
-        SYSCALL(YIELD, 0, 0, 0);
+    //    SYSCALL(YIELD, 0, 0, 0);
     }
 
     SYSCALL(TERMPROCESS, 0, 0, 0);
