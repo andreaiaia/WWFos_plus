@@ -51,7 +51,7 @@ void scheduler()
             WAIT(); // Aspettando un interrupt
             scheduler();
         }
-        else
+        else if (soft_count == 0)
         {
             //klog_print("SH - aaaaa panicdeadlock\n");
             // Siamo in deadlock
