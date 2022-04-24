@@ -37,7 +37,7 @@ void Exterminate(pcb_PTR process)
          */
         outChild(process);
         //Flag usato come guardia, nel caso Flag venga azzerato, il semaforo era di tipo DEVICE.
-        int flag = 1;
+        //int flag = 1;
         for (int i=0; i < DEVSEM_NUM; i++) {
             if (process->p_semAdd == &device_sem[i]) {
                 soft_count--;
