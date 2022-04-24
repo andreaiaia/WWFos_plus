@@ -139,6 +139,8 @@ void syscallExceptionHandler(unsigned int syscallCode)
         // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
         // ! //klog_print("HELP2.1 - \n");   ho rimosso questo perché ridondante
+        klog_print_hex(syscallCode);
+        klog_print("\n");
         switch (syscallCode)
         {
         case CREATEPROCESS:

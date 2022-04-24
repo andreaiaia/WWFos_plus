@@ -29,6 +29,7 @@ void exceptionHandler()
     else if (DECODED_EXCEPTION_CAUSE == 8)
     {
         klog_print("EXH_SYSCALL\n");
+        
         syscallExceptionHandler(REG_A0_SS);
     }
 }
