@@ -154,7 +154,8 @@ void nonTimerInterrupt(int line)
   if (tmp != NULL){
     tmp->p_s.reg_v0 = dev_status_code; 
     soft_count--;
-    HALT();
+    } else {
+      klog_print("INT_ TMP NULL");
     }
   // copio stato processore nel pcb attuale
   //klog_print("NTI copio stato processore\n");
