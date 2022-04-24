@@ -139,13 +139,13 @@ void syscallExceptionHandler(unsigned int syscallCode)
         // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
         // ! //klog_print("HELP2.1 - \n");   ho rimosso questo perché ridondante
-        klog_print_hex(syscallCode);
-        klog_print("\n");
+        // klog_print_hex(syscallCode);
+        // klog_print("\n");
         switch (syscallCode)
         {
         case CREATEPROCESS:
             INCREMENTO_PC;
-            //klog_print("HELP2.2 - create process\n");
+            klog_print("HELP2.2 - create process\n");
             Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
             //LDST(PROCESSOR_SAVED_STATE);
             postSyscall();
@@ -153,7 +153,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case TERMPROCESS:
             INCREMENTO_PC;
-            //klog_print("HELP2.3 - terminate process\n");
+            klog_print("HELP2.3 - terminate process\n");
             if (Terminate_Process((int)(REG_A1_SS))){
                 //LDST(PROCESSOR_SAVED_STATE);   
                 postSyscall();
@@ -164,7 +164,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case PASSEREN:
             INCREMENTO_PC;
-            //klog_print("HELP2.4 - passeren\n");
+            klog_print("HELP2.4 - passeren\n");
             if(Passeren((int *)(REG_A1_SS))){
                 //LDST(PROCESSOR_SAVED_STATE);
                 postSyscall();
@@ -178,7 +178,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case VERHOGEN:
             INCREMENTO_PC;
-            //klog_print("HELP2.5 - verhogen\n");
+            klog_print("HELP2.5 - verhogen\n");
             Verhogen((int *)(REG_A1_SS));
             if (current_p != NULL) {
                 //LDST(PROCESSOR_SAVED_STATE);
@@ -188,7 +188,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
         case DOIO:
             INCREMENTO_PC;
-            //klog_print("HELP2.6 - DoIo cane\n");
+            klog_print("HELP2.6 - DoIo cane\n");
             // if(Do_IO_Device((int *)(REG_A1_SS), (int)REG_A2_SS)){
             //   soft_count--;
             //   HALT();
