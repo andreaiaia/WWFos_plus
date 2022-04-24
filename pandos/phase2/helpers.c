@@ -85,6 +85,7 @@ pcb_PTR find_process(int pid)
             }
         }
     }
+    HALT();
     return NULL;
 }
 
