@@ -85,8 +85,7 @@ pcb_PTR find_process(int pid)
             }
         }
     }
-    HALT();
-    return NULL;
+    return NULL; // ! qui non ci passa, testato
 }
 
 void syscallExceptionHandler(unsigned int syscallCode)
