@@ -18,95 +18,95 @@ void copy_state(state_t *original, state_t *dest)
 
 /* Helpers per le SYSCALL */
 
-// //* "Do you know how you make someone into a Dalek? Subtract Love, add Anger." ~ Steven Moffat
-// void Exterminate(pcb_PTR process)
-// {
-//     // Controlla se il processo non ha figli
-//     if (!emptyChild(process))
-//     {
-//         // Termina tutti i figli
-//         while (!emptyChild(process))
-//         {
-//             pcb_PTR child = removeChild(process);
-//             Exterminate(child);
-//         }
-//     }
-//         /**
-//          * Nel caso il processo corrente sia figlio di qualche
-//          * altro processo, lo rimuove dalla lista dei figli del padre
-//          */
-//         outChild(process);
-//         //Flag usato come guardia, nel caso Flag venga azzerato, il semaforo era di tipo DEVICE.
-//         int flag = 1;
-//         for (int i=0; i < DEVSEM_NUM; i++) {
-//             if (process->p_semAdd == &device_sem[i]) {
-//                 soft_count--;
-//                 flag=0;
-//             } 
-//         }
-//         if (process->p_prio) {
-//             outProcQ(&high_ready_q, process);
-//         }
-//         else {
-//             outProcQ(&low_ready_q, process);
-//         } // ! Possibile ottimizzazione col flag in base a risultato outprocq
-
-//         // Togliamo il processo dalla coda del semaforo
-//         outBlocked(process);
-//         // Decremento il conto dei processi attivi
-//         proc_count--;
-//         for (int i = 0; i < MAXPROC; i++)
-//         {
-//             if (all_processes[i] == process)
-//                 all_processes[i] = NULL;
-//         }
-//         //Il tutor dice che ci va ma Davoli dice di no (?) Nick.
-//         // Se flag è 1, l'if a riga 42 non ha trovato corrispondenza con un semaforo di tipo device
-//         /*if (flag) {
-//             // Se il semaforo non sta bloccando altri processi, incremento il suo valore.
-//                 if (!headBlocked(process->p_semAdd)) {
-//                 *(process->p_semAdd) = 1;
-//                 }
-//         }*/
-//         // Termino il processo corrente
-//         freePcb(process);
-// }
-
-void Exterminate(pcb_PTR proc)
+//* "Do you know how you make someone into a Dalek? Subtract Love, add Anger." ~ Steven Moffat
+void Exterminate(pcb_PTR process)
 {
-    if (proc == NULL) {
-        return;
+    // Controlla se il processo non ha figli
+    if (!emptyChild(process))
+    {
+        // Termina tutti i figli
+        while (!emptyChild(process))
+        {
+            pcb_PTR child = removeChild(process);
+            Exterminate(child);
+        }
     }
-
-    /* remove proc from its parent (if available) */
-    outChild(proc);
-
-    /* if the process is blocked on a semaphore... */
-    if (proc->p_semAdd != NULL) {
-        /* remove it from the semd proc queue */
-        outBlocked(proc);
-
-        /* if we are handling a device semaphore */
+        /**
+         * Nel caso il processo corrente sia figlio di qualche
+         * altro processo, lo rimuove dalla lista dei figli del padre
+         */
+        outChild(process);
+        //Flag usato come guardia, nel caso Flag venga azzerato, il semaforo era di tipo DEVICE.
+        int flag = 1;
         for (int i=0; i < DEVSEM_NUM; i++) {
-            if (proc->p_semAdd == &device_sem[i]) {
+            if (process->p_semAdd == &device_sem[i]) {
                 soft_count--;
+                flag=0;
             } 
         }
-    } else if (proc->p_prio) {
-            outProcQ(&high_ready_q, proc);
+        if (process->p_prio) {
+            outProcQ(&high_ready_q, process);
         }
         else {
-            outProcQ(&low_ready_q, proc);
+            outProcQ(&low_ready_q, process);
+        } // ! Possibile ottimizzazione col flag in base a risultato outprocq
+
+        // Togliamo il processo dalla coda del semaforo
+        outBlocked(process);
+        // Decremento il conto dei processi attivi
+        proc_count--;
+        for (int i = 0; i < MAXPROC; i++)
+        {
+            if (all_processes[i] == process)
+                all_processes[i] = NULL;
         }
-    proc_count--;
-
-    /* terminate every proc child */
-    while (!emptyChild(proc)) {
-        Exterminate(removeChild(proc));
-    }
-
-    freePcb(proc);
+        //Il tutor dice che ci va ma Davoli dice di no (?) Nick.
+        // Se flag è 1, l'if a riga 42 non ha trovato corrispondenza con un semaforo di tipo device
+        /*if (flag) {
+            // Se il semaforo non sta bloccando altri processi, incremento il suo valore.
+                if (!headBlocked(process->p_semAdd)) {
+                *(process->p_semAdd) = 1;
+                }
+        }*/
+        // Termino il processo corrente
+        freePcb(process);
 }
+
+// void Exterminate(pcb_PTR proc)
+// {
+//     if (proc == NULL) {
+//         return;
+//     }
+
+//     /* remove proc from its parent (if available) */
+//     outChild(proc);
+
+//     /* if the process is blocked on a semaphore... */
+//     if (proc->p_semAdd != NULL) {
+//         /* remove it from the semd proc queue */
+//         outBlocked(proc);
+
+//         /* if we are handling a device semaphore */
+//         for (int i=0; i < DEVSEM_NUM; i++) {
+//             if (proc->p_semAdd == &device_sem[i]) {
+//                 soft_count--;
+//             } 
+//         }
+//     } else if (proc->p_prio) {
+//             outProcQ(&high_ready_q, proc);
+//         }
+//         else {
+//             outProcQ(&low_ready_q, proc);
+//         }
+//     proc_count--;
+
+//     /* terminate every proc child */
+//     while (!emptyChild(proc)) {
+//         Exterminate(removeChild(proc));
+//     }
+
+//     freePcb(proc);
+// }
 
 
 
@@ -132,7 +132,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
     //klog_print("HELP1 - entro syscallExcHandler\n");
     // * Verifico che il processo chiamante della Syscall sia in KernelMode e che abbia chiamato una Syscall (rega0 < 0)
     if (((PROCESSOR_SAVED_STATE->status & STATUS_KUp) != STATUS_KUp) && ((int)syscallCode < 0) )
-    {
+    {   
         //klog_print("HELP2 - check ker. mode: ON\n");
         // * Syscall lecita, ovvero processo in modalità Kernel e parametro a0 negativo.
         // * Procedo a smistare alla syscall corretta basandomi sul syscallCode
@@ -246,13 +246,13 @@ void syscallExceptionHandler(unsigned int syscallCode)
             current_p = NULL;
             break;
 
-        default:
+        /*default:
             //klog_print("HELP2.12 - default case\n");
             // * Imposto il bit RI
             PROCESSOR_SAVED_STATE->cause = (PROCESSOR_SAVED_STATE->cause & ~CAUSE_EXCCODE_MASK) | (EXC_RI << CAUSE_EXCCODE_BIT);
             // * Simulo una TRAP
             PassUpOrDie(GENERALEXCEPT);
-            break;
+            break;*/
         }
         //klog_print("HELP_ CHIAMATA SCHEDULERO\n");
         scheduler();
