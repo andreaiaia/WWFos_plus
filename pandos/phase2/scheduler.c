@@ -42,7 +42,8 @@ void scheduler()
             //klog_print("SH soft_count > 0\n");
             // Imposto lo stato corrente per accettare interrupt
             // E disabilito il tutto il resto (quindi anche il PLT)
-            unsigned int waitingStatus = getSTATUS() | IECON | IEPON | IMON;
+            //unsigned int waitingStatus = getSTATUS() | IECON | IEPON | IMON;
+            unsigned int waitingStatus = getSTATUS() | IECON | IMON;
             //klog_print("SH - setState accetto interrupt\n");
             setTIMER(MAX_TIME);
             current_p = NULL;
