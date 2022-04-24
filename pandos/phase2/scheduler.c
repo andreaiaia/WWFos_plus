@@ -13,7 +13,7 @@ void scheduler()
     // Se la coda dei processi a BASSA priorità è non-vuota
     else if (!emptyProcQ(&low_ready_q))
     {
-        if (yielded != NULL) // ! perché è qui?
+        if (yielded != NULL) 
         {
             //klog_print("SH yielded != NULL\n");
             insertProcQ(&high_ready_q, yielded);
