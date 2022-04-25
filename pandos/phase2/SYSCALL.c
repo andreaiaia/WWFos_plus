@@ -144,15 +144,6 @@ pcb_PTR Verhogen(int *semaddr)
         } else {
             outProcQ(&low_ready_q, current_p);
         }*/
-        //! da qui
-        int flag=1;
-        for (int i=0; i < DEVSEM_NUM; i++) {
-            if (semaddr == &device_sem[i]) {
-                flag=0;
-            } 
-        }
-        if (flag) compl_soft++;
-        // ! a qui, duplicata 4 volte con compl_soft-- in 2 è da togliere.
         current_p = NULL;
 
     }
@@ -166,9 +157,7 @@ pcb_PTR Verhogen(int *semaddr)
                 flag=0;
             } 
         }
-        if (flag) compl_soft--;
-        first->p_semAdd = NULL; //! Superflui per modifiche fatte in phase1
-        //soft_count--; // !spostato nell'interrupt h di alex
+        
         if (first->p_prio == 1)
             insertProcQ(&high_ready_q, first);
         else
