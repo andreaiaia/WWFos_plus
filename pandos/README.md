@@ -9,7 +9,11 @@ Il sistema operativo PandOS è l'ultimo di una serie di sistemi operativi didatt
 ## Setup
 
 Per poter compilare ed eseguire il codice è necessario trovarsi su un sistema operativo GNU/Linux e installare l'emulatore [uMPS3](https://github.com/virtualsquare/umps3).
-A questo punto è sufficiente trovarsi nella directory phase2 e lanciare il comando `make all`, dopodiché per avviare la macchina virtuale basta seguire [questo tutorial](https://wiki.virtualsquare.org/#!education/tutorials/umps/getting_started.md#Booting_in_%C2%B5MPS).
+A questo punto è sufficiente trovarsi nella directory phase2 e lanciare il comando `make`, dopodiché per avviare la macchina virtuale basta seguire [questo tutorial](https://wiki.virtualsquare.org/#!education/tutorials/umps/getting_started.md#Booting_in_%C2%B5MPS), i cui passi riassumo brevemente:
+
+- Aprire il file di configurazione "phase2.json";
+- Accendere la macchina;
+- Avviare il test.
 
 ## Fase 1
 
