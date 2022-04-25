@@ -218,6 +218,13 @@ void PassUpOrDie(int excCode)
  */
 void load_state()
 {
+    if (current_p != NULL)
+    {
+        // Fermo il calcolo del tempo usato dal current_p
+        STCK(finish);
+        // Aggiungo il tempo trascorso al tempo impiegato dal processo
+        current_p->p_time = (current_p->p_time) + (finish - start);
+    }
     STCK(start);
     LDST(PROCESSOR_SAVED_STATE);
 }
