@@ -46,7 +46,12 @@ int Terminate_Process(int pid)
 {
     if (pid == 0)
     {
-        Exterminate(current_p); // Termina il current_p
+        // Fermo il calcolo del tempo usato dal current_p
+        STCK(finish);
+        // Aggiungo il tempo trascorso al tempo impiegato dal processo
+        current_p->p_time = (current_p->p_time) + (finish - start);
+        // Termina il current_p
+        Exterminate(current_p);
         current_p = NULL;
         return 0;
     }
@@ -64,6 +69,10 @@ int Passeren(int *semaddr)
         return 1;
     else if (*semaddr == 0)
     {
+        // Fermo il calcolo del tempo usato dal current_p
+        STCK(finish);
+        // Aggiungo il tempo trascorso al tempo impiegato dal processo
+        current_p->p_time = (current_p->p_time) + (finish - start);
         // Blocco il processo corrente
         insertBlocked(semaddr, current_p);
         return 0;
@@ -92,6 +101,10 @@ pcb_PTR Verhogen(int *semaddr)
     pcb_PTR first = NULL;
     if (*semaddr == 1)
     {
+        // Fermo il calcolo del tempo usato dal current_p
+        STCK(finish);
+        // Aggiungo il tempo trascorso al tempo impiegato dal processo
+        current_p->p_time = (current_p->p_time) + (finish - start);
         //  Sospendo il processo corrente
         copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
         insertBlocked(semaddr, current_p);
