@@ -19,23 +19,20 @@ extern pcb_PTR all_processes[MAXPROC];
 
 // Questa system call crea un nuovo processo come figlio del chiamante.
 void Create_Process(state_t *statep, int prio, support_t *supportp);
-
-/** Quando invocata, la SYS2 termina il processo indicato
+/**
+ * Quando invocata, la SYS2 termina il processo indicato
  * dal secondo parametro insieme a tutta la sua progenie.
  */
 int Terminate_Process(int pid);
-
-// SYSCALL sui semafori
+/* SYSCALL sui semafori */
 int Passeren(int *semaddr);
 pcb_PTR Verhogen(int *semaddr);
-
+// Syscall sui device
 int Do_IO_Device(int *commandAddr, int commandValue);
-
+// Altre Syscall
 void Get_CPU_Time();
-
 void Get_Process_Id(int parent);
 int Wait_For_Clock();
-
 void Get_Support_Data();
 void Yield();
 

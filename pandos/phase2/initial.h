@@ -11,7 +11,7 @@
 #include "../phase1/asl.h"
 #include "../phase1/pcb.h"
 
-//* HANDY DEFINES
+//* Handy defines */
 // = 0xFFFF.FFFF per ricaricare PLTTimer
 #define MAX_TIME 4294967295
 // Numero di semafori dei dispositivi
@@ -35,7 +35,7 @@
 extern void uTLB_RefillHandler();
 // La funzione test si trova nel file di test fornito
 extern void test();
-// Funzione utile per il debugging
+// Funzioni utile per il debugging
 extern void klog_print(char *);
 extern void klog_print_hex(unsigned int);
 

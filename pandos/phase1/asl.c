@@ -61,7 +61,7 @@ pcb_t *removeBlocked(int *semAdd)
         if (s_iter->s_key == semAdd)
         {
             res = removeProcQ(&(s_iter->s_procq));
-            res->p_semAdd = NULL; // ! aggiunta in prova
+            res->p_semAdd = NULL;
             if (list_empty(&(s_iter->s_procq)))
             {
                 list_del(&(s_iter->s_link));

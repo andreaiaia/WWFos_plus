@@ -12,7 +12,6 @@ extern cpu_t start;
 extern cpu_t finish;
 
 void load_new_proc(struct list_head *);
-
 void scheduler();
 
 #endif

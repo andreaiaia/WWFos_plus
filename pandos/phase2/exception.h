@@ -6,9 +6,6 @@
 #include "interrupt.h"
 #include "SYSCALL.h"
 
-
-//FUNCTION PROTOTYPES
 void exceptionHandler();
-
 
 #endif
