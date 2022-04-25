@@ -220,8 +220,11 @@ void PassUpOrDie(int excCode)
  * oppure (se il processo è stato bloccato o terminato) chiamare
  * lo scheduler per lanciare un altro processo.
  */
-void postSyscall()
-{
+
+void postSyscall() {
+    STCK(finish);
+    // Aggiungo il tempo trascorso al tempo impiegato dal processo
+    current_p->p_time = (current_p->p_time) + (finish - start);
     STCK(start);
     LDST(PROCESSOR_SAVED_STATE);
 }
