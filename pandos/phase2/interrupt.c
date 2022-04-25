@@ -2,25 +2,32 @@
 
 void interruptHandler()
 {
-    /**
-     * Scorro le linee di Cause.IP alla ricerca di un
-     * pending interrupt, non guardo la linea 0 perché
-     * il nostro sistema usa un solo processore
-     */
-    for (int line = 1; line < N_INTERRUPT_LINES; line++)
+  /**
+   * Scorro le linee di Cause.IP alla ricerca di un
+   * pending interrupt, non guardo la linea 0 perché
+   * il nostro sistema usa un solo processore
+   */
+  for (int line = 1; line < N_INTERRUPT_LINES; line++)
+  {
+    if ((PROCESSOR_SAVED_STATE->cause) & CAUSE_IP(line))
     {
-        if ((PROCESSOR_SAVED_STATE->cause) & CAUSE_IP(line))
-        {
-            if (line == 1)
-                PLTTimerInterrupt(line);
-            else if (line == 2)
-                intervalTimerInterrupt(line);
-            else
-                deviceInterrupt(line);
-
-            break;
-        }
+      if (line == 1)
+      {
+        PLTTimerInterrupt(line);
+        break;
+      }
+      else if (line == 2)
+      {
+        intervalTimerInterrupt(line);
+        break;
+      }
+      else
+      {
+        nonTimerInterrupt(line);
+        break;
+      }
     }
+  }
 }
 
 void PLTTimerInterrupt(int line)
