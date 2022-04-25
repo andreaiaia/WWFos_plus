@@ -61,7 +61,7 @@ void intervalTimerInterrupt(int line)
     if (current_p == NULL)
         scheduler();
     else
-        postSyscall();
+        load_state();
 }
 
 // Linee 3-7, interrupt sui device
@@ -137,5 +137,5 @@ void deviceInterrupt(int line)
     if (current_p == NULL)
         scheduler();
     else
-        postSyscall();
+        load_state();
 }

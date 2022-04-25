@@ -98,14 +98,14 @@ void syscallExceptionHandler(unsigned int syscallCode)
         case CREATEPROCESS:
             INCREMENTO_PC;
             Create_Process((state_t *)(REG_A1_SS), (int)(REG_A2_SS), (support_t *)(REG_A3_SS));
-            postSyscall();
+            load_state();
             break;
 
         case TERMPROCESS:
             INCREMENTO_PC;
 
             if (Terminate_Process((int)(REG_A1_SS)))
-                postSyscall();
+                load_state();
 
             break;
 
@@ -113,7 +113,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
             INCREMENTO_PC;
 
             if (Passeren((int *)(REG_A1_SS)))
-                postSyscall();
+                load_state();
             else
                 copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
 
@@ -124,7 +124,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
             Verhogen((int *)(REG_A1_SS));
             if (current_p != NULL)
-                postSyscall();
+                load_state();
 
             break;
 
@@ -139,7 +139,7 @@ void syscallExceptionHandler(unsigned int syscallCode)
         case GETTIME:
             INCREMENTO_PC;
             Get_CPU_Time();
-            postSyscall();
+            load_state();
             break;
 
         case CLOCKWAIT:
@@ -153,13 +153,13 @@ void syscallExceptionHandler(unsigned int syscallCode)
         case GETSUPPORTPTR:
             INCREMENTO_PC;
             Get_Support_Data();
-            postSyscall();
+            load_state();
             break;
 
         case GETPROCESSID:
             INCREMENTO_PC;
             Get_Process_Id((int)(REG_A1_SS));
-            postSyscall();
+            load_state();
             break;
 
         case YIELD:
@@ -216,7 +216,7 @@ void PassUpOrDie(int excCode)
  * oppure (se il processo è stato bloccato o terminato) chiamare
  * lo scheduler per lanciare un altro processo.
  */
-void postSyscall()
+void load_state()
 {
     STCK(start);
     LDST(PROCESSOR_SAVED_STATE);

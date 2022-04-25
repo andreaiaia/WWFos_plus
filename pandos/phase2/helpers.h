@@ -17,7 +17,7 @@ pcb_PTR find_process(int pid);
 
 //* Helpers collegati all'exception handler */
 // Operazioni post syscall
-void postSyscall();
+void load_state();
 // SyscallExceptionHandler, gestisce il caso di un'eccezione di tipo Syscall e provvede allo smistamento
 void syscallExceptionHandler(unsigned int syscallCode);
 // Caricamento BIOSDATAPAGE nel registro della CPU e call allo scheduler()
