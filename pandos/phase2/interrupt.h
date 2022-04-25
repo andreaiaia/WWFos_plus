@@ -10,6 +10,6 @@ extern int device_sem[DEVSEM_NUM];
 void interruptHandler();
 void PLTTimerInterrupt(int line);
 void intervalTimerInterrupt(int line);
-void nonTimerInterrupt(int line);
+void deviceInterrupt(int line);
 
 #endif
