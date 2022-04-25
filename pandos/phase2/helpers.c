@@ -36,21 +36,20 @@ void Exterminate(pcb_PTR process)
      * altro processo, lo rimuove dalla lista dei figli del padre
      */
     outChild(process);
-    // Se flag viene azzerato, non servirà rimuovere il processo dalle ready queue
+    // Riduciamo il soft_count solo se il proc è bloccato da un dev sem
     for (int i = 0; i < DEVSEM_NUM; i++)
     {
         if (process->p_semAdd == &device_sem[i])
             soft_count--;
     }
-    // In base al flag rimuoviamo il proc dalla ready queue o dalla block queue
+    // Rimuoviamo il proc da qualunque coda possa trovarsi
     if (process->p_prio)
         outProcQ(&high_ready_q, process);
     else
         outProcQ(&low_ready_q, process);
 
-    // Togliamo il processo dalla coda del semaforo
+    // Togliamo il processo dalla coda dell'eventuale semaforo
     outBlocked(process);
-
     // Decremento il conto dei processi attivi
     proc_count--;
     // Rimuovo il processo dall'array di tutti i processi
@@ -65,7 +64,6 @@ void Exterminate(pcb_PTR process)
 
 pcb_PTR find_process(int pid)
 {
-    klog_print("find process\n");
     if (current_p->p_pid == pid)
         return current_p;
     else
@@ -73,9 +71,7 @@ pcb_PTR find_process(int pid)
         for (int i = 0; i < MAXPROC; i++)
         {
             if ((all_processes[i]) && (all_processes[i]->p_pid == pid))
-            {
                 return all_processes[i];
-            }
         }
     }
     /**
