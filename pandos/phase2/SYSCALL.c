@@ -98,7 +98,7 @@ pcb_PTR Verhogen(int *semaddr)
         current_p = NULL;
 
     }
-    else if (headBlocked(semaddr) != NULL)
+    else if (headBlocked(semaddr))
     {
         first = removeBlocked(semaddr);
         if (first->p_prio == 1)
