@@ -67,32 +67,64 @@ int Terminate_Process(int pid)
 
 int Passeren(int *semaddr)
 {
+    //klog_print("PASS - entro\n");
     if (semaddr == NULL)
-        return 1;
+    {
+        //klog_print("PASS1 - sem == NULL\n");
+        return(1);
+    }
     else if (*semaddr == 0)
     {
-        // Blocco il processo corrente
+        //klog_print("PASS2 - sem == 0 (blocco proc)\n");
+        //* Blocco il processo corrente
+        // Aggiungo il processo corrente alla coda del semd
         insertBlocked(semaddr, current_p);
-        return 0;
+        // Incremento il conto dei processi bloccati
+        //soft_count++; // !modifica per manes
+        /**
+         * Rimuovo per sicurezza il processo da qualsiasi
+         * proc_q in cui possa trovarsi
+         */
+        /*if (current_p->p_prio == 1)
+            outProcQ(&high_ready_q, current_p);
+        else
+            outProcQ(&low_ready_q, current_p);*/
+        int flag=1;
+        for (int i=0; i < DEVSEM_NUM; i++) {
+            if (semaddr == &device_sem[i]) {
+                flag=0;
+            } 
+        }
+        if (flag) compl_soft++;
+        return(0);
     }
     else if (headBlocked(semaddr) != NULL)
     {
+        //klog_print("PASS3 - sem != 0 (proc in ready)\n");
         pcb_PTR first = removeBlocked(semaddr);
-        first->p_semAdd = NULL;
-
+        first->p_semAdd = NULL; //! Superflui per modifiche fatte in phase1
+        //soft_count--; // ! modifica per manes
         if (first->p_prio == 1)
             insertProcQ(&high_ready_q, first);
         else
             insertProcQ(&low_ready_q, first);
-
-        return 1;
+                      int flag=1;
+        for (int i=0; i < DEVSEM_NUM; i++) {
+            if (semaddr == &device_sem[i]) {
+                flag=0;
+            } 
+        }
+        if (flag) compl_soft--;
+        return(1);
     }
     else
     {
+        //klog_print("PASS4 - metto sem a 0\n");
         *semaddr = 0;
-        return 1;
+        return(1);
     }
 }
+
 
 pcb_PTR Verhogen(int *semaddr)
 {
