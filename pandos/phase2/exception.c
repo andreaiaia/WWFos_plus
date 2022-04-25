@@ -2,6 +2,11 @@
 
 void exceptionHandler()
 {
+    // Fermo il calcolo del tempo usato dal current_p
+    STCK(finish);
+    // Aggiungo il tempo trascorso al tempo impiegato dal processo
+    current_p->p_time = (current_p->p_time) + (finish - start);
+
        // Exception code 0 -> Si passa il controllo al device interrupt handler
     if (DECODED_EXCEPTION_CAUSE == 0)
         interruptHandler();
