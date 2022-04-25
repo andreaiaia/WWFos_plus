@@ -37,28 +37,20 @@ void Exterminate(pcb_PTR process)
      */
     outChild(process);
     // Se flag viene azzerato, non servirà rimuovere il processo dalle ready queue
-    int flag = 1;
     for (int i = 0; i < DEVSEM_NUM; i++)
     {
         if (process->p_semAdd == &device_sem[i])
-        {
             soft_count--;
-            flag = 0;
-        }
     }
     // In base al flag rimuoviamo il proc dalla ready queue o dalla block queue
-    if (flag)
-    {
-        if (process->p_prio)
-            outProcQ(&high_ready_q, process);
-        else
-            outProcQ(&low_ready_q, process);
-    }
+    if (process->p_prio)
+        outProcQ(&high_ready_q, process);
     else
-    {
-        // Togliamo il processo dalla coda del semaforo
-        outBlocked(process);
-    }
+        outProcQ(&low_ready_q, process);
+
+    // Togliamo il processo dalla coda del semaforo
+    outBlocked(process);
+
     // Decremento il conto dei processi attivi
     proc_count--;
     // Rimuovo il processo dall'array di tutti i processi
