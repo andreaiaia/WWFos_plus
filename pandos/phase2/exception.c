@@ -2,12 +2,13 @@
 
 void exceptionHandler()
 {
-    /*if (current_p != NULL){
+    if (current_p != NULL){
     // Fermo il calcolo del tempo usato dal current_p
     STCK(finish);
     // Aggiungo il tempo trascorso al tempo impiegato dal processo
     current_p->p_time = (current_p->p_time) + (finish - start);
-    }*/
+    }
+    klog_print_hex(DECODED_EXCEPTION_CAUSE);
        // Exception code 0 -> Si passa il controllo al device interrupt handler
     if (DECODED_EXCEPTION_CAUSE == 0)
         interruptHandler();
