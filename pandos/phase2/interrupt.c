@@ -13,22 +13,23 @@ void interruptHandler()
         {
             if (line == 1){
                 PLTTimerInterrupt(line);
-                            break;
+                break;
 
             }
             else if (line == 2){
                 intervalTimerInterrupt(line);
-                            break;
+                break;
 
             }
             else{
                 deviceInterrupt(line);
-            break;
+                break;
             }
         }
     }
 }
 
+// Interrupt di PLT, è scaduto il tempo
 void PLTTimerInterrupt(int line)
 {
     setTIMER(MAX_TIME);
