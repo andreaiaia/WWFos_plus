@@ -95,14 +95,12 @@ int Passeren(int *semaddr)
                 flag=0;
             } 
         }
-        if (flag) compl_soft++;
         return(0);
     }
     else if (headBlocked(semaddr) != NULL)
     {
         //klog_print("PASS3 - sem != 0 (proc in ready)\n");
         pcb_PTR first = removeBlocked(semaddr);
-        first->p_semAdd = NULL; //! Superflui per modifiche fatte in phase1
         //soft_count--; // ! modifica per manes
         if (first->p_prio == 1)
             insertProcQ(&high_ready_q, first);
@@ -114,7 +112,6 @@ int Passeren(int *semaddr)
                 flag=0;
             } 
         }
-        if (flag) compl_soft--;
         return(1);
     }
     else
