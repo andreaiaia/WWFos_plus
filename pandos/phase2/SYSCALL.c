@@ -2,11 +2,13 @@
 
 void Create_Process(state_t *statep, int prio, support_t *supportp)
 {
+    //klog_print("SYS_CREATE_PROC - entro\n");
     // Creo il processo figlio
     pcb_PTR child = allocPcb();
     // Se non è stato possibile allocare, ritorno errore
-    if (child == NULL)
+    if (child == NULL) {
         PROCESSOR_SAVED_STATE->reg_v0 = NOPROC; // Ritorno il valore di fallimento
+    }
     else
     {
         // Imposto i campi secondo i parametri ricevuti
@@ -20,13 +22,17 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
         child->p_pid = (memaddr)child;
         // Associo il process appena creato al suo processo padre
         insertChild(current_p, child);
+
         // Inserisco il processo nella coda corretta
         if (prio)
             insertProcQ(&high_ready_q, child);
         else
+        {
+            klog_print("SYS_CREATE_PROC - insertProcQ\n");
             insertProcQ(&low_ready_q, child);
-
+        }
         // Incremento il conto dei processi
+        //klog_print("SYS_CREATE_PROC - proc_count++\n");
         proc_count++;
         for (int i = 0; i < MAXPROC; i++)
         {
@@ -37,7 +43,9 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
             }
         }
     }
-    // Restituisco il valore di successo
+    // Ritorno successo
+    //current_p->p_s.reg_v0 = child->p_pid;
+    //klog_print("SYS_CREATE_PROC - fine create_process\n");
     PROCESSOR_SAVED_STATE->reg_v0 = child->p_pid;
 }
 
