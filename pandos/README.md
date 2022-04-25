@@ -66,7 +66,7 @@ Nel corso del debug del codice è sorto un dubbio riguardo un accorgimento nella
 Inizialmente a seguito di questo ciclo avevamo, sotto consiglio del Tutor, inserito il seguente controllo:
 
 ```C
-// Se flag è 0, l'if a riga 42 ha trovato corrispondenza con un semaforo di tipo device
+// Se flag è 0, l'if di cui sopra ha trovato corrispondenza con un semaforo di tipo device
 // quindi, se il semaforo non sta bloccando altri processi, incremento il suo valore.
 if (flag)
 {
@@ -77,3 +77,10 @@ if (flag)
 
 In seguito però in una discussione sul gruppo telegram del corso è intervenuto il prof sostenendo che questa operazione sia superflua in quanto se ne occuperebbe direttamente la Verhogen non appena fosse chiamata (in maniera indipendente) in seguito alla Terminate_Process.
 Dal momento che effettivamente la funzione Verhogen modifica ad uno il valore di un semaforo qualora questo si trovasse una blocked queue vuota, abbiamo pensato di seguire l'indicazione del prof e rimuovere il controllo dalla Exterminate.
+
+### Modifiche alle fasi precedenti
+
+Per sopperire ad alcune mancanze che non erano emerse durante la precedente fase, abbiamo modificato due delle funzioni di Fase 1:
+
+- La funzione allocPcb è stata modificata per impostare anche il campo p_supportStruct a NULL;
+- La funzione removeBlocked è stata modificata per impostare il campo p_semAdd del pcb a NULL quando viene rimosso.
