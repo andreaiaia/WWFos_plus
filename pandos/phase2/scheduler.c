@@ -1,5 +1,5 @@
 #include "scheduler.h"
-
+//qui funziona
 void scheduler()
 {
     //klog_print("SH - entro\n");
