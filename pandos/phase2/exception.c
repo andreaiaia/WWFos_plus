@@ -9,6 +9,7 @@ void exceptionHandler()
     current_p->p_time = (current_p->p_time) + (finish - start);
     }
     klog_print_hex(DECODED_EXCEPTION_CAUSE);
+    klog_print("\n");
        // Exception code 0 -> Si passa il controllo al device interrupt handler
     if (DECODED_EXCEPTION_CAUSE == 0)
         interruptHandler();
