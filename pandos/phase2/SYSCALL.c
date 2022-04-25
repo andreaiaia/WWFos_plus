@@ -52,17 +52,16 @@ void Create_Process(state_t *statep, int prio, support_t *supportp)
 // Se il secondo parametro è 0 allora il bersaglio è il processo invocante
 int Terminate_Process(int pid)
 {
-    if (pid == 0)
-    {
+    if (pid == 0) {
         Exterminate(current_p); // Termina il current_p
         current_p = NULL;
-        return 0;
+        return(0);
     }
     else
     {
         pcb_PTR to_terminate = find_process(pid);
         Exterminate(to_terminate); // Termina il proc con il corrispondente pid
-        return 1;
+        return(1);
     }
 }
 
