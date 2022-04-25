@@ -89,40 +89,18 @@ int Passeren(int *semaddr)
 
 pcb_PTR Verhogen(int *semaddr)
 {
-    //klog_print("VER - entro\n");
     pcb_PTR first = NULL;
     if (*semaddr == 1)
     {
-        //klog_print("VER1 - semaddr == 1 (sospendo current_p)\n");
         // Sospendo il processo corrente
         copy_state(PROCESSOR_SAVED_STATE, &(current_p->p_s));
-        // Lo inserisco nella coda corretta
-        /*if (current_p->p_prio == 1)
-            insertProcQ(&high_ready_q, current_p);
-        else
-            insertProcQ(&low_ready_q, current_p);
-        */
         insertBlocked(semaddr, current_p);
-        /*if (current_p->p_prio == 1){
-            outProcQ(&high_ready_q, current_p);
-        } else {
-            outProcQ(&low_ready_q, current_p);
-        }*/
         current_p = NULL;
 
     }
     else if (headBlocked(semaddr) != NULL)
     {
-        //klog_print("VER2 - semaddr == 0 (metto in ready)\n");
         first = removeBlocked(semaddr);
-                int flag=1;
-        for (int i=0; i < DEVSEM_NUM; i++) {
-            if (semaddr == &device_sem[i]) {
-                flag=0;
-            } 
-        }
-        
-       
         if (first->p_prio == 1)
             insertProcQ(&high_ready_q, first);
         else
@@ -130,10 +108,8 @@ pcb_PTR Verhogen(int *semaddr)
     }
     else
     {
-        //klog_print("VER3 - metto semaddr a 1\n");
         *semaddr = 1;
     }
-    //klog_print("VER4 - fine verhogen\n");
     return first;
 }
 
