@@ -23,7 +23,7 @@ void interruptHandler()
       }
       else
       {
-        nonTimerInterrupt(line);
+        deviceInterrupt(line);
         break;
       }
     }
