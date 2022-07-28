@@ -1,17 +1,19 @@
 // Qui vanno implementati il general exception handler (sezione 4.6)
 // il SYSCALL exception handler (sezione 4.7) e il program trap exception handler (sezione 4.8)
 
-void trapExcHandler() {
 
-}
+// wrapper della NSYS2, killa user process
+void Trap_Exc_Handler()
+{
+    //? docs: 4.8
 
-//? docs: 4.7.2 (SYS2 - Terminate)
-/*
-   implementa [SYS2]:  void SYSCALL(TERMINATE, 0, 0, 0)
-   wrapper della NSYS2, killa user process
-
- */
-//! per richiedere questa syscall è necessario inserire il valore 2 nel registro a0 e poi chiamare la syscall
-void Terminate(int pid) {
-    Terminate_Process(pid);
+    // se processo in mutua esclusione prima libero il semaforo
+    if(current_p->semAdd != 0) {  //? non sono affatto sicuro di come controllare se è in mutua esclusione
+        Verhogen(current_p->semAdd);
+        Terminate_Process(&(current_p->p_pid));
+    }
+    else{
+        Terminate_Process(&(current_p->p_pid));
+    }
+    //? alla fine va chiamato scheduler()?
 }
