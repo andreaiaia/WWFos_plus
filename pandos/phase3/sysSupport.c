@@ -3,7 +3,7 @@
 
 
 // wrapper della NSYS2, killa user process
-void Trap_Exc_Handler()
+void Trap_Exc_Handler() //? ho messo void ma non ne sono certo, non vedo cosa dovrebbe tornare in ogni caso visto che deve solo UCCIDERE
 {
     //? docs: 4.8
 
