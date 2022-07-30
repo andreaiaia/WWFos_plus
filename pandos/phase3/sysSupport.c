@@ -1,14 +1,18 @@
 // Qui vanno implementati il general exception handler (sezione 4.6)
 // il SYSCALL exception handler (sezione 4.7) e il program trap exception handler (sezione 4.8)
 
+extern pcb_PTR current_p;
 
-// wrapper della NSYS2, killa user process
-void Trap_Exc_Handler() //? ho messo void ma non ne sono certo, non vedo cosa dovrebbe tornare in ogni caso visto che deve solo UCCIDERE
+
+void trapExceptionHandler() //? ho messo void ma non ne sono certo, non vedo cosa dovrebbe tornare in ogni caso visto che deve solo UCCIDERE
 {
     //? docs: 4.8
 
     // se processo in mutua esclusione prima libero il semaforo
-    if(current_p->semAdd != 0) {  //? non sono affatto sicuro di come controllare se è in mutua esclusione
+    //! usare semaforo del support level non quello del livello 3
+    //! mettere il valore 2 in a0
+    //! la terminologia da usare è del tipo SYSCALL (TERMINATE, 0, 0, 0)
+    if(semaforoLvlSupport != 0) {  //? non sono affatto sicuro di come controllare se è in mutua esclusione
         Verhogen(current_p->semAdd);
         Terminate_Process(&(current_p->p_pid));
     }
