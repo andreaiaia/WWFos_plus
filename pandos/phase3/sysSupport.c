@@ -2,17 +2,17 @@
 // General exception handler - Sezione 4.6
 void generalExcHandler()
 {
-    /*prende il current process supp struct*/
+    // Prende il current process supp struct
     support_t *currSupStruct = (support_t *)SYSCALL(GETSUPPORTPTR, 0, 0, 0);
     /*determina la causa*/
     int cause = CAUSE_GET_EXCCODE(currSupStruct->sup_exceptState[GENERALEXCEPT].cause);
 
-    /*se e' una syscall la gestisce*/
+    // Se e' una syscall la gestisce
     if (cause == SYSEXCEPTION)
     {
-        /*incrementiamo il pc*/
+        // Incrementiamo il pc
         currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
-        /*prende la syscall*/
+        // Prende la syscall
         int sysNum = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a0;
         switch (sysNum)
         {
@@ -32,18 +32,18 @@ void generalExcHandler()
             readFromTerm(currSupStruct);
             break;
         default:
-            /* TODO termina il processo*/
+            // TODO: termina il processo
         }
-        /*carica lo stato di chi ha causato l'eccezione*/
+        // Carica lo stato di chi ha causato l'eccezione
         LDST(&(currSupStruct->sup_exceptState[GENERALEXCEPT]));
     }
-    /* TODO se non e' una syscall termina il processo*/
+    // TODO: se non e' una syscall termina il processo
 }
 
 // SYSCALL exception handler - Sezione 4.7
 
 // Program Trap Exception Handler - Sezione 4.8
-// ! Ti prego Alex ricordati di mettere le definizioni di funzione anche nel file .h
+//! Ti prego Alex ricordati di mettere le definizioni di funzione anche nel file .h
 void trapExceptionHandler() //? ho messo void ma non ne sono certo, non vedo cosa dovrebbe tornare in ogni caso visto che deve solo UCCIDERE
 {
     //? docs: 4.8
