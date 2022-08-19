@@ -79,12 +79,12 @@ int main()
      */
     RAMTOP(kernel_mode_proc->p_s.reg_sp);
     // Imposto il PC sull'indirizzo della funzione test
-    kernel_mode_proc->p_s.pc_epc = (memaddr)test;
+    kernel_mode_proc->p_s.pc_epc = (memaddr)test_fase3;
     /**
      * Come indicato sul manuale, per ragioni tecniche va
      * inizializzato allo stesso modo anche il registro t9 del gpr
      */
-    kernel_mode_proc->p_s.reg_t9 = (memaddr)test;
+    kernel_mode_proc->p_s.reg_t9 = (memaddr)test_fase3;
     // Essendo un processo a bassa priorità, imposto il campo prio di conseguenza
     kernel_mode_proc->p_prio = 0;
     // Finalmente inserisco il processo inizializzato nella ready queue
