@@ -43,24 +43,13 @@ void generalExcHandler()
 // SYSCALL exception handler - Sezione 4.7
 
 // Program Trap Exception Handler - Sezione 4.8
-//? posso assumere che mi verrà passato il parametro in input? dovrebbe pensarci la generalExcHandler() a passarmelo
-
 void trapExceptionHandler(support_t *currSupStruct)
 {
-    //! usare semaforo del support level non quello del livello 3
-    //! mettere il valore 2 in a0
-    //! la terminologia da usare è del tipo SYSCALL (TERMINATE, 0, 0, 0)
-
-    /* PSEUDOCODE
-    
-        if (processo è in mutua excl)
-            NSYS4
-        a0 = 2
+    //* pseudocode
+    /*
+        if (current_proc semaphore == 0)
+            SYSCALL(VERHOGEN, x, 0, 0)
+        state_t->gpr[4] = 2   // o forse è tipo currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a0 = 2
         SYSCALL (TERMINATE, 0, 0, 0)
     */
-
-   if(){
-
-   }
-   currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a0 = 2;
 }
