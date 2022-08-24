@@ -43,23 +43,24 @@ void generalExcHandler()
 // SYSCALL exception handler - Sezione 4.7
 
 // Program Trap Exception Handler - Sezione 4.8
-//! Ti prego Alex ricordati di mettere le definizioni di funzione anche nel file .h
-void trapExceptionHandler() //? ho messo void ma non ne sono certo, non vedo cosa dovrebbe tornare in ogni caso visto che deve solo UCCIDERE
-{
-    //? docs: 4.8
+//? posso assumere che mi verrà passato il parametro in input? dovrebbe pensarci la generalExcHandler() a passarmelo
 
-    // se processo in mutua esclusione prima libero il semaforo
+void trapExceptionHandler(support_t *currSupStruct)
+{
     //! usare semaforo del support level non quello del livello 3
     //! mettere il valore 2 in a0
     //! la terminologia da usare è del tipo SYSCALL (TERMINATE, 0, 0, 0)
-    if (semaforoLvlSupport != 0)
-    { //? non sono affatto sicuro di come controllare se è in mutua esclusione
-        Verhogen(current_p->semAdd);
-        Terminate_Process(&(current_p->p_pid));
-    }
-    else
-    {
-        Terminate_Process(&(current_p->p_pid));
-    }
-    //? alla fine va chiamato scheduler()?
+
+    /* PSEUDOCODE
+    
+        if (processo è in mutua excl)
+            NSYS4
+        a0 = 2
+        SYSCALL (TERMINATE, 0, 0, 0)
+    */
+
+   if(){
+
+   }
+   currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a0 = 2;
 }

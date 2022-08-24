@@ -18,4 +18,6 @@ extern int getDeviceSemaphoreIndex(int line, int device, int term_is_recv);
 /* General Exception Handler, gestisce le system call con numero >= 1 */
 void generalExcHandler();
 
+/* Wrapper per NSYS2: uccide lo user-process */
+void trapExceptionHandler();
 #endif
