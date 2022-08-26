@@ -25,22 +25,25 @@ void syscallExcHandler(support_t *currSupStruct)
     switch (sysNum)
     {
     case TERMINATE:
-        terminate();
+        SYSCALL(TERMINATE, 0, 0, 0);
         break;
     case GET_TOD:
-        getTOD(currSupStruct);
+        unsigned int retValue = SYSCALL(GETTOD, 0, 0, 0);
         break;
     case WRITEPRINTER:
-        writeToPrinter(currSupStruct);
+        // TODO: ricavare virtAddr e len dai registri a1, a2
+        int retValue = SYSCALL(WRITEPRINTER, char *virtAddr, int len, 0);
         break;
     case WRITETERMINAL:
-        writeToTerm(currSupStruct);
+        // TODO: ricavare virtAddr e len dai registri a1, a2
+        int retValue = SYSCALL(WRITETERMINAL, char *virtAddr, int len, 0);
         break;
     case READTERMINAL:
-        readFromTerm(currSupStruct);
+        // TODO: ricavare virtAddr dal registro a1
+        int retValue = SYSCALL(READTERMINAL, char *virtAddr, 0, 0);
         break;
     default:
-        // TODO: termina il processo
+        // TODO: termina il processo, forse la TERMINATE e' la default
     }
     // Carica lo stato di chi ha causato l'eccezione
     LDST(&(currSupStruct->sup_exceptState[GENERALEXCEPT]));
