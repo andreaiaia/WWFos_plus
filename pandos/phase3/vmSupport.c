@@ -7,17 +7,40 @@
  * initSwapStructs da richiamare poi in initProc.c
  */
 
+/**
+ * Il TLB-Refill handler è l'unica parte del livello supporto
+ * ad avere accesso alle strutture dati di livello Kernel, quindi il
+ * current_p può essere usato solo da lui.
+ */
+
+extern pcb_PTR current_p;
+
 // Swap pool table e relative strutture dati
 swap_t swap_pool_table[POOLSIZE];
 int swap_semaphore;
 
 void uTLB_RefillHandler()
 {
-    setENTRYHI(0x80000000);
-    setENTRYLO(0x00000000);
+    state_t *procSavedState = (state_t *)BIOSDATAPAGE;
+    // ---------------------
+    size_t index = getPTEIndex(procSavedState->entry_hi);
+    pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
+
+    // Aggiungo la PTE nel TLB
+    setENTRYHI(pte.pte_entryHI);
+    setENTRYLO(pte.pte_entryLO);
     TLBWR();
 
-    LDST((state_t *)0x0FFFF000);
+    LDST(procSavedState);
+}
+
+size_t getPTEIndex(memaddr entry_hi)
+{
+    // processo: prendi EntryHI e ricavi il VPN, poi dal VPN ricavi l'index
+    size_t vpn = entryhi >> VPNSHIFT;
+    size_t index = vpn - (KUSEG >> VPNSHIFT);
+
+    return index;
 }
 
 /**

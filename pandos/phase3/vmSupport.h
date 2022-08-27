@@ -7,6 +7,8 @@
 
 void uTLB_RefillHandler();
 
+size_t getPTEIndex(memaddr);
+
 void initSwapStructs();
 
 #endif
