@@ -52,11 +52,11 @@ void syscallExcHandler(support_t *currSupStruct)
 // Program Trap Exception Handler - Sezione 4.8
 void trapExcHandler(support_t *currSupStruct)
 {
-    //* pseudocode
+    // todo: trovare il semaforo su cui è bloccato il processo; poi dovrebbe essere finito
+    //? non capisco come cazzo accedere al semaforo; che faccio, scorro tutti i semafori possibili? sembra sbagliato come approccio
     /*
         if (current_proc semaphore == 0)
-            SYSCALL(VERHOGEN, x, 0, 0)
-        state_t->gpr[4] = 2   // o forse è tipo currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a0 = 2
+            SYSCALL(VERHOGEN, x, 0, 0)    //? dove x è indirizzo del semaforo su cui il processo è bloccato
         SYSCALL (TERMINATE, 0, 0, 0)
     */
 }
