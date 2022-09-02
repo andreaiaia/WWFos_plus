@@ -4,12 +4,14 @@
 #include "pandos_types.h"
 #include "pandos_const.h"
 #include "helpersSupport.h"
-#include "sysSupport.h"
 
 // Renaming some umps const's written in black speech of mordor
 #define TLB_INVALID_LOAD TLBINVLDL
 #define TLB_INVALID_STORE TLBINVLDS
 #define TLB_MODIFICATION 1
+
+// Richiamo funzioni dagli altri moduli
+extern void trapExcHandler(support_t *);
 
 void TLB_ExcHandler();
 
