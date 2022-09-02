@@ -23,5 +23,5 @@ void generalExcHandler();
 void syscallExcHandler(support_t *);
 
 /* Wrapper per NSYS2: uccide lo user-process */
-void trapExcHandler();
+void trapExcHandler(support_t *);
 #endif
