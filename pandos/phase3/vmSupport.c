@@ -17,23 +17,40 @@ void TLB_ExcHandler()
      * Innanzitutto recupero il puntatore alla struttura di
      * supporto del processo che ha sollevato la TLB exception
      */
-    memaddr guiltySupportStructure = SYSCALL(GETSUPPORTPTR, 0, 0, 0);
+    support_t *guiltySupportStructure = SYSCALL(GETSUPPORTPTR, 0, 0, 0);
 
     // Determino la causa della TLB Exception
     int cause = CAUSE_GET_EXCCODE(currSupStruct->sup_exceptState[PGFAULTEXCEPT].cause);
 
-    if (cause == TLB_INVALID_LOAD)
-    {
-        // Page fault on load operation
-    }
-    else if (cause == TLB_INVALID_STORE)
-    {
-        // Page fault on store operation
-    }
-    else if (cause == TLB_MODIFICATION)
+    /**
+     * Se l'eccezione è di tipo TLB_modification la
+     * tratto come una trap, altrimenti proseguo nella gestione
+     */
+    if (cause == TLB_MODIFICATION)
     {
         // Attempt to write on a read-only page
         trapExcHandler(guiltySupportStructure);
+    }
+    else
+    {
+        // Prendo l'accesso alla swap pool table
+        // ! RICORDA DI FARE LE V DOVE SERVONO
+        SYSCALL(PASSEREN, (int)&swap_semaphore, 0, 0);
+
+        // Trova la missing page number (indicata con p) dal processor saved state
+        state_t *procSavedState = &guiltySupportStructure->sup_except_state[PGFAULTEXCEPT];
+        size_t p = getPTEIndex(procSavedState->entry_hi);
+
+        // if (cause == TLB_INVALID_LOAD)
+        // {
+        //     // Page fault on load operation
+        // }
+        // else if (cause == TLB_INVALID_STORE)
+        // {
+        //     // Page fault on store operation
+        // }
+
+        SYSCALL(VERHOGEN, (int)&swap_semaphore, 0, 0);
     }
 }
 
