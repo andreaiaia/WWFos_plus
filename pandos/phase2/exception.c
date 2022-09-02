@@ -21,3 +21,25 @@ void exceptionHandler()
     else if (DECODED_EXCEPTION_CAUSE == 8)
         syscallExceptionHandler(REG_A0_SS);
 }
+
+void uTLB_RefillHandler()
+{
+    size_t index = getPTEIndex(PROCESSOR_SAVED_STATE->entry_hi);
+    pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
+
+    // Aggiungo la PTE nel TLB
+    setENTRYHI(pte.pte_entryHI);
+    setENTRYLO(pte.pte_entryLO);
+    TLBWR();
+
+    LDST(PROCESSOR_SAVED_STATE);
+}
+
+size_t getPTEIndex(memaddr entry_hi)
+{
+    // processo: prendi EntryHI e ricavi il VPN, poi dal VPN ricavi l'index
+    size_t vpn = entryhi >> VPNSHIFT;
+    size_t index = vpn - (KUSEG >> VPNSHIFT);
+
+    return index;
+}

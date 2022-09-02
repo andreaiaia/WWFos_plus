@@ -5,9 +5,7 @@
 #include "pandos_const.h"
 #include "helpersSupport.h"
 
-void uTLB_RefillHandler();
-
-size_t getPTEIndex(memaddr);
+void TLB_ExcHandler();
 
 void initSwapStructs();
 

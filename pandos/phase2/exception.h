@@ -7,5 +7,7 @@
 #include "SYSCALL.h"
 
 void exceptionHandler();
+void uTLB_RefillHandler();
+size_t getPTEIndex(memaddr);
 
 #endif
