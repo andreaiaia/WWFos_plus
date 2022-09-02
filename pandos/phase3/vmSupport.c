@@ -18,6 +18,23 @@ void TLB_ExcHandler()
      * supporto del processo che ha sollevato la TLB exception
      */
     memaddr guiltySupportStructure = SYSCALL(GETSUPPORTPTR, 0, 0, 0);
+
+    // Determino la causa della TLB Exception
+    int cause = CAUSE_GET_EXCCODE(currSupStruct->sup_exceptState[PGFAULTEXCEPT].cause);
+
+    if (cause == TLB_INVALID_LOAD)
+    {
+        // Page fault on load operation
+    }
+    else if (cause == TLB_INVALID_STORE)
+    {
+        // Page fault on store operation
+    }
+    else if (cause == TLB_MODIFICATION)
+    {
+        // Attempt to write on a read-only page
+        trapExcHandler(guiltySupportStructure);
+    }
 }
 
 /**
