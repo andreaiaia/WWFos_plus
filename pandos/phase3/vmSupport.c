@@ -34,12 +34,40 @@ void TLB_ExcHandler()
     else
     {
         // Prendo l'accesso alla swap pool table
-        // ! RICORDA DI FARE LE V DOVE SERVONO
+        // ! RICORDA DI FARE LE V DOVE SERVONO DOPO
         SYSCALL(PASSEREN, (int)&swap_semaphore, 0, 0);
 
         // Trova la missing page number (indicata con p) dal processor saved state
         state_t *procSavedState = &guiltySupportStructure->sup_except_state[PGFAULTEXCEPT];
         size_t p = getPTEIndex(procSavedState->entry_hi);
+
+        // Prendo un frame i dallo swap pool usando l'algoritmo di pandos
+        int i = pandosPageReplacementAlgorithm;
+        swap_t swap_frame = swap_pool_table[];
+
+        // Controllo se il frame scelto è occupato
+        if (swap_frame.sw_asid != NOPROC)
+        {
+            // Queste operazioni vanno fatte in modo atomico
+            // Quindi disattivo gli interrupts
+            setSTATUS(getSTATUS() & DISABLEINTS);
+
+            // Segno la pagina come invalida
+            (guiltySupportStructure->sup_privatePgTbl[i])
+                ->pte_entryLO &= !VALIDON;
+
+            // Aggiorno il TLB
+            setENTRYHI(*swap_frame.sw_pte->pte_entryHI);
+            setENTRYLO(*swap_frame.sw_pte->pte_entryLO);
+            TLBWI();
+
+            // Adesso posso riattivare gli interrupts
+            setSTATUS(getSTATUS() | IECON);
+        }
+
+        //* IT'S A WRAP
+        // Continua da paragrafo [4.5.1]
+        // (poi torna al punto 8c del paragrafo [4.4.2])
 
         // if (cause == TLB_INVALID_LOAD)
         // {
@@ -74,4 +102,24 @@ void initSwapStructs()
 
     // Faccio la V per liberare il semaforo
     SYSCALL(VERHOGEN, (int)&swap_semaphore, 0, 0);
+}
+
+/**
+ * The recommended Pandos page replacement algorithm is First in First out.
+ * This algorithm is easily implemented via a static variable.
+ * Whenever a frame is needed to support a page fault, simply
+ * increment this variable mod the size of the Swap Pool.
+ */
+int pandosPageReplacementAlgorithm()
+{
+    // Prima cerco un frame libero alla maniera old style
+    for (int j = 0; j < POOLSIZE; ++j)
+    {
+        if ((swap_pool_table[j].sw_asid == NOPROC))
+            return j;
+    }
+    // Se non trovo nulla, procedo con l'algoritmo di pandos
+    static int i = -1;
+    i = (i + 1) % POOLSIZE;
+    return i;
 }
