@@ -17,7 +17,7 @@ void TLB_ExcHandler()
      * Innanzitutto recupero il puntatore alla struttura di
      * supporto del processo che ha sollevato la TLB exception
      */
-    support_t *guiltySupportStructure = SYSCALL(GETSUPPORTPTR, 0, 0, 0);
+    support_t *currentSupStruct = SYSCALL(GETSUPPORTPTR, 0, 0, 0);
 
     // Determino la causa della TLB Exception
     int cause = CAUSE_GET_EXCCODE(currSupStruct->sup_exceptState[PGFAULTEXCEPT].cause);
@@ -29,7 +29,7 @@ void TLB_ExcHandler()
     if (cause == TLB_MODIFICATION)
     {
         // Attempt to write on a read-only page
-        trapExcHandler(guiltySupportStructure);
+        trapExcHandler(currentSupStruct);
     }
     else
     {
@@ -38,7 +38,7 @@ void TLB_ExcHandler()
         SYSCALL(PASSEREN, (int)&swap_semaphore, 0, 0);
 
         // Trova la missing page number (indicata con p) dal processor saved state
-        state_t *procSavedState = &guiltySupportStructure->sup_except_state[PGFAULTEXCEPT];
+        state_t *procSavedState = &currentSupStruct->sup_except_state[PGFAULTEXCEPT];
         size_t p = getPTEIndex(procSavedState->entry_hi);
 
         // Prendo un frame i dallo swap pool usando l'algoritmo di pandos
@@ -53,7 +53,7 @@ void TLB_ExcHandler()
             setSTATUS(getSTATUS() & DISABLEINTS);
 
             // Segno la pagina come invalida
-            (guiltySupportStructure->sup_privatePgTbl[i])
+            (currentSupStruct->sup_privatePgTbl[i])
                 ->pte_entryLO &= !VALIDON;
 
             // Aggiorno il TLB
@@ -62,43 +62,43 @@ void TLB_ExcHandler()
             TLBWI();
 
             /**
-             * Scrivo il contenuto del frame i (da riga 45)
-             * nel backing store del processo. Per farlo devo:
+             * Scrivo il contenuto da swap_frame al
+             * backing store del processo. Per farlo devo:
              *
              ** 1. Scrivere nel campo DATA0 del flash device
              **    l'indirizzo fisico dell'inizio del blocco da scrivere.
              */
             dtpreg_t *dev = (dtpreg_t *)DEV_REG_ADDR(FLASHINT, swap_frame.sw_asid - 1);
-            size_t command = FLASHWRITE;
             dev->data0 = (memaddr)swap_frame;
 
             //* 2. Effettuare la scrittura con la NSYS5
-            int write_result = SYSCALL(DOIO, (int)&reg->command, cmd, 0);
+            int write_result = SYSCALL(DOIO, (int)&dev->command, FLASHWRITE, 0);
 
             // Qualsiasi errore viene gestito come una trap
             if (write_result != READY)
-            {
-                trapExcHandler(guiltySupportStructure)
-            }
+                trapExcHandler(currentSupStruct);
 
             // Adesso posso riattivare gli interrupts
             setSTATUS(getSTATUS() | IECON);
         }
         /**
-         * Se il frame è libero, leggi il backing store
-         * del processo corrente dalla pagina p al frame i
+         * Se il frame è libero, leggo il backing store
+         * del processo corrente dalla pagina p al swap_frame
          */
+        dtpreg_t *dev = (dtpreg_t *)DEV_REG_ADDR(FLASHINT, currentSupStruct->sup_asid - 1);
+        dev->data0 = (memaddr)swap_frame;
+        int read_result = SYSCALL(DOIO, (int)&dev->command, FLASHREAD, 0);
 
-        // if (cause == TLB_INVALID_LOAD)
-        // {
-        //     // Page fault on load operation
-        // }
-        // else if (cause == TLB_INVALID_STORE)
-        // {
-        //     // Page fault on store operation
-        // }
+        // Qualsiasi errore viene gestito come una trap
+        if (read_result != READY)
+            trapExcHandler(currentSupStruct);
 
+        // TODO paragrafo 4.4.2 riprendi dal punto 10 (pagina 55)
+
+        // Tana libera tutti
         SYSCALL(VERHOGEN, (int)&swap_semaphore, 0, 0);
+        // Ritorno il controllo al processo che ha sollevato la TLB exc
+        LDST(procSavedState);
     }
 }
 
