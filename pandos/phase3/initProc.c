@@ -29,13 +29,44 @@ void test_fase3()
 
 }
 
+/**************************/
+/*   PARCO GIOCHI ALEX    */
+/**************************/
+
+
+// semafori periferiche
+int printer_sem[UPROCMAX];
+int flash_sem[UPROCMAX];
+int term_w_sem[UPROCMAX];
+int term_r_sem[UPROCMAX];
+
+void test_alex() {
+
+    // inizializza swap pool table e swap semaphore
+    initSwapStructs();
+    
+    // mettere a 1 semafori dei dispositivi I/O
+    for(int i = 0; i < UPROCMAX; i++){
+        printer_sem[i]    = 1;
+        flash_sem[i]      = 1;
+        term_w_sem[i] = 1;
+        term_r_sem[i]  = 1;
+    }
+
+    // lanciare gli U-procs
+    for(int i = 0; i < UPROCMAX; i++){
+        
+    }
+
+}
+
 //! lasciate ogne speranza o voi che leggete (da qui in giu' codice Alex capitolo 4.9)
 
 /*
     inizializzare:
 *        - swap pool table
 *        - swap pool semaphore
-        - semafori delle periferiche I/O tutti a 1
+*        - semafori delle periferiche I/O tutti a 1
 
 
     lanciare U-procs da 1 a 8:
