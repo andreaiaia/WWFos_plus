@@ -42,8 +42,8 @@ void TLB_ExcHandler()
         size_t p = getPTEIndex(procSavedState->entry_hi);
 
         // Prendo un frame i dallo swap pool usando l'algoritmo di pandos
-        int i = pandosPageReplacementAlgorithm;
-        swap_t swap_frame = swap_pool_table[];
+        int i = pandosPageReplacementAlgorithm();
+        swap_t swap_frame = swap_pool_table[i];
 
         // Controllo se il frame scelto è occupato
         if (swap_frame.sw_asid != NOPROC)
@@ -61,13 +61,33 @@ void TLB_ExcHandler()
             setENTRYLO(*swap_frame.sw_pte->pte_entryLO);
             TLBWI();
 
+            /**
+             * Scrivo il contenuto del frame i (da riga 45)
+             * nel backing store del processo. Per farlo devo:
+             *
+             ** 1. Scrivere nel campo DATA0 del flash device
+             **    l'indirizzo fisico dell'inizio del blocco da scrivere.
+             */
+            dtpreg_t *dev = (dtpreg_t *)DEV_REG_ADDR(FLASHINT, swap_frame.sw_asid - 1);
+            size_t command = FLASHWRITE;
+            dev->data0 = (memaddr)swap_frame;
+
+            //* 2. Effettuare la scrittura con la NSYS5
+            int write_result = SYSCALL(DOIO, (int)&reg->command, cmd, 0);
+
+            // Qualsiasi errore viene gestito come una trap
+            if (write_result != READY)
+            {
+                trapExcHandler(guiltySupportStructure)
+            }
+
             // Adesso posso riattivare gli interrupts
             setSTATUS(getSTATUS() | IECON);
         }
-
-        //* IT'S A WRAP
-        // Continua da paragrafo [4.5.1]
-        // (poi torna al punto 8c del paragrafo [4.4.2])
+        /**
+         * Se il frame è libero, leggi il backing store
+         * del processo corrente dalla pagina p al frame i
+         */
 
         // if (cause == TLB_INVALID_LOAD)
         // {
