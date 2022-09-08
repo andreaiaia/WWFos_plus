@@ -42,15 +42,16 @@ int flash_sem[UPROCMAX];
 int term_w_sem[UPROCMAX];
 int term_r_sem[UPROCMAX];
 
-state_t state_table[UPROCMAX]; // array di state process, cuggino dell'array supportTable
+state_t cpu_state_table[UPROCMAX]; // array di processor state per gli U-procs
+//? non sono sicuro serva un array di stati processore per gli U-proc, forse basta crearne uno e spammarlo sull'inizializzazione di tutti gli U-proc?
+
 
 void test_alex()
 {
-
     // inizializza swap pool table e swap semaphore
     initSwapStructs();
     
-    // mettere a 1 semafori dei dispositivi I/O
+    // inizializza semafori device
     for(int i = 0; i < UPROCMAX; i++){
         printer_sem[i]    = 1;
         flash_sem[i]      = 1;
@@ -58,25 +59,28 @@ void test_alex()
         term_r_sem[i]     = 1;
     }
 
+    // inizializzazione dello stato del processore degli U-proc
     for (int i = 0; i < UPROCMAX; i++){
-        state_table[i]->pc_epc = UPROCSTARTADDR;
-        state_table[i]->entry_hi = i+1;
-        state_table[i]->status = //user mode con tutti interrupt e local timer enabled;
-    //todo quale minchia è lo stack pointer nello state_t? sai, dovrei inizializzarlo 
+        cpu_state_table[i]->pc_epc = UPROCSTARTADDR;
+        cpu_state_table[i]->entry_hi = i+1;
+        cpu_state_table[i]->status =     //user mode con tutti interrupt e local timer enabled;
+        // todo capire come inizializzare lo status
+        //todo quale minchia è lo stack pointer nello state_t? sai, dovrei inizializzarlo 
     }
 
+    // inizializzazione della support struct degli U-proc
     for(int i = 0; i < UPROCMAX; i++){
         support_table[i].sup_asid = i + 1; //  ogni U-proc deve avere un ASID != 0 unico
 
-        support_table[i].sup_exceptContext[PGFAULTEXCEPT]->pc = (memaddr)TLB_ExcHandler; // indirizzo del TLB handler del livello di supporto
+        support_table[i].sup_exceptContext[PGFAULTEXCEPT]->pc = (memaddr)TLB_ExcHandler; 
         support_table[i].sup_exceptContext[PGFAULTEXCEPT]->status = STATUS_TE | STATUS_IM(IL_TIMER) | STATUS_IEp | STATUS_IM_MASK | STATUS_KUp ^ STATUS_KUp;
         //todo capire cosa fanno tutte quelle costanti su status
-        support_table[i].sup_exceptContext[PGFAULTEXCEPT]->stackPtr = &(...sup_stackGen[499]); 
+        support_table[i].sup_exceptContext[PGFAULTEXCEPT]->stackPtr = &(...sup_stackGen[499]); //? da capire cosa e come e perché stackGen[499]
         //todo da capire come funziona il discorso del sup_StackGen[500]
 
-        support_table[i].sup_exceptContext[GENERALEXCEPT]->pc = (memaddr)generalExcHandler; // indirizzo del TLB handler del livello di supporto
+        support_table[i].sup_exceptContext[GENERALEXCEPT]->pc = (memaddr)generalExcHandler;
         support_table[i].sup_exceptContext[GENERALEXCEPT]->status = STATUS_TE | STATUS_IM(IL_TIMER) | STATUS_IEp | STATUS_IM_MASK | STATUS_KUp ^ STATUS_KUp;
-        support_table[i].sup_exceptContext[GENERALEXCEPT]->stackPtr = &(); 
+        support_table[i].sup_exceptContext[GENERALEXCEPT]->stackPtr = &(...sup_stackGen[499]);
 
         //todo capire come inizializzare la privatePgTbl
         support_table[i].sup_privatePgTbl 
@@ -85,7 +89,7 @@ void test_alex()
 
     // lanciare gli U-procs
     for (int i = 0; i < UPROCMAX; i++){
-        SYSCALL(CREATEPROCESS, state_t &(state_table[i]), int prio, support_t support_table[i]);
+        SYSCALL(CREATEPROCESS, state_t &(cpu_state_table[i]), int prio, support_t support_table[i]);
     }
 
 
@@ -123,7 +127,7 @@ void test_alex()
                     - sup_privatePgTbl[32] = la Page Table del processo
                     - sup_stackTLB[500] = l'area per lo stack del lvl di supporto (500integer = 2Kb)
                     - sup_stackGen[500] = area stack per il genExcHandler del lvl supporto
-                    ? non ho capito bene il discorso del stackGen[500], devo crearlo io?
+                    ? non ho capito bene il discorso del stackGen[500], devo crearlo io? idem per lo stackTLB
 
 
 *    eseguire NSYS1 (vedi note in fondo) (ciclo for su array delle support struct)
