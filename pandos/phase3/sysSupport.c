@@ -14,33 +14,46 @@ void generalExcHandler()
     // Se non è una syscall, passo la gestione al trap exception handler
     trapExcHandler(currSupStruct);
 }
+/* the Support Level’s SYSCALL exception handler must also increment
+the PC by 4 in order to return control to the instruction after the
+SYSCALL instruction. */
+// !Chiedere ad andrea
 
 // SYSCALL exception handler - Sezione 4.7
 void syscallExcHandler(support_t *currSupStruct)
 {
-    // Incrementiamo il pc
-    currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
     // Prende la syscall
-    int sysNum = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a0;
-    switch (sysNum)
+    int reg_a0 = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a0;
+    int reg_a1 = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a1;
+    int reg_a2 = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a2;
+    int reg_a3 = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a3;
+
+    switch (reg_a0)
     {
+    case GETTOD:
+        unsigned int retValue = SYSCALL(reg_a0, reg_a1, reg_a2, reg_a3);
+        // Incrementiamo il pc
+        currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
+        break;
     case TERMINATE:
         SYSCALL(TERMINATE, 0, 0, 0);
-        break;
-    case GETTOD:
-        unsigned int retValue = SYSCALL(GETTOD, 0, 0, 0);
+        // Incrementiamo il pc
+        currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
         break;
     case WRITEPRINTER:
-        // TODO: ricavare virtAddr e len dai registri a1, a2
-        int retValue = SYSCALL(WRITEPRINTER, char *virtAddr, int len, 0);
+        int retValue = SYSCALL(reg_a0, reg_a1, reg_a2, reg_a3);
+        // Incrementiamo il pc
+        currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
         break;
     case WRITETERMINAL:
-        // TODO: ricavare virtAddr e len dai registri a1, a2
-        int retValue = SYSCALL(WRITETERMINAL, char *virtAddr, int len, 0);
+        int retValue = SYSCALL(reg_a0, reg_a1, reg_a2, reg_a3);
+        // Incrementiamo il pc
+        currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
         break;
     case READTERMINAL:
-        // TODO: ricavare virtAddr dal registro a1
-        int retValue = SYSCALL(READTERMINAL, char *virtAddr, 0, 0);
+        int retValue = SYSCALL(reg_a0, reg_a1, reg_a2, reg_a3);
+        // Incrementiamo il pc
+        currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
         break;
     default:
         // TODO: termina il processo, forse la TERMINATE e' la default
