@@ -27,7 +27,7 @@ void syscallExcHandler(support_t *currSupStruct)
     case TERMINATE:
         SYSCALL(TERMINATE, 0, 0, 0);
         break;
-    case GET_TOD:
+    case GETTOD:
         unsigned int retValue = SYSCALL(GETTOD, 0, 0, 0);
         break;
     case WRITEPRINTER:

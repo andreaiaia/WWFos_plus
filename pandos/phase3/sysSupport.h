@@ -1,11 +1,19 @@
 #ifndef SYS_SUPPORT_H
 #define SYS_SUPPORT_H
 
+
 #include "../h/pandos_types.h"
 #include "../h/pandos_const.h"
 #include "helpersSupport.h"
+#include "../phase2/initial.h"
 
 //* Costanti
+
+#define GETTOD 1
+#define TERMINATE 2
+#define WRITEPRINTER 3
+#define WRITETERMINAL 4
+#define READTERMINAL 5
 
 #define SWAP ((32 * PAGESIZE) + RAMSTART)
 #define DEV_POSITION(T) ((int)T - DEV_REG_START) / (DEV_REG_SIZE / 2)
