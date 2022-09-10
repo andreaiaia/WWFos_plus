@@ -8,7 +8,7 @@
 
 // Strutture di supporto dei processi
 support_t support_table[UPROCMAX];
-list_head support_free;
+struct list_head support_free;
 
 // Semafori per tutti i dispositivi
 int device_sem[DEVSEM_NUM];
