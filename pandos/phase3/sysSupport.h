@@ -1,8 +1,8 @@
 #ifndef SYS_SUPPORT_H
 #define SYS_SUPPORT_H
 
-#include "pandos_types.h"
-#include "pandos_const.h"
+#include "../h/pandos_types.h"
+#include "../h/pandos_const.h"
 #include "helpersSupport.h"
 
 //* Costanti
