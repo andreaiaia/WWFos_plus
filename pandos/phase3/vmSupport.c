@@ -20,7 +20,7 @@ void TLB_ExcHandler()
     support_t *currentSupStruct = SYSCALL(GETSUPPORTPTR, 0, 0, 0);
 
     // Determino la causa della TLB Exception
-    int cause = CAUSE_GET_EXCCODE(currSupStruct->sup_exceptState[PGFAULTEXCEPT].cause);
+    int cause = CAUSE_GET_EXCCODE(currentSupStruct->sup_exceptState[PGFAULTEXCEPT].cause);
 
     /**
      * Se l'eccezione è di tipo TLB_modification la
