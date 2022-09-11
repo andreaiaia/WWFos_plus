@@ -53,7 +53,7 @@ void TLB_ExcHandler()
             setSTATUS(getSTATUS() & DISABLEINTS);
 
             // Segno la pagina come invalida
-           currentSupStruct->(&sup_privatePgTbl[i])->pte_entryLO &= !VALIDON;
+           currentSupStruct->sup_privatePgTbl[i].pte_entryLO &= !VALIDON;
 
             // Aggiorno il TLB
             setENTRYHI(swap_frame.sw_pte->pte_entryHI);
@@ -68,7 +68,7 @@ void TLB_ExcHandler()
              **    l'indirizzo fisico dell'inizio del blocco da scrivere.
              */
             dtpreg_t *dev = (dtpreg_t *)DEV_REG_ADDR(FLASHINT, swap_frame.sw_asid - 1);
-            dev->data0 = (memaddr)swap_frame;
+            dev->data0 = (memaddr)&swap_frame;
 
             //* 2. Effettuare la scrittura con la NSYS5
             int write_result = SYSCALL(DOIO, (int)&dev->command, FLASHWRITE, 0);
@@ -85,7 +85,7 @@ void TLB_ExcHandler()
          * del processo corrente dalla pagina p al swap_frame
          */
         dtpreg_t *dev = (dtpreg_t *)DEV_REG_ADDR(FLASHINT, currentSupStruct->sup_asid - 1);
-        dev->data0 = (memaddr)swap_frame;
+        dev->data0 = (memaddr)&swap_frame;
         int read_result = SYSCALL(DOIO, (int)&dev->command, FLASHREAD, 0);
 
         // Qualsiasi errore viene gestito come una trap
