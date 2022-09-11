@@ -34,7 +34,6 @@ void TLB_ExcHandler()
     else
     {
         // Prendo l'accesso alla swap pool table
-        // ! RICORDA DI FARE LE V DOVE SERVONO DOPO
         SYSCALL(PASSEREN, (int)&swap_semaphore, 0, 0);
 
         // Trova la missing page number (indicata con p) dal processor saved state
