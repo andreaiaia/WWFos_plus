@@ -97,11 +97,25 @@ void TLB_ExcHandler()
         swap_pool_table[i].sw_pageNo = procSavedState->entry_hi >> VPNSHIFT;
         swap_pool_table[i].sw_pte = currSupStruct->sup_privatePgTbl + p;
 
-        (currSupStruct->sup_privatePgTbl[p]).pte_entryLO = ;
+        // Queste operazioni vanno fatte in modo atomico
+        // Quindi disattivo gli interrupts
+        setSTATUS(getSTATUS() & DISABLEINTS);
+
+        // Aggiorno la page table entry del current process
+        currSupStruct->sup_privatePgTbl[p].pte_entryLO = (memaddr)swap_frame | VALIDON | DIRTYON;
+
+        // Aggiorno il TLB
+        setENTRYHI(currSupStruct->sup_privatePgTbl[p].pte_entryHI);
+        setENTRYLO(currSupStruct->sup_privatePgTbl[p].pte_entryLO);
+        TLBWI();
 
         // Tana libera tutti
         SYSCALL(VERHOGEN, (int)&swap_semaphore, 0, 0);
-        // Ritorno il controllo al processo che ha sollevato la TLB exc
+
+        // Adesso posso riattivare gli interrupts
+        setSTATUS(getSTATUS() | IECON);
+
+        // Restituisco il controllo al processo che ha sollevato la TLB exc
         LDST(procSavedState);
     }
 }
