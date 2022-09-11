@@ -123,6 +123,7 @@ void initSwapStructs()
     SYSCALL(VERHOGEN, (int)&swap_semaphore, 0, 0);
 }
 
+
 /**
  * The recommended Pandos page replacement algorithm is First in First out.
  * This algorithm is easily implemented via a static variable.
