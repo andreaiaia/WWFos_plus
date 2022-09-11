@@ -5,7 +5,6 @@
 #include "../h/pandos_types.h"
 #include "../h/pandos_const.h"
 #include "helpersSupport.h"
-#include "../phase2/initial.h"
 
 //* Costanti
 
