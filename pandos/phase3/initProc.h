@@ -3,6 +3,8 @@
 
 #include "../h/pandos_types.h"
 #include "../h/pandos_const.h"
+#include <umps3/umps/cp0.h>
+#include "vmSupport.h"
 
 // Non sono sicuro del numero di semafori, dal libro
 // (pagina 63) mi sembra di capire che siano 8 flash device,

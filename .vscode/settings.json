@@ -17,7 +17,8 @@
         "type_traits": "c",
         "exception": "c",
         "helperssupport.h": "c",
-        "cp0.h": "c"
+        "cp0.h": "c",
+        "initproc.h": "c"
     },
     "peacock.color": "#1857a4",
     "workbench.colorCustomizations": {
