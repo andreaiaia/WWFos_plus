@@ -6,7 +6,7 @@
 #include "interrupt.h"
 #include "SYSCALL.h"
 
-extern size_t getPTEIndex(memaddr);
+extern size_tt getPTEIndex(memaddr);
 
 void exceptionHandler();
 void uTLB_RefillHandler();
