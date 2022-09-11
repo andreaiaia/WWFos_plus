@@ -26,7 +26,7 @@ void syscallExcHandler(support_t *currSupStruct)
     int reg_a0 = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a0;
     int reg_a1 = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a1;
     int reg_a2 = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a2;
-    int reg_a3 = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a3;
+
 
     switch (reg_a0)
     {
@@ -37,6 +37,7 @@ void syscallExcHandler(support_t *currSupStruct)
         break;
     case TERMINATE:
         SYSCALL(TERMINATE, 0, 0, 0);
+        terminate();
         // Incrementiamo il pc
         currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
         break;
@@ -57,6 +58,7 @@ void syscallExcHandler(support_t *currSupStruct)
         break;
     default:
         // TODO: termina il processo, forse la TERMINATE e' la default
+        
     }
     // Carica lo stato di chi ha causato l'eccezione
     LDST(&(currSupStruct->sup_exceptState[GENERALEXCEPT]));

@@ -41,14 +41,16 @@ int term_w_sem[UPROCMAX];
 int term_r_sem[UPROCMAX];
 
 state_t cpu_state_table[UPROCMAX]; // array di processor state per gli U-procs
-//? non sono sicuro serva un array di stati processore per gli U-proc, forse basta crearne uno e spammarlo sull'inizializzazione di tutti gli U-proc?
-
+//? non sono sicuro serva un array di stati processore per gli U-proc, forse basta crearne uno e 
+//? spammarlo sull'inizializzazione di tutti gli U-proc?
+//! Puoi usare la copy_state della phase2 e modificarla inzializzando tutte le cose a 0. 
+//! Modificando anche i parametri con 1 solo, non hai bisogno di origin e state.
 
 void test_alex()
 {
     // inizializza swap pool table e swap semaphore
     initSwapStructs();
-    
+    mainSemaphore=0; // Richiesta da andrea
     // inizializza semafori device
     for(int i = 0; i < UPROCMAX; i++){
         printer_sem[i]    = 1;
@@ -64,6 +66,8 @@ void test_alex()
         cpu_state_table[i].entry_hi = i+1;
         cpu_state_table[i].status = STATUS_TE | STATUS_IM(IL_TIMER) | STATUS_IEp | STATUS_IM_MASK | STATUS_KUc; // user mode con tutti interrupt e local timer enabled;
         //todo quale minchia è lo stack pointer nello state_t? sai, dovrei inizializzarlo 
+        //! processo poi hai una struttura state_t che avrà il campo p_s che avrà il campo reg_sp
+        //! riga 65 modificare gpr[24] non sei Conte, porcoddio (GDPR)
     }
 
     // inizializzazione support struct degli U-proc
@@ -72,6 +76,7 @@ void test_alex()
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].pc = (memaddr)TLB_ExcHandler; 
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].status = STATUS_TE | STATUS_IM(IL_TIMER) | STATUS_IEp | STATUS_IM_MASK | STATUS_KUp ^ STATUS_KUp;
         //todo capire cosa fanno tutte quelle costanti su status
+        //! Guarda main phase2 riga 78 circa, guarda inizio capitolo 3 
             // STATUS_TE, STATUS_IM(IL_TIMER)
             // STATUS_IEp  dovrebbe essere InterruptEnabled process
             // STATUS_IM_MASK  dovrebbe attivare tutte le interrupt line (non so bene cosa voglia dire nemmeno io)
@@ -79,13 +84,12 @@ void test_alex()
             // lo ^ è lo xor
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].stackPtr = &(...sup_stackGen[499]); //? da capire cosa e come e perché stackGen[499]
         //todo da capire come funziona il discorso del sup_StackGen[500]
-
         support_table[i].sup_exceptContext[GENERALEXCEPT].pc = (memaddr)generalExcHandler;
         support_table[i].sup_exceptContext[GENERALEXCEPT].status = STATUS_TE | STATUS_IM(IL_TIMER) | STATUS_IEp | STATUS_IM_MASK | STATUS_KUp ^ STATUS_KUp;
         support_table[i].sup_exceptContext[GENERALEXCEPT].stackPtr = &(...sup_stackGen[499]);
 
         //todo capire come inizializzare la privatePgTbl
-        support_table[i].sup_privatePgTbl 
+        support_table[i].sup_privatePgTbl ;
     }
 
 
@@ -99,9 +103,10 @@ void test_alex()
     //? codice preso da Frau con lo scopo di chiedere spiegazioni
     
     for (int i = 0; i < UPROCMAX; ++i)
-        SYSCALL(PASSEREN, (int)&master_semaphore, 0, 0);
+        SYSCALL(PASSEREN, (int)&mainSemaphore, 0, 0);
     SYSCALL(TERMPROCESS, 0, 0, 0);
     //todo qui a uncerto punto i processi vengono conclusi e bisogna spegnere la baracca non ho idea per ora
+    //! Andrea utilizzerebbe l'approccio terminate, non quello verhogen e poi ci guardiamo.
 }
 
 //! lasciate ogne speranza o voi che programmate (da qui in giu' codice Alex capitolo 4.9)
