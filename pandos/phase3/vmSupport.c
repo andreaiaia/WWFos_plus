@@ -38,8 +38,8 @@ void TLB_ExcHandler()
         SYSCALL(PASSEREN, (int)&swap_semaphore, 0, 0);
 
         // Trova la missing page number (indicata con p) dal processor saved state
-        state_t *procSavedState = &currentSupStruct->sup_except_state[PGFAULTEXCEPT];
-        size_t p = getPTEIndex(procSavedState->entry_hi);
+        state_t *procSavedState = &currentSupStruct->sup_exceptState[PGFAULTEXCEPT];
+        size_tt p = getPTEIndex(procSavedState->entry_hi);
 
         // Prendo un frame i dallo swap pool usando l'algoritmo di pandos
         int i = pandosPageReplacementAlgorithm();
@@ -53,12 +53,11 @@ void TLB_ExcHandler()
             setSTATUS(getSTATUS() & DISABLEINTS);
 
             // Segno la pagina come invalida
-            (currentSupStruct->sup_privatePgTbl[i])
-                ->pte_entryLO &= !VALIDON;
+           currentSupStruct->(&sup_privatePgTbl[i])->pte_entryLO &= !VALIDON;
 
             // Aggiorno il TLB
-            setENTRYHI(*swap_frame.sw_pte->pte_entryHI);
-            setENTRYLO(*swap_frame.sw_pte->pte_entryLO);
+            setENTRYHI(swap_frame.sw_pte->pte_entryHI);
+            setENTRYLO(swap_frame.sw_pte->pte_entryLO);
             TLBWI();
 
             /**
