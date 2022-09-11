@@ -55,9 +55,7 @@ void TLB_ExcHandler()
             currSupStruct->sup_privatePgTbl[i].pte_entryLO &= !VALIDON;
 
             // Aggiorno il TLB
-            setENTRYHI(swap_frame.sw_pte->pte_entryHI);
-            setENTRYLO(swap_frame.sw_pte->pte_entryLO);
-            TLBWI();
+            TLB_updater(currSupStruct->sup_privatePgTbl[p]);
 
             /**
              * Scrivo il contenuto da swap_frame al
@@ -104,9 +102,7 @@ void TLB_ExcHandler()
         currSupStruct->sup_privatePgTbl[p].pte_entryLO = (memaddr)swap_frame | VALIDON | DIRTYON;
 
         // Aggiorno il TLB
-        setENTRYHI(currSupStruct->sup_privatePgTbl[p].pte_entryHI);
-        setENTRYLO(currSupStruct->sup_privatePgTbl[p].pte_entryLO);
-        TLBWI();
+        TLB_updater(currSupStruct->sup_privatePgTbl[p]);
 
         // Tana libera tutti
         SYSCALL(VERHOGEN, (int)&swap_semaphore, 0, 0);
@@ -159,4 +155,16 @@ int pandosPageReplacementAlgorithm()
     static int i = -1;
     i = (i + 1) % POOLSIZE;
     return i;
+}
+
+void TLB_updater(pteEntry_t pteEntry)
+{
+    setENTRYHI(pteEntry.pte_entryHI);
+    TLBP();
+    if (getINDEX() & PRESENTFLAG)
+    {
+        setENTRYHI(pteEntry.pte_entryHI);
+        setENTRYLO(pteEntry.pte_entryLO);
+        TLBWI();
+    }
 }
