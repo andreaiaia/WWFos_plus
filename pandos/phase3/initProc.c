@@ -3,8 +3,6 @@
 
 #include "initProc.h"
 
-#include "../h/pandos_types.h"
-#include "../h/pandos_const.h"
 
 // Strutture di supporto dei processi
 support_t support_table[UPROCMAX];
