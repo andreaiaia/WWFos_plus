@@ -70,7 +70,9 @@ void terminate(support_t *currSupStructPTR){
 }
 
 int writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
-   
+    for (int i=0; i < len; i++){
+        SYSCALL(DOIO, )
+    }
     INC_PC;
     return(0);
 }
