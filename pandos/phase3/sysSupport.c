@@ -152,8 +152,6 @@ void readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR) {
     SYSCALL(VERHOGEN, term_r_sem[device_id], 0, 0);
     buffer[i] = '\0';
     SUP_REG_V0 = i;
-
-
 }
 
 
