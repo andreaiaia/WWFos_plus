@@ -74,7 +74,7 @@ void writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
     //Ricaviamo il device ID facendo asid-1 (perchè gli asid contano da 1)
     int device_id = currSupStructPTR->sup_asid - 1;
     //Ricaviamo un puntatore a device (di tipo stampante) utilizzando la macro già definita in arch.h
-    dtpreg_t *device = (dtpreg_t *)DEV_REG_ADDR(IL_TERMINAL, device_id); 
+    dtpreg_t *device = (dtpreg_t *)DEV_REG_ADDR(IL_PRINTER, device_id); 
     //Blocco il device selezionato sul relativo semaforo
     SYSCALL(PASSEREN, printer_sem[device_id], 0, 0);
     
@@ -91,14 +91,42 @@ void writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
 
 int writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
    
+     //Ricaviamo il device ID facendo asid-1 (perchè gli asid contano da 1)
+    int device_id = currSupStructPTR->sup_asid - 1;
+    //Ricaviamo un puntatore a device (di tipo stampante) utilizzando la macro già definita in arch.h
+    termreg_t *device = (termreg_t *)DEV_REG_ADDR(IL_TERMINAL, device_id); 
+    //Blocco il device selezionato sul relativo semaforo
+    SYSCALL(PASSEREN, term_w_sem[device_id], 0, 0);
+    
+    for (int i=0; i < len; i++) {
+        int valore = (TRANSMITCHAR | (unsigned int)SUP_REG_A1 << 8);
+        //Indichiamo il punto dove iniziare a leggere/scrivere
+        int print_result = SYSCALL(DOIO, (int*)device->transm_command, valore, 0);
+        //Controllo nel caso la print non vada a buon fine per illecito da parte del chiamante
+        if (print_result != READY) trapExcHandler(currSupStructPTR);
+    }
     INC_PC;
-    return(0);
+    SYSCALL(VERHOGEN, term_w_sem[device_id], 0, 0);
 }
 
 int readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR) {
-
+    //!DA FARE
+     //Ricaviamo il device ID facendo asid-1 (perchè gli asid contano da 1)
+    int device_id = currSupStructPTR->sup_asid - 1;
+    //Ricaviamo un puntatore a device (di tipo stampante) utilizzando la macro già definita in arch.h
+    dtpreg_t *device = (dtpreg_t *)DEV_REG_ADDR(IL_TERMINAL, device_id); 
+    //Blocco il device selezionato sul relativo semaforo
+    SYSCALL(PASSEREN, term_r_sem[device_id], 0, 0);
+    
+    for (int i=0; i < len; i++) {
+        //Indichiamo il punto dove iniziare a leggere/scrivere
+        device->data0 = virtAddrPTR;
+        int print_result = SYSCALL(DOIO, (int*)device->command, TRANSMITCHAR, 0);
+        //Controllo nel caso la print non vada a buon fine per illecito da parte del chiamante
+        if (print_result != READY) trapExcHandler(currSupStructPTR);
+    }
     INC_PC;
-    return(0);
+    SYSCALL(VERHOGEN, term_r_sem[device_id], 0, 0);
 }
 
 
