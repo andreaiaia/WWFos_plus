@@ -3,16 +3,16 @@
 void generalExcHandler()
 {
     // Prende il current process supp struct
-    support_t *currSupStruct = (support_t *)SYSCALL(GETSUPPORTPTR, 0, 0, 0);
+    support_t *currSupStructPTR = (support_t *)SYSCALL(GETSUPPORTPTR, 0, 0, 0);
     /*determina la causa*/
-    int cause = CAUSE_GET_EXCCODE(currSupStruct->sup_exceptState[GENERALEXCEPT].cause);
+    int cause = CAUSE_GET_EXCCODE(currSupStructPTR->sup_exceptState[GENERALEXCEPT].cause);
 
     // Se e' una syscall chiama il syscall exception handler
     if (cause == SYSEXCEPTION)
-        syscallExcHandler(currSupStruct);
+        syscallExcHandler(currSupStructPTR);
 
     // Se non è una syscall, passo la gestione al trap exception handler
-    trapExcHandler(currSupStruct);
+    trapExcHandler(currSupStructPTR);
 }
 /* the Support Level’s SYSCALL exception handler must also increment
 the PC by 4 in order to return control to the instruction after the
@@ -20,52 +20,43 @@ SYSCALL instruction. */
 // !Chiedere ad andrea
 
 // SYSCALL exception handler - Sezione 4.7
-void syscallExcHandler(support_t *currSupStruct)
+void syscallExcHandler(support_t *currSupStructPTR)
 {
-    // Prende la syscall
-    int reg_a0 = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a0;
-    int reg_a1 = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a1;
-    int reg_a2 = currSupStruct->sup_exceptState[GENERALEXCEPT].reg_a2;
-
-
-    switch (reg_a0)
+    //Switch case in base al contenuto del reg_a0
+    //
+        //! Incrementiamo il pc, da inserire nelle syscall
+        //! currSupStructPTR->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
+    switch (SUP_REG_A0)
     {
     case GETTOD:
-        unsigned int retValue = SYSCALL(reg_a0, reg_a1, reg_a2, reg_a3);
-        // Incrementiamo il pc
-        currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
+        getTod(currSupStructPTR);
         break;
+
     case TERMINATE:
-        SYSCALL(TERMINATE, 0, 0, 0);
-        terminate();
-        // Incrementiamo il pc
-        currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
+        terminate(currSupStructPTR);
         break;
+
     case WRITEPRINTER:
-        int retValue = SYSCALL(reg_a0, reg_a1, reg_a2, reg_a3);
-        // Incrementiamo il pc
-        currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
+        writeToPrinter(currSupStructPTR, SUP_REG_A1, SUP_REG_A2);
         break;
+
     case WRITETERMINAL:
-        int retValue = SYSCALL(reg_a0, reg_a1, reg_a2, reg_a3);
-        // Incrementiamo il pc
-        currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
+        writeToTerminal(currSupStructPTR, SUP_REG_A1, SUP_REG_A2);
         break;
+
     case READTERMINAL:
-        int retValue = SYSCALL(reg_a0, reg_a1, reg_a2, reg_a3);
-        // Incrementiamo il pc
-        currSupStruct->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
+        readFromTerminal(currSupStructPTR, SUP_REG_A1);
         break;
     default:
         // TODO: termina il processo, forse la TERMINATE e' la default
         
     }
     // Carica lo stato di chi ha causato l'eccezione
-    LDST(&(currSupStruct->sup_exceptState[GENERALEXCEPT]));
+    LDST(&(currSupStructPTR->sup_exceptState[GENERALEXCEPT]));
 }
 
 // Program Trap Exception Handler - Sezione 4.8
-void trapExcHandler(support_t *currSupStruct)
+void trapExcHandler(support_t *currSupStructPTR)
 {
     // todo: trovare il semaforo su cui è bloccato il processo; poi dovrebbe essere finito
     //? non capisco come cazzo accedere al semaforo; che faccio, scorro tutti i semafori possibili? sembra sbagliato come approccio
