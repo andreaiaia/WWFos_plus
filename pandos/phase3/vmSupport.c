@@ -38,7 +38,7 @@ void TLB_ExcHandler()
 
         // Trova la missing page number (indicata con p) dal processor saved state
         state_t *procSavedState = &currSupStruct->sup_exceptState[PGFAULTEXCEPT];
-        size_tt p = getPTEIndex(procSavedState->entry_hi);
+        int index = ENTRYHI_GET_ASID(procSavedState->entry_hi);
 
         // Prendo un frame i dallo swap pool usando l'algoritmo di pandos
         int i = pandosPageReplacementAlgorithm();
@@ -55,7 +55,7 @@ void TLB_ExcHandler()
             currSupStruct->sup_privatePgTbl[i].pte_entryLO &= !VALIDON;
 
             // Aggiorno il TLB
-            TLB_updater(currSupStruct->sup_privatePgTbl[p]);
+            TLB_updater(currSupStruct->sup_privatePgTbl[index]);
 
             /**
              * Scrivo il contenuto da swap_frame al
@@ -91,18 +91,18 @@ void TLB_ExcHandler()
 
         // Aggiorno la swap_pool_table con i nuovi contenuti del frame i
         swap_pool_table[i].sw_asid = currSupStruct->sup_asid;
-        swap_pool_table[i].sw_pageNo = procSavedState->entry_hi >> VPNSHIFT;
-        swap_pool_table[i].sw_pte = currSupStruct->sup_privatePgTbl + p;
+        swap_pool_table[i].sw_pageNo = ENTRYHI_GET_VPN(procSavedState->entry_hi);
+        swap_pool_table[i].sw_pte = currSupStruct->sup_privatePgTbl + index;
 
         // Queste operazioni vanno fatte in modo atomico
         // Quindi disattivo gli interrupts
         setSTATUS(getSTATUS() & DISABLEINTS);
 
         // Aggiorno la page table entry del current process
-        currSupStruct->sup_privatePgTbl[p].pte_entryLO = (memaddr)swap_frame | VALIDON | DIRTYON;
+        currSupStruct->sup_privatePgTbl[index].pte_entryLO = (memaddr)swap_frame | VALIDON | DIRTYON;
 
         // Aggiorno il TLB
-        TLB_updater(currSupStruct->sup_privatePgTbl[p]);
+        TLB_updater(currSupStruct->sup_privatePgTbl[index]);
 
         // Tana libera tutti
         SYSCALL(VERHOGEN, (int)&swap_semaphore, 0, 0);
