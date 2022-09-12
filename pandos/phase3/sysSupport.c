@@ -99,7 +99,7 @@ int writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
     SYSCALL(PASSEREN, term_w_sem[device_id], 0, 0);
     
     for (int i=0; i < len; i++) {
-        int valore = (TRANSMITCHAR | (unsigned int)SUP_REG_A1 << 8);
+        int valore = (TRANSMITCHAR | (unsigned int)SUP_REG_A1 << 8); //capire perché
         //Indichiamo il punto dove iniziare a leggere/scrivere
         int print_result = SYSCALL(DOIO, (int*)device->transm_command, valore, 0);
         //Controllo nel caso la print non vada a buon fine per illecito da parte del chiamante
