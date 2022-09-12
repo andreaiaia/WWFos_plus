@@ -17,11 +17,13 @@
 #define SWAP ((32 * PAGESIZE) + RAMSTART)
 #define DEV_POSITION(T) ((int)T - DEV_REG_START) / (DEV_REG_SIZE / 2)
 
-#define  SUP_REG_A0 currSupStructPTR->sup_exceptState[GENERALEXCEPT].reg_a0
-#define  SUP_REG_A1 currSupStructPTR->sup_exceptState[GENERALEXCEPT].reg_a1
-#define  SUP_REG_A2 currSupStructPTR->sup_exceptState[GENERALEXCEPT].reg_a2
+#define SUP_REG_A0 currSupStructPTR->sup_exceptState[GENERALEXCEPT].reg_a0
+#define SUP_REG_A1 currSupStructPTR->sup_exceptState[GENERALEXCEPT].reg_a1
+#define SUP_REG_A2 currSupStructPTR->sup_exceptState[GENERALEXCEPT].reg_a2
+#define SUP_REG_V0 currSupStructPTR->sup_exceptState[GENERALEXCEPT].reg_v0
 
 #define INC_PC currSupStructPTR->sup_exceptState[GENERALEXCEPT].pc_epc += 4
+
 
 //* Richiami esterni
 extern int device_sem[DEVSEM_NUM];
@@ -43,7 +45,7 @@ void trapExcHandler(support_t *);
 /* When this service is requested, it causes the number of microseconds since
 the system was last booted/reset to be placed/returned in the U-proc’s v0
 register. */
-unsigned int getTod(support_t *currSupStructPTR);
+void getTod(support_t *currSupStructPTR);
 
 /* This services causes the executing U-proc to cease to exist. The SYS2 service
 is essentially a user-mode “wrapper” for the kernel-mode restricted NSYS2

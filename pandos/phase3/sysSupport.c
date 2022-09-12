@@ -48,7 +48,7 @@ void syscallExcHandler(support_t *currSupStructPTR)
         break;
     default:
         // TODO: termina il processo, forse la TERMINATE e' la default
-        
+        SYSCALL(TERMPROCESS, 0 ,0 ,0);
     }
     // Carica lo stato di chi ha causato l'eccezione
     LDST(&(currSupStructPTR->sup_exceptState[GENERALEXCEPT]));
@@ -57,20 +57,16 @@ void syscallExcHandler(support_t *currSupStructPTR)
 
 //* INIZIO SYSCALL 
 
-unsigned int getTod(support_t *currSupStructPTR) {
-    //dovrei dire da quanto tempo il pc è acceso
-    //l'unica syscall che mi viene in mente è la
-    //get_CPU_TIME, sommo per ogni processo?
-    //non mi piace molto.
-   
+void getTod(support_t *currSupStructPTR) {
+    unsigned int valore_tod;
+    STCK(valore_tod); 
+    SUP_REG_V0 = valore_tod;
     INC_PC;
-    return(0);
 }
 
 void terminate(support_t *currSupStructPTR){
     SYSCALL(TERMPROCESS, 0, 0, 0);
     INC_PC;
-    return(0);
 }
 
 int writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
