@@ -21,6 +21,8 @@
 #define  SUP_REG_A1 currSupStructPTR->sup_exceptState[GENERALEXCEPT].reg_a1
 #define  SUP_REG_A2 currSupStructPTR->sup_exceptState[GENERALEXCEPT].reg_a2
 
+#define INC_PC currSupStructPTR->sup_exceptState[GENERALEXCEPT].pc_epc += 4
+
 //* Richiami esterni
 extern int device_sem[DEVSEM_NUM];
 extern int getDeviceSemaphoreIndex(int line, int device, int term_is_recv);

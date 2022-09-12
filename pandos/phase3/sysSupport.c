@@ -56,14 +56,42 @@ void syscallExcHandler(support_t *currSupStructPTR)
 
 
 //* INIZIO SYSCALL 
-unsigned int getTod(support_t *currSupStructPTR) 
-{
+
+unsigned int getTod(support_t *currSupStructPTR) {
     //dovrei dire da quanto tempo il pc è acceso
     //l'unica syscall che mi viene in mente è la
     //get_CPU_TIME, sommo per ogni processo?
     //non mi piace molto.
+   
+    INC_PC;
     return(0);
 }
+
+void terminate(support_t *currSupStructPTR){
+
+    INC_PC;
+    return(0);
+}
+
+int writeToPrinter(support_t *currSupstructPTR, char *virtAddrPTR, int len) {
+   
+    INC_PC;
+    return(0);
+}
+
+int writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
+   
+    INC_PC;
+    return(0);
+}
+
+int readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR) {
+
+    INC_PC;
+    return(0);
+}
+
+
 
 // commento la parte di alex perché è maledetta e non sa scrive codice
 // // Program Trap Exception Handler - Sezione 4.8
