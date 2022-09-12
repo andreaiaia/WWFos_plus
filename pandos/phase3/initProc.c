@@ -3,13 +3,9 @@
 
 #include "initProc.h"
 
-
 // Strutture di supporto dei processi
 support_t support_table[UPROCMAX];
 struct list_head support_free;
-
-// Semafori per tutti i dispositivi
-int device_sem[DEVSEM_NUM];
 
 int mainSemaphore;
 
@@ -23,25 +19,20 @@ void test_fase3()
 
     // Fine del test, chiudiamo baracca e burattini
     HALT();
-
-
 }
-
-
 
 /**************************/
 /*   PARCO GIOCHI ALEX    */
 /**************************/
-
 
 // semafori periferiche
 
 // !Ciao alex, qui c'erano le definizioni dei semafori, davvero arriviamo in fase 3
 // !e metti ancora le definizioni nel .c? Mannaggia ai sandali di Laneve
 state_t cpu_state_table[UPROCMAX]; // array di processor state per gli U-procs
-//? non sono sicuro serva un array di stati processore per gli U-proc, forse basta crearne uno e 
+//? non sono sicuro serva un array di stati processore per gli U-proc, forse basta crearne uno e
 //? spammarlo sull'inizializzazione di tutti gli U-proc?
-//! Puoi usare la copy_state della phase2 e modificarla inzializzando tutte le cose a 0. 
+//! Puoi usare la copy_state della phase2 e modificarla inzializzando tutte le cose a 0.
 //! Modificando anche i parametri con 1 solo, non hai bisogno di origin e state.
 
 void test_alex()
@@ -52,18 +43,20 @@ void test_alex()
     mainSemaphore = 0; // Richiesta da andrea
 
     // inizializza semafori device
-    for(int i = 0; i < UPROCMAX; i++){
-        printer_sem[i]    = 1;
-        flash_sem[i]      = 1;
-        term_w_sem[i]     = 1;
-        term_r_sem[i]     = 1;
+    for (int i = 0; i < UPROCMAX; i++)
+    {
+        printer_sem[i] = 1;
+        flash_sem[i] = 1;
+        term_w_sem[i] = 1;
+        term_r_sem[i] = 1;
     }
 
     // inizializzazione processor_state degli U-proc
-    for (int i = 0; i < UPROCMAX; i++){
+    for (int i = 0; i < UPROCMAX; i++)
+    {
         cpu_state_table[i].pc_epc = UPROCSTARTADDR;
-        cpu_state_table[i].reg_t9 = UPROCSTARTADDR;   
-        cpu_state_table[i].entry_hi = i+1; // ASID != 0 
+        cpu_state_table[i].reg_t9 = UPROCSTARTADDR;
+        cpu_state_table[i].entry_hi = i + 1;                         // ASID != 0
         cpu_state_table[i].status = ALLOFF | IEPON | IMON | TEBITON; // main phase2 riga 68: viene fatta stessa cosa: interrupt e PLTimer abilitati
         //* vedi note in fondo per descrizione macro
         // todo mettere processo in user mode
@@ -71,34 +64,34 @@ void test_alex()
     }
 
     // inizializzazione support_struct degli U-proc
-    for(int i = 0; i < UPROCMAX; i++){
-        support_table[i].sup_asid = i + 1; //  ASID != 0 
+    for (int i = 0; i < UPROCMAX; i++)
+    {
+        support_table[i].sup_asid = i + 1; //  ASID != 0
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].pc = (memaddr)TLB_ExcHandler;
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON; // main phase2 riga 68: viene fatta stessa cosa: interrupt e PLTimer abilitati
         //! Guarda main phase2 riga 78 circa, guarda inizio capitolo 3
         // todo mettere support struct in kernel mode
 
-        support_table[i].sup_exceptContext[PGFAULTEXCEPT].stackPtr = &(...sup_stackGen[499]); //todo da capire come funziona il discorso del sup_StackGen[500]
+        support_table[i].sup_exceptContext[PGFAULTEXCEPT].stackPtr = &(... sup_stackGen[499]); // todo da capire come funziona il discorso del sup_StackGen[500]
         support_table[i].sup_exceptContext[GENERALEXCEPT].pc = (memaddr)generalExcHandler;
-        support_table[i].sup_exceptContext[GENERALEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON; 
-        support_table[i].sup_exceptContext[GENERALEXCEPT].stackPtr = &(...sup_stackGen[499]);
+        support_table[i].sup_exceptContext[GENERALEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON;
+        support_table[i].sup_exceptContext[GENERALEXCEPT].stackPtr = &(... sup_stackGen[499]);
 
-        //todo capire come inizializzare la privatePgTbl
-        support_table[i].sup_privatePgTbl ;
+        // todo capire come inizializzare la privatePgTbl
+        support_table[i].sup_privatePgTbl;
     }
-
 
     // lanciare gli U-procs
-    for (int i = 0; i < UPROCMAX; i++){
+    for (int i = 0; i < UPROCMAX; i++)
+    {
         SYSCALL(CREATEPROCESS, &(cpu_state_table[i]), PROCESS_PRIO_LOW, support_table[i]);
     }
-
 
     // aspettare che terminino tutti i processi
     for (int i = 0; i < UPROCMAX; ++i)
         SYSCALL(PASSEREN, (int)&mainSemaphore, 0, 0);
     SYSCALL(TERMPROCESS, 0, 0, 0);
-    //todo qui a uncerto punto i processi vengono conclusi e bisogna spegnere la baracca non ho idea per ora
+    // todo qui a uncerto punto i processi vengono conclusi e bisogna spegnere la baracca non ho idea per ora
     //! Andrea utilizzerebbe l'approccio terminate, non quello verhogen e poi ci guardiamo.
 }
 
