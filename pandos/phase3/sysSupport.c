@@ -70,7 +70,7 @@ void terminate(support_t *currSupStructPTR){
 }
 
 void writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
-    
+    if (SUP_REG_A1 < KUSEG || len < 0 || len > 128) trapExcHandler(currSupStructPTR); 
     //Ricaviamo il device ID facendo asid-1 (perchè gli asid contano da 1)
     int device_id = currSupStructPTR->sup_asid - 1;
     //Ricaviamo un puntatore a device (di tipo stampante) utilizzando la macro già definita in arch.h
@@ -81,58 +81,79 @@ void writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
     for (int i=0; i < len; i++) {
         //Indichiamo il punto dove iniziare a leggere/scrivere
         device->data0 = virtAddrPTR;
-        int print_result = SYSCALL(DOIO, (int*)(device->command), TRANSMITCHAR, 0);
+        int res = SYSCALL(DOIO, (int*)(device->command), TRANSMITCHAR, 0);
         //Controllo nel caso la print non vada a buon fine per illecito da parte del chiamante
-        if (print_result != READY) trapExcHandler(currSupStructPTR);
+        if (res != READY) {
+            SUP_REG_V0 = -(res & 0xF);
+            SYSCALL(VERHOGEN, term_r_sem[device_id], 0, 0);
+            return;
+        }
     }
     INC_PC;
     SYSCALL(VERHOGEN, printer_sem[device_id], 0, 0);
+    SUP_REG_V0 = len;
 }
 
-int writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
-   
+void writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
+    if (SUP_REG_A1 < KUSEG || len < 0 || len > 128) trapExcHandler(currSupStructPTR); 
+    
      //Ricaviamo il device ID facendo asid-1 (perchè gli asid contano da 1)
     int device_id = currSupStructPTR->sup_asid - 1;
     //Ricaviamo un puntatore a device (di tipo stampante) utilizzando la macro già definita in arch.h
     termreg_t *device = (termreg_t *)DEV_REG_ADDR(IL_TERMINAL, device_id); 
     //Blocco il device selezionato sul relativo semaforo
     SYSCALL(PASSEREN, term_w_sem[device_id], 0, 0);
-    
     for (int i=0; i < len; i++) {
         int valore = (TRANSMITCHAR | (unsigned int)SUP_REG_A1 << 8); //capire perché
         //Indichiamo il punto dove iniziare a leggere/scrivere
-        int print_result = SYSCALL(DOIO, (int*)(device->transm_command), valore, 0);
+        int res = SYSCALL(DOIO, (int*)(device->transm_command), valore, 0);
         //Controllo nel caso la print non vada a buon fine per illecito da parte del chiamante
-        if (print_result != READY) trapExcHandler(currSupStructPTR);
+        if (res != OKCHARTRANS) {
+        SUP_REG_V0 = -(res & 0xF);
+        SYSCALL(VERHOGEN, term_r_sem[device_id], 0, 0);
+        return;
+        }
     }
     INC_PC;
     SYSCALL(VERHOGEN, term_w_sem[device_id], 0, 0);
+    SUP_REG_V0 = len;
 }
 
-int readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR) {
-    //!DA FARE
-     //Ricaviamo il device ID facendo asid-1 (perchè gli asid contano da 1)
+void readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR) {
+
+    //come da specifiche, leggere da un dispositivo terminale al di fuori
+    //del proprio u-proc logical address space è un errore e il processo va terminato 
+    if (SUP_REG_A1 < KUSEG) trapExcHandler(currSupStructPTR); 
+
+    char buffer[MAXSTRLENG];
+
+    //Ricaviamo il device ID facendo asid-1 (perchè gli asid contano da 1)
     int device_id = currSupStructPTR->sup_asid - 1;
     //Ricaviamo un puntatore a device (di tipo stampante) utilizzando la macro già definita in arch.h
     termreg_t *device = (termreg_t *)DEV_REG_ADDR(IL_TERMINAL, device_id); 
     //Blocco il device selezionato sul relativo semaforo
     SYSCALL(PASSEREN, term_r_sem[device_id], 0, 0);
+    int i = 0;
     char guard = '\0';
-    while (guard != '\n') {
-        unsigned int res = SYSCALL(DOIO, (int*)(device->recv_command), 2, 0); //occhio al tipo passato come secondo parametro (il cast)
-
-
-    }
-
-    for (int i=0; i < len; i++) {
-        //Indichiamo il punto dove iniziare a leggere/scrivere
-        device->data0 = virtAddrPTR;
-        int print_result = SYSCALL(DOIO, (int*)device->command, TRANSMITCHAR, 0);
-        //Controllo nel caso la print non vada a buon fine per illecito da parte del chiamante
-        if (print_result != READY) trapExcHandler(currSupStructPTR);
+    while (guard != '\n' && i < MAXSTRLENG) {
+        unsigned int res = SYSCALL(DOIO, (int*)(device->recv_command), TRANSMITCHAR, 0); //occhio al tipo passato come secondo parametro (il cast)
+        if (res != OKCHARTRANS) {
+            SUP_REG_V0 = -(res & 0xF);
+            SYSCALL(VERHOGEN, term_r_sem[device_id], 0, 0);
+            return;
+        }
+        //caso in cui lettura andata a buon fine shiftiamo di 8 bit
+        //e facciamo l'or bit a bit con 0xFF (11111111) come da spec
+        //cap. 5.7 pops       
+        buffer[i], guard = (res >> 8) & 0xFF;
+        i++;
     }
     INC_PC;
     SYSCALL(VERHOGEN, term_r_sem[device_id], 0, 0);
+    buffer[i] = '\0';
+    SUP_REG_V0 = i;
+
+
 }
 
 

@@ -61,12 +61,12 @@ void writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len);
 /* When requested, this service causes the requesting U-proc to be suspended
 until a line of output (string of characters) has been transmitted to the
 terminal device associated with the U-proc. */
-int writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len);
+void writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len);
 
 /* When requested, this service
 causes the requesting U-proc to be suspended until a line of input (string
 of characters) has been transmitted from the terminal device associated with
 the U-proc. */
-int readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR);
+void readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR);
 
 #endif
