@@ -6,7 +6,6 @@
 #include <umps3/umps/cp0.h>
 #include "vmSupport.h"
 
-<<<<<<< HEAD
 // Non sono sicuro del numero di semafori, dal libro
 // (pagina 63) mi sembra di capire che siano 8 flash device,
 // 8 stampanti e 16 terminali, quindi 32 in tutto
@@ -17,8 +16,6 @@ int flash_sem[UPROCMAX];
 int term_w_sem[UPROCMAX];
 int term_r_sem[UPROCMAX];
 
-=======
->>>>>>> 71c7087eb79b1e8f69a700057d02d46313ddf9e7
 extern void initSwapStructs();
 
 void test_fase3();
