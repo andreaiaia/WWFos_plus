@@ -68,12 +68,12 @@ unsigned int getTod(support_t *currSupStructPTR) {
 }
 
 void terminate(support_t *currSupStructPTR){
-
+    SYSCALL(TERMPROCESS, 0, 0, 0);
     INC_PC;
     return(0);
 }
 
-int writeToPrinter(support_t *currSupstructPTR, char *virtAddrPTR, int len) {
+int writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
    
     INC_PC;
     return(0);

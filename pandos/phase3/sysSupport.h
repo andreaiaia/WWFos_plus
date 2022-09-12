@@ -53,7 +53,7 @@ void terminate(support_t *currSupStructPTR);
 /* When requested, this service causes the requesting U-proc to be suspended
 until a line of output (string of characters) has been transmitted to the printer
 device associated with the U-proc. */
-int writeToPrinter(support_t *currSupstructPTR, char *virtAddrPTR, int len);
+int writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len);
 
 /* When requested, this service causes the requesting U-proc to be suspended
 until a line of output (string of characters) has been transmitted to the
