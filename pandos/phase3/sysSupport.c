@@ -14,17 +14,12 @@ void generalExcHandler()
     // Se non è una syscall, passo la gestione al trap exception handler
     trapExcHandler(currSupStructPTR);
 }
-/* the Support Level’s SYSCALL exception handler must also increment
-the PC by 4 in order to return control to the instruction after the
-SYSCALL instruction. */
-// !Chiedere ad andrea
+
 
 // SYSCALL exception handler - Sezione 4.7
 void syscallExcHandler(support_t *currSupStructPTR)
 {
     //Switch case in base al contenuto del reg_a0
-    //! Incrementiamo il pc, da inserire nelle syscall
-    //! currSupStructPTR->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
     switch (SUP_REG_A0)
     {
     case GETTOD:
@@ -47,8 +42,7 @@ void syscallExcHandler(support_t *currSupStructPTR)
         readFromTerminal(currSupStructPTR, SUP_REG_A1);
         break;
     default:
-        // TODO: termina il processo, forse la TERMINATE e' la default
-        SYSCALL(TERMPROCESS, 0 ,0 ,0);
+        trapExcHandler(currSupStructPTR); //sperando che killi
     }
     // Carica lo stato di chi ha causato l'eccezione
     LDST(&(currSupStructPTR->sup_exceptState[GENERALEXCEPT]));
