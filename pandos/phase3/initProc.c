@@ -35,11 +35,9 @@ void test_fase3()
 
 
 // semafori periferiche
-int printer_sem[UPROCMAX];
-int flash_sem[UPROCMAX];
-int term_w_sem[UPROCMAX];
-int term_r_sem[UPROCMAX];
 
+// !Ciao alex, qui c'erano le definizioni dei semafori, davvero arriviamo in fase 3
+// !e metti ancora le definizioni nel .c? Mannaggia ai sandali di Laneve
 state_t cpu_state_table[UPROCMAX]; // array di processor state per gli U-procs
 //? non sono sicuro serva un array di stati processore per gli U-proc, forse basta crearne uno e 
 //? spammarlo sull'inizializzazione di tutti gli U-proc?

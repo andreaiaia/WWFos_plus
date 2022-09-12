@@ -2,6 +2,7 @@
 #define SYS_SUPPORT_H
 
 
+#include <umps3/umps/arch.h>
 #include "../h/pandos_types.h"
 #include "../h/pandos_const.h"
 #include "helpersSupport.h"
@@ -55,7 +56,7 @@ void terminate(support_t *currSupStructPTR);
 /* When requested, this service causes the requesting U-proc to be suspended
 until a line of output (string of characters) has been transmitted to the printer
 device associated with the U-proc. */
-int writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len);
+void writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len);
 
 /* When requested, this service causes the requesting U-proc to be suspended
 until a line of output (string of characters) has been transmitted to the

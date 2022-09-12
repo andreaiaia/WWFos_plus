@@ -11,6 +11,11 @@
 // 8 stampanti e 16 terminali, quindi 32 in tutto
 #define DEVSEM_NUM 32
 
+int printer_sem[UPROCMAX];
+int flash_sem[UPROCMAX];
+int term_w_sem[UPROCMAX];
+int term_r_sem[UPROCMAX];
+
 extern void initSwapStructs();
 
 void test_fase3();
