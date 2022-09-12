@@ -4,7 +4,7 @@
 #include "initProc.h"
 
 // Strutture di supporto dei processi
-support_t support_table[UPROCMAX];
+support_t support_table[72];
 struct list_head support_free;
 
 int mainSemaphore;
