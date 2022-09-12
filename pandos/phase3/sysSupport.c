@@ -23,9 +23,8 @@ SYSCALL instruction. */
 void syscallExcHandler(support_t *currSupStructPTR)
 {
     //Switch case in base al contenuto del reg_a0
-    //
-        //! Incrementiamo il pc, da inserire nelle syscall
-        //! currSupStructPTR->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
+    //! Incrementiamo il pc, da inserire nelle syscall
+    //! currSupStructPTR->sup_exceptState[GENERALEXCEPT].pc_epc += 4;
     switch (SUP_REG_A0)
     {
     case GETTOD:
@@ -55,14 +54,26 @@ void syscallExcHandler(support_t *currSupStructPTR)
     LDST(&(currSupStructPTR->sup_exceptState[GENERALEXCEPT]));
 }
 
-// Program Trap Exception Handler - Sezione 4.8
-void trapExcHandler(support_t *currSupStructPTR)
+
+//* INIZIO SYSCALL 
+unsigned int getTod(support_t *currSupStructPTR) 
 {
-    // todo: trovare il semaforo su cui è bloccato il processo; poi dovrebbe essere finito
-    //? non capisco come cazzo accedere al semaforo; che faccio, scorro tutti i semafori possibili? sembra sbagliato come approccio
-    /*
-        if (current_proc semaphore == 0)
-            SYSCALL(VERHOGEN, x, 0, 0)    //? dove x è indirizzo del semaforo su cui il processo è bloccato
-        SYSCALL (TERMINATE, 0, 0, 0)
-    */
+    //dovrei dire da quanto tempo il pc è acceso
+    //l'unica syscall che mi viene in mente è la
+    //get_CPU_TIME, sommo per ogni processo?
+    //non mi piace molto.
+    return(0);
 }
+
+// commento la parte di alex perché è maledetta e non sa scrive codice
+// // Program Trap Exception Handler - Sezione 4.8
+// void trapExcHandler(support_t *currSupStructPTR)
+// {
+//     // todo: trovare il semaforo su cui è bloccato il processo; poi dovrebbe essere finito
+//     //? non capisco come cazzo accedere al semaforo; che faccio, scorro tutti i semafori possibili? sembra sbagliato come approccio
+//     /*
+//         if (current_proc semaphore == 0)
+//             SYSCALL(VERHOGEN, x, 0, 0)    //? dove x è indirizzo del semaforo su cui il processo è bloccato
+//         SYSCALL (TERMINATE, 0, 0, 0)
+//     */
+// }
