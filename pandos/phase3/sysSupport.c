@@ -81,7 +81,7 @@ void writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
     for (int i=0; i < len; i++) {
         //Indichiamo il punto dove iniziare a leggere/scrivere
         device->data0 = virtAddrPTR;
-        int print_result = SYSCALL(DOIO, (int*)device->command, TRANSMITCHAR, 0);
+        int print_result = SYSCALL(DOIO, (int*)(device->command), TRANSMITCHAR, 0);
         //Controllo nel caso la print non vada a buon fine per illecito da parte del chiamante
         if (print_result != READY) trapExcHandler(currSupStructPTR);
     }
@@ -101,7 +101,7 @@ int writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len) {
     for (int i=0; i < len; i++) {
         int valore = (TRANSMITCHAR | (unsigned int)SUP_REG_A1 << 8); //capire perché
         //Indichiamo il punto dove iniziare a leggere/scrivere
-        int print_result = SYSCALL(DOIO, (int*)device->transm_command, valore, 0);
+        int print_result = SYSCALL(DOIO, (int*)(device->transm_command), valore, 0);
         //Controllo nel caso la print non vada a buon fine per illecito da parte del chiamante
         if (print_result != READY) trapExcHandler(currSupStructPTR);
     }
@@ -114,10 +114,16 @@ int readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR) {
      //Ricaviamo il device ID facendo asid-1 (perchè gli asid contano da 1)
     int device_id = currSupStructPTR->sup_asid - 1;
     //Ricaviamo un puntatore a device (di tipo stampante) utilizzando la macro già definita in arch.h
-    dtpreg_t *device = (dtpreg_t *)DEV_REG_ADDR(IL_TERMINAL, device_id); 
+    termreg_t *device = (termreg_t *)DEV_REG_ADDR(IL_TERMINAL, device_id); 
     //Blocco il device selezionato sul relativo semaforo
     SYSCALL(PASSEREN, term_r_sem[device_id], 0, 0);
-    
+    char guard = '\0';
+    while (guard != '\n') {
+        unsigned int res = SYSCALL(DOIO, (int*)(device->recv_command), 2, 0); //occhio al tipo passato come secondo parametro (il cast)
+
+
+    }
+
     for (int i=0; i < len; i++) {
         //Indichiamo il punto dove iniziare a leggere/scrivere
         device->data0 = virtAddrPTR;
