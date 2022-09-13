@@ -51,10 +51,20 @@ void syscallExcHandler(support_t *currSupStructPTR)
 // Program Trap Exception Handler - Sezione 4.8
 void trapExcHandler(support_t *currSupStructPTR)
 {
-    SYSCALL(TERMINATE, 0, 0, 0)
+    int asid = currSupStructPTR->sup_asid;
+    for (int i = 0; i < POOLSIZE; i++)
+    {
+        if (swap_pool_table[i].sw_asid == asid)
+            swap_pool_table[i].sw_asid = -1;
+    }
+    // Sblocco il traffico
+    SYSCALL(VERHOGEN, (int)&swapSemaphore, 0, 0);
+    SYSCALL(VERHOGEN, (int)&mainSemaphore, 0, 0);
+    // Ammazzo il processo
+    SYSCALL(TERMINATE, 0, 0, 0);
 }
 
-//* INIZIO SYSCALL
+//* INIZIO SYSCALLS
 
 void getTod(support_t *currSupStructPTR)
 {
@@ -112,7 +122,7 @@ void writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len)
     SYSCALL(PASSEREN, term_w_sem[device_id], 0, 0);
     for (int i = 0; i < len; i++)
     {
-        int valore = (TRANSMITCHAR | (unsigned int)SUP_REG_A1 << 8); // capire perché
+        int valore = (TRANSMITCHAR | (unsigned int)SUP_REG_A1 << BYTELENGTH); // capire perché
         // Indichiamo il punto dove iniziare a leggere/scrivere
         int res = SYSCALL(DOIO, (int *)(device->transm_command), valore, 0);
         // Controllo nel caso la print non vada a buon fine per illecito da parte del chiamante

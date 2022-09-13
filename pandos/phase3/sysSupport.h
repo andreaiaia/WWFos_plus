@@ -6,14 +6,15 @@
 #include "../h/pandos_const.h"
 #include "helpersSupport.h"
 #include "initProc.h"
-//* Costanti
 
+// Costanti
 #define GETTOD 1
 #define TERMINATE 2
 #define WRITEPRINTER 3
 #define WRITETERMINAL 4
 #define READTERMINAL 5
 
+// Macro
 #define SWAP ((32 * PAGESIZE) + RAMSTART)
 #define DEV_POSITION(T) ((int)T - DEV_REG_START) / (DEV_REG_SIZE / 2)
 
@@ -24,19 +25,19 @@
 
 #define INC_PC currSupStructPTR->sup_exceptState[GENERALEXCEPT].pc_epc += 4
 
-//* Richiami esterni
-extern int device_sem[DEVSEM_NUM];
+// Richiami esterni
+extern int swapSemaphore;
+extern int mainSemaphore;
 extern int getDeviceSemaphoreIndex(int line, int device, int term_is_recv);
+// support_t supportStruct_table[UPROCMAX];
+extern struct list_head supportStruct_free;
 
 //* Dichiarazioni prototipi di funzioni
-
-//* General Exception Handler, gestisce le system call con numero >= 1 */
+// General Exception Handler, gestisce le system call con numero >= 1 */
 void generalExcHandler();
-
-//* SYSCALL Exception Handler */
+// SYSCALL Exception Handler */
 void syscallExcHandler(support_t *);
-
-//* Uccide il processo corrente in maniera ordinata */
+// Uccide il processo corrente in maniera ordinata */
 void trapExcHandler(support_t *);
 
 //* INIZIO SYSCALL LVL SUPPORTO
