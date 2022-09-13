@@ -66,10 +66,10 @@ void test_alex()
         support_table[i].sup_asid = i + 1;   // ASID != 0
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].pc = (memaddr)TLB_ExcHandler;
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON;
-        support_table[i].sup_exceptContext[PGFAULTEXCEPT].stackPtr = &(support_table[i].sup_exceptContext[PGFAULTEXCEPT].sup_stackTLB[499]);
+        support_table[i].sup_exceptContext[PGFAULTEXCEPT].stackPtr = &(support_table[i].sup_stackTLB[499]);
         support_table[i].sup_exceptContext[GENERALEXCEPT].pc = (memaddr)generalExcHandler;
         support_table[i].sup_exceptContext[GENERALEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON;
-        support_table[i].sup_exceptContext[GENERALEXCEPT].stackPtr = &(support_table[i].sup_exceptContext[GENERALEXCEPT].sup_stackGen[499]);
+        support_table[i].sup_exceptContext[GENERALEXCEPT].stackPtr = &(support_table[i].sup_stackGen[499]);
 
         // creazione processo
         SYSCALL(CREATEPROCESS, &(stateaux), PROCESS_PRIO_LOW, &(support_table[i]));
