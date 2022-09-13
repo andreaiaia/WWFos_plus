@@ -13,6 +13,10 @@
 // Richiamo funzioni dagli altri moduli
 extern void trapExcHandler(support_t *);
 
+// Swap pool table e relative strutture dati
+swap_t swap_pool_table[POOLSIZE];
+int swapSemaphore;
+
 void TLB_ExcHandler();
 
 void initSwapStructs();

@@ -7,10 +7,6 @@
  * initSwapStructs da richiamare poi in initProc.c
  */
 
-// Swap pool table e relative strutture dati
-swap_t swap_pool_table[POOLSIZE];
-int swap_semaphore;
-
 void TLB_ExcHandler()
 {
     /**
@@ -34,7 +30,7 @@ void TLB_ExcHandler()
     else
     {
         // Prendo l'accesso alla swap pool table
-        SYSCALL(PASSEREN, (int)&swap_semaphore, 0, 0);
+        SYSCALL(PASSEREN, (int)&swapSemaphore, 0, 0);
 
         // Trova la missing page number (indicata con p) dal processor saved state
         state_t *procSavedState = &currSupStruct->sup_exceptState[PGFAULTEXCEPT];
@@ -67,8 +63,8 @@ void TLB_ExcHandler()
             dtpreg_t *dev = (dtpreg_t *)DEV_REG_ADDR(FLASHINT, swap_frame.sw_asid - 1);
             dev->data0 = (memaddr)&swap_frame;
 
-            //* 2. Effettuare la scrittura con la NSYS5
-            int write_result = SYSCALL(DOIO, (int)&dev->command, FLASHWRITE, 0);
+            //* 2. Effettuare la scrittura con la DOIO (NSYS5)
+            int write_result = SYSCALL(DOIO, (int)&dev->command, FLASHWRITE | index << BYTELENGTH, 0);
 
             // Qualsiasi errore viene gestito come una trap
             if (write_result != READY)
@@ -105,7 +101,7 @@ void TLB_ExcHandler()
         TLB_updater(currSupStruct->sup_privatePgTbl[index]);
 
         // Tana libera tutti
-        SYSCALL(VERHOGEN, (int)&swap_semaphore, 0, 0);
+        SYSCALL(VERHOGEN, (int)&swapSemaphore, 0, 0);
 
         // Adesso posso riattivare gli interrupts
         setSTATUS(getSTATUS() | IECON);
@@ -122,9 +118,9 @@ void TLB_ExcHandler()
 void initSwapStructs()
 {
     // Inizializzo il semaforo della swap pool table
-    swap_semaphore = 1;
+    swapSemaphore = 1;
     // Faccio una P sul semaforo, dal momento che devo accedere alla swap pool table
-    SYSCALL(PASSEREN, (int)&swap_semaphore, 0, 0);
+    SYSCALL(PASSEREN, (int)&swapSemaphore, 0, 0);
     /**
      * Segno come non allocate tutte le entry della swap pool.
      * Per farlo uso ASID -1 come suggerito nel libro, dal
@@ -134,7 +130,7 @@ void initSwapStructs()
         swap_pool_table[i].sw_asid = -1;
 
     // Faccio la V per liberare il semaforo
-    SYSCALL(VERHOGEN, (int)&swap_semaphore, 0, 0);
+    SYSCALL(VERHOGEN, (int)&swapSemaphore, 0, 0);
 }
 
 /**
