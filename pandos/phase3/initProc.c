@@ -3,12 +3,6 @@
 
 #include "initProc.h"
 
-// Strutture di supporto dei processi
-support_t support_table[UPROCMAX];
-struct list_head support_free;
-
-int mainSemaphore;
-
 void test_fase3()
 {
     // Inizializzo le strutture dati della Swap Pool Table
@@ -32,16 +26,15 @@ void test_fase3()
 
 //? se per le struct serve l'array non credo sia lo stesso per il processor_state visto che nella struct c'é la variabile in carne ed ossa e non un ptr
 
-support_t support_table[UPROCMAX]; // array delle strutture di supporto dei processi
-
 void test_alex()
 {
-    state_t stateaux;
-
-    mainSemaphore = 0; // Richiesta da andrea
+    //? che è sto coso?
+    // state_t stateaux;
 
     // inizializza swap pool table e swap semaphore
     initSwapStructs();
+
+    mainSemaphore = 0;
 
     // inizializza semafori device
     for (int i = 0; i < UPROCMAX; i++)
