@@ -28,6 +28,8 @@ typedef struct context_t {
     unsigned int stackPtr;
     unsigned int status;
     unsigned int pc;
+    unsigned int sup_stackTLB[500];
+    unsigned int sup_stackGen[500];
 } context_t;
 
 
