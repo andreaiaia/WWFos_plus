@@ -138,10 +138,11 @@ void initSwapStructs()
 }
 
 /**
- * The recommended Pandos page replacement algorithm is First in First out.
- * This algorithm is easily implemented via a static variable.
- * Whenever a frame is needed to support a page fault, simply
- * increment this variable mod the size of the Swap Pool.
+ * L'algoritmo raccomandato da pandos è di tipo FIFO.
+ * È facilmente implementabile con una variabile statica.
+ * Quando un frame deve supportare un page fault, si
+ * incrementa questa variabile e si fa il modulo con la
+ * dimensione della swap pool.
  */
 int pandosPageReplacementAlgorithm()
 {

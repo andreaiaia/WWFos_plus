@@ -1,7 +1,6 @@
 #ifndef SYS_SUPPORT_H
 #define SYS_SUPPORT_H
 
-
 #include <umps3/umps/arch.h>
 #include "../h/pandos_types.h"
 #include "../h/pandos_const.h"
@@ -25,48 +24,53 @@
 
 #define INC_PC currSupStructPTR->sup_exceptState[GENERALEXCEPT].pc_epc += 4
 
-
 //* Richiami esterni
 extern int device_sem[DEVSEM_NUM];
 extern int getDeviceSemaphoreIndex(int line, int device, int term_is_recv);
 
 //* Dichiarazioni prototipi di funzioni
 
-/* General Exception Handler, gestisce le system call con numero >= 1 */
+//* General Exception Handler, gestisce le system call con numero >= 1 */
 void generalExcHandler();
 
-/* SYSCALL Exception Handler */
+//* SYSCALL Exception Handler */
 void syscallExcHandler(support_t *);
 
-/* Wrapper per NSYS2: uccide lo user-process */
+//* Uccide il processo corrente in maniera ordinata */
 void trapExcHandler(support_t *);
 
-//* INIZIO SYSCALL LVL SUPPORTO 
-
-/* When this service is requested, it causes the number of microseconds since
-the system was last booted/reset to be placed/returned in the U-proc’s v0
-register. */
+//* INIZIO SYSCALL LVL SUPPORTO
+/**
+ * Il servizio restituisce in v0 il numero di microsecondi
+ * passati da quando il sistema è stato avviato.
+ */
 void getTod(support_t *currSupStructPTR);
 
-/* This services causes the executing U-proc to cease to exist. The SYS2 service
-is essentially a user-mode “wrapper” for the kernel-mode restricted NSYS2
-service.*/
+/**
+ * Questo servizio ammazza il current process.
+ * È essenzialmente un wrapper della TERMPROCESS di fase 2.
+ */
 void terminate(support_t *currSupStructPTR);
 
-/* When requested, this service causes the requesting U-proc to be suspended
-until a line of output (string of characters) has been transmitted to the printer
-device associated with the U-proc. */
+/**
+ * Questo servizio sospende il processo chiamante fino a
+ * quando una linea di output non è stata trasmessa al printer
+ * device proprio del processo.
+ */
 void writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len);
 
-/* When requested, this service causes the requesting U-proc to be suspended
-until a line of output (string of characters) has been transmitted to the
-terminal device associated with the U-proc. */
+/**
+ * Questo servizio sospende il processo chiamante fino a
+ * quando una linea di output non è stata trasmessa al terminal
+ * device proprio del processo.
+ */
 void writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len);
 
-/* When requested, this service
-causes the requesting U-proc to be suspended until a line of input (string
-of characters) has been transmitted from the terminal device associated with
-the U-proc. */
+/**
+ * Questo servizio sospende il processo chiamante fino a
+ * quando una linea di input non è stata trasmessa dal terminal
+ * device proprio del processo.
+ */
 void readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR);
 
 #endif
