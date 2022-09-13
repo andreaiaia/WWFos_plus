@@ -58,6 +58,10 @@ void trapExcHandler(support_t *currSupStructPTR)
             swap_pool_table[i].sw_asid = -1;
     }
     // Sblocco il traffico
+    SYSCALL(VERHOGEN, (int)&printer_sem[asid], 0, 0);
+    SYSCALL(VERHOGEN, (int)&flash_sem[asid], 0, 0);
+    SYSCALL(VERHOGEN, (int)&term_w_sem[asid], 0, 0);
+    SYSCALL(VERHOGEN, (int)&term_r_sem[asid], 0, 0);
     SYSCALL(VERHOGEN, (int)&swapSemaphore, 0, 0);
     SYSCALL(VERHOGEN, (int)&mainSemaphore, 0, 0);
     // Ammazzo il processo

@@ -26,6 +26,10 @@
 #define INC_PC currSupStructPTR->sup_exceptState[GENERALEXCEPT].pc_epc += 4
 
 // Richiami esterni
+extern int printer_sem[UPROCMAX];
+extern int flash_sem[UPROCMAX];
+extern int term_w_sem[UPROCMAX];
+extern int term_r_sem[UPROCMAX];
 extern int swapSemaphore;
 extern int mainSemaphore;
 extern int getDeviceSemaphoreIndex(int line, int device, int term_is_recv);
