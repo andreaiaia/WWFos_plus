@@ -11,29 +11,6 @@ void test_fase3()
     // Inizializzo il semaforo principale
     mainSemaphore = 0;
 
-    // Fine del test, chiudiamo baracca e burattini
-    HALT();
-}
-
-/**************************/
-/*   PARCO GIOCHI ALEX    */
-/**************************/
-
-//? per mettere processi in user mode ho aggiunto | STATUS_KUc ma non sono certo sia corretto
-//? RISPOSTA: no, non credo vada messo, in quanto il bit dev'essere a 0 perché il kernel mode sia attivo (pag. 9 pops)
-//? di conseguenza non ci metto nulla così dovrebbe essere a 0 (questo sulla support_struct)
-//? mentre nel processor_state c'era scritto che dev'essere in user mode e quindi ho aggiunto STATUS_KUc
-
-//? se per le struct serve l'array non credo sia lo stesso per il processor_state visto che nella struct c'é la variabile in carne ed ossa e non un ptr
-
-void test_alex()
-{
-    // Inizializzo le strutture dati della Swap Pool Table
-    initSwapStructs();
-
-    // Inizializzo il semaforo principale
-    mainSemaphore = 0;
-
     // Inizializzo i semafori dei dispositivi a 1
     for (int i = 0; i < UPROCMAX; i++)
     {
