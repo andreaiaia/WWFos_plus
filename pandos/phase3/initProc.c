@@ -48,7 +48,7 @@ void test_alex()
     initial_status.pc_epc = UPROCSTARTADDR;
     initial_status.reg_t9 = UPROCSTARTADDR;
     initial_status.reg_sp = USERSTACKTOP;
-    initial_status.status = ALLOFF | IEPON | IMON | TEBITON | STATUS_KUc;
+    initial_status.status = ALLOFF | IEPON | IMON | TEBITON | USERPON;
 
     // inizializzazione (creazione lista) degli 8 U-proc
     for (int i = 0; i < UPROCMAX; i++)
