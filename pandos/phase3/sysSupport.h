@@ -42,7 +42,7 @@ void generalExcHandler();
 // SYSCALL Exception Handler */
 void syscallExcHandler(support_t *);
 // Uccide il processo corrente in maniera ordinata */
-void trapExcHandler(support_t *);
+void trapExcHandler();
 
 //* INIZIO SYSCALL LVL SUPPORTO
 /**

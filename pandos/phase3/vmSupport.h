@@ -11,7 +11,7 @@
 #define TLB_MODIFICATION 1
 
 // Richiamo funzioni dagli altri moduli
-extern void trapExcHandler(support_t *);
+extern void trapExcHandler();
 
 // Swap pool table e relative strutture dati
 swap_t swap_pool_table[POOLSIZE];

@@ -25,7 +25,7 @@ void TLB_ExcHandler()
     if (cause == TLB_MODIFICATION)
     {
         // Attempt to write on a read-only page
-        trapExcHandler(currSupStruct);
+        trapExcHandler();
     }
     else
     {
@@ -68,7 +68,7 @@ void TLB_ExcHandler()
 
             // Qualsiasi errore viene gestito come una trap
             if (write_result != READY)
-                trapExcHandler(currSupStruct);
+                trapExcHandler();
 
             // Adesso posso riattivare gli interrupts
             setSTATUS(getSTATUS() | IECON);
@@ -83,7 +83,7 @@ void TLB_ExcHandler()
 
         // Qualsiasi errore viene gestito come una trap
         if (read_result != READY)
-            trapExcHandler(currSupStruct);
+            trapExcHandler();
 
         // Aggiorno la swap_pool_table con i nuovi contenuti del frame i
         swap_pool_table[i].sw_asid = currSupStruct->sup_asid;

@@ -13,7 +13,7 @@ void generalExcHandler()
         syscallExcHandler(currSupStructPTR);
 
     // Se non è una syscall, passo la gestione al trap exception handler
-    trapExcHandler(currSupStructPTR);
+    trapExcHandler();
 }
 
 // SYSCALL exception handler - Sezione 4.7
@@ -42,14 +42,14 @@ void syscallExcHandler(support_t *currSupStructPTR)
         readFromTerminal(currSupStructPTR, SUP_REG_A1);
         break;
     default:
-        trapExcHandler(currSupStructPTR); // sperando che killi
+        trapExcHandler(); // sperando che killi
     }
     // Carica lo stato di chi ha causato l'eccezione
     LDST(&(currSupStructPTR->sup_exceptState[GENERALEXCEPT]));
 }
 
 // Program Trap Exception Handler - Sezione 4.8
-void trapExcHandler(support_t *currSupStructPTR)
+void trapExcHandler()
 {
     SYSCALL(TERMINATE, 0, 0, 0);
 }
@@ -87,7 +87,7 @@ void terminate(support_t *currSupStructPTR)
 void writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len)
 {
     if (SUP_REG_A1 < KUSEG || len < 0 || len > 128)
-        trapExcHandler(currSupStructPTR);
+        trapExcHandler();
     // Ricaviamo il device ID facendo asid-1 (perchè gli asid contano da 1)
     int device_id = currSupStructPTR->sup_asid - 1;
     // Ricaviamo un puntatore a device (di tipo stampante) utilizzando la macro già definita in arch.h
@@ -116,7 +116,7 @@ void writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len)
 void writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len)
 {
     if (SUP_REG_A1 < KUSEG || len < 0 || len > 128)
-        trapExcHandler(currSupStructPTR);
+        trapExcHandler();
 
     // Ricaviamo il device ID facendo asid-1 (perchè gli asid contano da 1)
     int device_id = currSupStructPTR->sup_asid - 1;
@@ -150,7 +150,7 @@ void readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR)
      * e il processo va terminato.
      */
     if (SUP_REG_A1 < KUSEG)
-        trapExcHandler(currSupStructPTR);
+        trapExcHandler();
 
     char buffer[MAXSTRLENG];
 
