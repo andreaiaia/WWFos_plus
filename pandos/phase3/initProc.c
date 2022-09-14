@@ -57,11 +57,6 @@ void test_fase3()
 
 //* Legenda delle macro (alcune a pag.9 pops)
 /*
-    STATUS_TE, STATUS_IM(IL_TIMER)
-    STATUS_IEp  dovrebbe essere InterruptEnabled process
-    STATUS_IM_MASK  dovrebbe attivare tutte le interrupt line (non so bene cosa voglia dire nemmeno io)
-    STATUS_KUp   potrebbe essere KernelUser process o qualcosa del genere
-    lo ^ è lo xor
     ALLOFF = serie di 0
     IEPON = Interrupt Enable Previous ON
     IMON = Interrupt Mask ON
