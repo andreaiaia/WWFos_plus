@@ -28,15 +28,13 @@ void test_fase3()
 
 void test_alex()
 {
-    //? che è sto coso?
-    // state_t stateaux;
-
-    // inizializza swap pool table e swap semaphore
+    // Inizializzo le strutture dati della Swap Pool Table
     initSwapStructs();
 
+    // Inizializzo il semaforo principale
     mainSemaphore = 0;
 
-    // inizializza semafori device
+    // Inizializzo i semafori dei dispositivi a 1
     for (int i = 0; i < UPROCMAX; i++)
     {
         printer_sem[i] = 1;
@@ -45,28 +43,32 @@ void test_alex()
         term_r_sem[i] = 1;
     }
 
+    // Creo lo stato predefinito dei processi
+    state_t initial_status;
+    initial_status.pc_epc = UPROCSTARTADDR;
+    initial_status.reg_t9 = UPROCSTARTADDR;
+    initial_status.reg_sp = USERSTACKTOP;
+    initial_status.status = ALLOFF | IEPON | IMON | TEBITON | STATUS_KUc;
+
     // inizializzazione (creazione lista) degli 8 U-proc
     for (int i = 0; i < UPROCMAX; i++)
     {
+        // Assegno ad ogni processo il suo ASID
+        initial_status.entry_hi = (i + 1) << ASIDSHIFT;
 
-        // inizializzazione processor_state
-        stateaux.pc_epc = UPROCSTARTADDR;
-        stateaux.reg_t9 = UPROCSTARTADDR;
-        stateaux.reg_sp = USERSTACKTOP;
-        stateaux.status = ALLOFF | IEPON | IMON | TEBITON | STATUS_KUc; // main phase2 riga 68: interrupt e PLTimer abilitati
-        stateaux.entry_hi = i + 1;                                      // ASID != 0
-
-        // inizializzazione support_struct
-        support_table[i].sup_asid = i + 1; // ASID != 0
+        // Replico l'assegnamento dell'ASID ma nella support struct
+        support_table[i].sup_asid = i + 1;
+        // Imposto l'exceptContext per quando si verifica un page fault
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].pc = (memaddr)TLB_ExcHandler;
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON;
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].stackPtr = &(support_table[i].sup_stackTLB[499]);
+        // Imposto l'exceptContext per quando si verifica una eccezione qualsiasi
         support_table[i].sup_exceptContext[GENERALEXCEPT].pc = (memaddr)generalExcHandler;
         support_table[i].sup_exceptContext[GENERALEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON;
         support_table[i].sup_exceptContext[GENERALEXCEPT].stackPtr = &(support_table[i].sup_stackGen[499]);
 
-        // creazione processo
-        SYSCALL(CREATEPROCESS, &(stateaux), PROCESS_PRIO_LOW, &(support_table[i]));
+        // Infine creo il processo
+        SYSCALL(CREATEPROCESS, &(initial_status), PROCESS_PRIO_LOW, &(support_table[i]));
     }
 
     // aspettare che terminino tutti i processi
