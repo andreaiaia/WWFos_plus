@@ -95,7 +95,8 @@ void TLB_ExcHandler()
         setSTATUS(getSTATUS() & DISABLEINTS);
 
         // Aggiorno la page table entry del current process
-        currSupStruct->sup_privatePgTbl[index].pte_entryLO = (memaddr)swap_frame | VALIDON | DIRTYON;
+        memaddr swap_frame_addr = SWAPSTART + i * PAGESIZE;
+        currSupStruct->sup_privatePgTbl[index].pte_entryLO = swap_frame_addr | VALIDON | DIRTYON;
 
         // Aggiorno il TLB
         TLB_updater(currSupStruct->sup_privatePgTbl[index]);

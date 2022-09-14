@@ -15,7 +15,6 @@
 #define READTERMINAL 5
 
 // Macro
-#define SWAP ((32 * PAGESIZE) + RAMSTART)
 #define DEV_POSITION(T) ((int)T - DEV_REG_START) / (DEV_REG_SIZE / 2)
 
 #define SUP_REG_A0 currSupStructPTR->sup_exceptState[GENERALEXCEPT].reg_a0

@@ -5,9 +5,7 @@
 #include "pandos_const.h"
 #include "helpersSupport.h"
 
-// Renaming some umps const's written in black speech of mordor
-#define TLB_INVALID_LOAD TLBINVLDL
-#define TLB_INVALID_STORE TLBINVLDS
+#define SWAPSTART ((32 * PAGESIZE) + RAMSTART)
 #define TLB_MODIFICATION 1
 
 // Richiamo funzioni dagli altri moduli
