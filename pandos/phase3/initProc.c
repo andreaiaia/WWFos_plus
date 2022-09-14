@@ -35,6 +35,7 @@ void test_fase3()
 
         // Replico l'assegnamento dell'ASID ma nella support struct
         support_table[i].sup_asid = i + 1;
+
         // Imposto l'exceptContext per quando si verifica un page fault
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].pc = (memaddr)TLB_ExcHandler;
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON;
@@ -52,6 +53,8 @@ void test_fase3()
     {
         SYSCALL(PASSEREN, (int)&mainSemaphore, 0, 0);
     }
+
+    // Finito, chiudiamo baracca e burattini
     SYSCALL(TERMPROCESS, 0, 0, 0);
 }
 
