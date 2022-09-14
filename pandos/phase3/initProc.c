@@ -71,8 +71,6 @@ void test_alex()
         SYSCALL(CREATEPROCESS, &(initial_status), PROCESS_PRIO_LOW, &(support_table[i]));
     }
 
-    // aspettare che terminino tutti i processi
-    // todo capire come terminare i processi
     for (int i = 0; i < UPROCMAX; ++i)
     {
         SYSCALL(PASSEREN, (int)&mainSemaphore, 0, 0);

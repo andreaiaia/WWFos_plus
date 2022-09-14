@@ -51,20 +51,6 @@ void syscallExcHandler(support_t *currSupStructPTR)
 // Program Trap Exception Handler - Sezione 4.8
 void trapExcHandler(support_t *currSupStructPTR)
 {
-    int asid = currSupStructPTR->sup_asid;
-    for (int i = 0; i < POOLSIZE; i++)
-    {
-        if (swap_pool_table[i].sw_asid == asid)
-            swap_pool_table[i].sw_asid = -1;
-    }
-    // Sblocco il traffico
-    SYSCALL(VERHOGEN, &printer_sem[asid], 0, 0);
-    SYSCALL(VERHOGEN, &flash_sem[asid], 0, 0);
-    SYSCALL(VERHOGEN, &term_w_sem[asid], 0, 0);
-    SYSCALL(VERHOGEN, &term_r_sem[asid], 0, 0);
-    SYSCALL(VERHOGEN, &swapSemaphore, 0, 0);
-    SYSCALL(VERHOGEN, &mainSemaphore, 0, 0);
-    // Ammazzo il processo
     SYSCALL(TERMINATE, 0, 0, 0);
 }
 
@@ -80,6 +66,20 @@ void getTod(support_t *currSupStructPTR)
 
 void terminate(support_t *currSupStructPTR)
 {
+    int asid = currSupStructPTR->sup_asid;
+    for (int i = 0; i < POOLSIZE; i++)
+    {
+        if (swap_pool_table[i].sw_asid == asid)
+            swap_pool_table[i].sw_asid = -1;
+    }
+    // Sblocco il traffico
+    SYSCALL(VERHOGEN, &printer_sem[asid], 0, 0);
+    SYSCALL(VERHOGEN, &flash_sem[asid], 0, 0);
+    SYSCALL(VERHOGEN, &term_w_sem[asid], 0, 0);
+    SYSCALL(VERHOGEN, &term_r_sem[asid], 0, 0);
+    SYSCALL(VERHOGEN, &swapSemaphore, 0, 0);
+    SYSCALL(VERHOGEN, &mainSemaphore, 0, 0);
+    // Ammazzo il processo
     SYSCALL(TERMPROCESS, 0, 0, 0);
     INC_PC;
 }
