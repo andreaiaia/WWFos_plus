@@ -11,6 +11,8 @@ extern int term_r_sem[UPROCMAX];
 
 extern int mainSemaphore;
 
+extern swap_t swap_pool_table[POOLSIZE];
+extern int swapSemaphore;
 
 // Costanti
 #define GETTOD 1

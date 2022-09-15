@@ -17,10 +17,10 @@ void TLB_ExcHandler()
      * Innanzitutto recupero il puntatore alla struttura di
      * supporto del processo che ha sollevato la TLB exception
      */
-    support_t *currSupStruct = SYSCALL(GETSUPPORTPTR, 0, 0, 0);
+    support_t *currSupStructPTR = (support_t *)SYSCALL(GETSUPPORTPTR, 0, 0, 0);
 
     // Determino la causa della TLB Exception
-    int cause = CAUSE_GET_EXCCODE(currSupStruct->sup_exceptState[PGFAULTEXCEPT].cause);
+    int cause = CAUSE_GET_EXCCODE(currSupStructPTR->sup_exceptState[PGFAULTEXCEPT].cause);
 
     /**
      * Se l'eccezione è di tipo TLB_modification la
@@ -37,7 +37,7 @@ void TLB_ExcHandler()
         SYSCALL(PASSEREN, (int)&swapSemaphore, 0, 0);
 
         // Trova la missing page number (indicata con p) dal processor saved state
-        state_t *procSavedState = &currSupStruct->sup_exceptState[PGFAULTEXCEPT];
+        state_t *procSavedState = &currSupStructPTR->sup_exceptState[PGFAULTEXCEPT];
         int index = ENTRYHI_GET_ASID(procSavedState->entry_hi);
 
         // Prendo un frame i dallo swap pool usando l'algoritmo di pandos
@@ -52,10 +52,10 @@ void TLB_ExcHandler()
             setSTATUS(getSTATUS() & DISABLEINTS);
 
             // Segno la pagina come invalida
-            currSupStruct->sup_privatePgTbl[i].pte_entryLO &= !VALIDON;
+            currSupStructPTR->sup_privatePgTbl[i].pte_entryLO &= !VALIDON;
 
             // Aggiorno il TLB
-            TLB_updater(currSupStruct->sup_privatePgTbl[index]);
+            TLB_updater(currSupStructPTR->sup_privatePgTbl[index]);
 
             /**
              * Scrivo il contenuto da swap_frame al
@@ -81,7 +81,7 @@ void TLB_ExcHandler()
          * Se il frame è libero, leggo il backing store
          * del processo corrente dalla pagina p al swap_frame
          */
-        dtpreg_t *dev = (dtpreg_t *)DEV_REG_ADDR(FLASHINT, currSupStruct->sup_asid - 1);
+        dtpreg_t *dev = (dtpreg_t *)DEV_REG_ADDR(FLASHINT, currSupStructPTR->sup_asid - 1);
         dev->data0 = (memaddr)&swap_frame;
         int read_result = SYSCALL(DOIO, (int)&dev->command, FLASHREAD, 0);
 
@@ -90,9 +90,9 @@ void TLB_ExcHandler()
             trapExcHandler();
 
         // Aggiorno la swap_pool_table con i nuovi contenuti del frame i
-        swap_pool_table[i].sw_asid = currSupStruct->sup_asid;
+        swap_pool_table[i].sw_asid = currSupStructPTR->sup_asid;
         swap_pool_table[i].sw_pageNo = ENTRYHI_GET_VPN(procSavedState->entry_hi);
-        swap_pool_table[i].sw_pte = currSupStruct->sup_privatePgTbl + index;
+        swap_pool_table[i].sw_pte = currSupStructPTR->sup_privatePgTbl + index;
 
         // Queste operazioni vanno fatte in modo atomico
         // Quindi disattivo gli interrupts
@@ -100,10 +100,10 @@ void TLB_ExcHandler()
 
         // Aggiorno la page table entry del current process
         memaddr swap_frame_addr = SWAPSTART + i * PAGESIZE;
-        currSupStruct->sup_privatePgTbl[index].pte_entryLO = swap_frame_addr | VALIDON | DIRTYON;
+        currSupStructPTR->sup_privatePgTbl[index].pte_entryLO = swap_frame_addr | VALIDON | DIRTYON;
 
         // Aggiorno il TLB
-        TLB_updater(currSupStruct->sup_privatePgTbl[index]);
+        TLB_updater(currSupStructPTR->sup_privatePgTbl[index]);
 
         // Tana libera tutti
         SYSCALL(VERHOGEN, (int)&swapSemaphore, 0, 0);

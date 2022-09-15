@@ -10,7 +10,7 @@
 int pandosPageReplacementAlgorithm();
 
 void TLB_ExcHandler();
-
+void TLB_updater(pteEntry_t pteEntry);
 void initSwapStructs();
 
 #endif
