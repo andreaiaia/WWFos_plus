@@ -30,14 +30,17 @@ void uTLB_RefillHandler()
     pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
         klog_print("sono nel mezzo della refill bro\n");
 
-    setENTRYHI(pte.pte_entryHI);
-    //current_p->p_supportStruct->sup_privatePgTbl->pte_entryHI = pte.pte_entryHI;
-    //TLBP();
+    //setENTRYHI(pte.pte_entryHI);
+    current_p->p_supportStruct->sup_privatePgTbl->pte_entryHI = pte.pte_entryHI;
+    TLBP();
     if (getINDEX() & PRESENTFLAG){
     // Aggiungo la PTE nel TLB
     klog_print("ho funzionato\n");
-    setENTRYHI(pte.pte_entryHI);
-    setENTRYLO(pte.pte_entryLO);
+    current_p->p_supportStruct->sup_privatePgTbl->pte_entryHI = pte.pte_entryHI;
+    current_p->p_supportStruct->sup_privatePgTbl->pte_entryLO = pte.pte_entryLO;
+
+    // setENTRYHI(pte.pte_entryHI);
+    // setENTRYLO(pte.pte_entryLO);
     TLBWR();
     }
         klog_print("carico stato dopo tlb\n");
