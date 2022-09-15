@@ -11,7 +11,4 @@
 #include "../h/pandos_const.h"
 
 
-
-
-
 #endif
