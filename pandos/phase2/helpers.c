@@ -186,7 +186,6 @@ void syscallExceptionHandler(unsigned int syscallCode)
 
 void PassUpOrDie(int excCode)
 {
-    klog_print("sono in una passup");
     /**
      * Se la supportStruct è nulla si entra nella "Die"
      * e si termina il processo corrente e tutta la sua progenie.
