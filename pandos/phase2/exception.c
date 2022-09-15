@@ -24,6 +24,8 @@ void exceptionHandler()
 
 void uTLB_RefillHandler()
 {
+        klog_print("sono entrato in tlb bro\n");
+
     int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
     pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
 
