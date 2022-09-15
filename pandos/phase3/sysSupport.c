@@ -185,3 +185,36 @@ void readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR)
     buffer[i] = '\0';
     SUP_REG_V0 = i;
 }
+
+static inline size_t sys_read_terminal()
+{
+    size_t read = 0;
+    support_t *const current_support =
+        (support_t *)SYSCALL(GETSUPPORTPTR, 0, 0, 0);
+    const int termid = (int)current_support->sup_asid - 1;
+    termreg_t *const base = (termreg_t *)(DEV_REG_ADDR(IL_TERMINAL, termid));
+    char *const buf =
+        (char *)current_support->sup_except_state[GENERALEXCEPT].reg_a1;
+    int *const semaphore = &sys5_semaphores[termid];
+
+    if ((memaddr)buf < KUSEG)
+        SYSCALL(TERMINATE, 0, 0, 0);
+    SYSCALL(PASSEREN, (int)semaphore, 0, 0);
+    // No fixed string length: we terminate reading a newline character.
+    for (char r = EOS; r != '\n';)
+    {
+        const size_t status =
+            SYSCALL(DOIO, (int)&base->recv_command, (int)RECEIVE_CHAR, 0);
+        if (RECEIVE_STATUS(status) != DEV_STATUS_TERMINAL_OK)
+        {
+            SYSCALL(VERHOGEN, (int)semaphore, 0, 0);
+            return -RECEIVE_STATUS(status);
+        }
+        r = RECEIVE_VALUE(status);
+        *(buf + read++) = r;
+    }
+    SYSCALL(VERHOGEN, (int)semaphore, 0, 0);
+    // We add a EOS terminating character after the newline character: "*\n\0"
+    *(buf + read) = EOS;
+    return read;
+}
