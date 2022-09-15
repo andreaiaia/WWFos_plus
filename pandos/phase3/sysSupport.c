@@ -152,8 +152,8 @@ void readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR)
     if (SUP_REG_A1 < KUSEG)
         trapExcHandler();
 
-    char buffer[MAXSTRLENG];
-
+    char *buffer;
+    buffer = (char *)SUP_REG_A1;
     // Ricaviamo il device ID facendo asid-1 (perchè gli asid contano da 1)
     int device_id = currSupStructPTR->sup_asid - 1;
     // Ricaviamo un puntatore a device (di tipo stampante) (macro di arch.h)
@@ -176,46 +176,13 @@ void readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR)
          * Caso in cui lettura andata a buon fine shiftiamo di 8 bit
          * e facciamo l'or bit a bit con 0xFF (11111111) [5.7 pops]
          */
-        buffer[i] = (res >> 8) & 0xFF;
+        *(buffer + i) = (res >> 8) & 0xFF;
         guard = (res >> 8) & 0xFF;
         i++;
     }
     INC_PC;
     SYSCALL(VERHOGEN, (unsigned int)term_r_sem[device_id], 0, 0);
-    buffer[i] = '\0';
+    *(buffer + i) = '\0';
     SUP_REG_V0 = i;
     
-}
-
-static inline size_t sys_read_terminal()
-{
-    size_t read = 0;
-    support_t *const current_support =
-        (support_t *)SYSCALL(GETSUPPORTPTR, 0, 0, 0);
-    const int termid = (int)current_support->sup_asid - 1;
-    termreg_t *const base = (termreg_t *)(DEV_REG_ADDR(IL_TERMINAL, termid));
-    char *const buf =
-        (char *)current_support->sup_except_state[GENERALEXCEPT].reg_a1;
-    int *const semaphore = &sys5_semaphores[termid];
-
-    if ((memaddr)buf < KUSEG)
-        SYSCALL(TERMINATE, 0, 0, 0);
-    SYSCALL(PASSEREN, (int)semaphore, 0, 0);
-    // No fixed string length: we terminate reading a newline character.
-    for (char r = EOS; r != '\n';)
-    {
-        const size_t status =
-            SYSCALL(DOIO, (int)&base->recv_command, (int)RECEIVE_CHAR, 0);
-        if (RECEIVE_STATUS(status) != DEV_STATUS_TERMINAL_OK)
-        {
-            SYSCALL(VERHOGEN, (int)semaphore, 0, 0);
-            return -RECEIVE_STATUS(status);
-        }
-        r = RECEIVE_VALUE(status);
-        *(buf + read++) = r;
-    }
-    SYSCALL(VERHOGEN, (int)semaphore, 0, 0);
-    // We add a EOS terminating character after the newline character: "*\n\0"
-    *(buf + read) = EOS;
-    return read;
 }
