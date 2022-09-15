@@ -34,11 +34,11 @@ void uTLB_RefillHandler()
     TLBP();
     if (getINDEX() & PRESENTFLAG){
     // Aggiungo la PTE nel TLB
+    klog_print("ho funzionato\n");
     setENTRYHI(pte.pte_entryHI);
     setENTRYLO(pte.pte_entryLO);
     TLBWR();
     }
         klog_print("carico stato dopo tlb\n");
-    INCREMENTO_PC;
     LDST(PROCESSOR_SAVED_STATE);
 }
