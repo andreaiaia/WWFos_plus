@@ -7,6 +7,7 @@
 #define SWAPSTART ((32 * PAGESIZE) + RAMSTART)
 #define TLB_MODIFICATION 1
 
+int pandosPageReplacementAlgorithm();
 
 void TLB_ExcHandler();
 
