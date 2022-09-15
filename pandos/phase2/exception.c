@@ -24,11 +24,11 @@ void exceptionHandler()
 
 void uTLB_RefillHandler()
 {
-        klog_print("sono entrato in tlb bro\n");
+    klog_print("sono entrato in tlb bro\n");
 
     int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
     pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
-        klog_print("sono nel mezzo della refill bro\n");
+    klog_print("sono nel mezzo della refill bro\n");
 
     //setENTRYHI(pte.pte_entryHI);
     current_p->p_supportStruct->sup_privatePgTbl->pte_entryHI = pte.pte_entryHI;
@@ -43,6 +43,6 @@ void uTLB_RefillHandler()
     // setENTRYLO(pte.pte_entryLO);
     TLBWR();
     }
-        klog_print("carico stato dopo tlb\n");
+    klog_print("carico stato dopo tlb\n");
     LDST(PROCESSOR_SAVED_STATE);
 }
