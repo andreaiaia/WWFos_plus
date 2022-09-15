@@ -31,15 +31,15 @@ void syscallExcHandler(support_t *currSupStructPTR)
         break;
 
     case WRITEPRINTER:
-        writeToPrinter(currSupStructPTR, SUP_REG_A1, SUP_REG_A2);
+        writeToPrinter(currSupStructPTR, (char *)SUP_REG_A1, (int)SUP_REG_A2);
         break;
 
     case WRITETERMINAL:
-        writeToTerminal(currSupStructPTR, SUP_REG_A1, SUP_REG_A2);
+        writeToTerminal(currSupStructPTR, (char *)SUP_REG_A1, (int)SUP_REG_A2);
         break;
 
     case READTERMINAL:
-        readFromTerminal(currSupStructPTR, SUP_REG_A1);
+        readFromTerminal(currSupStructPTR, (char *)SUP_REG_A1);
         break;
     default:
         trapExcHandler(); // sperando che killi
@@ -73,12 +73,12 @@ void terminate(support_t *currSupStructPTR)
             swap_pool_table[i].sw_asid = -1;
     }
     // Sblocco il traffico
-    SYSCALL(VERHOGEN, &printer_sem[asid], 0, 0);
-    SYSCALL(VERHOGEN, &flash_sem[asid], 0, 0);
-    SYSCALL(VERHOGEN, &term_w_sem[asid], 0, 0);
-    SYSCALL(VERHOGEN, &term_r_sem[asid], 0, 0);
-    SYSCALL(VERHOGEN, &swapSemaphore, 0, 0);
-    SYSCALL(VERHOGEN, &mainSemaphore, 0, 0);
+    SYSCALL(VERHOGEN, (unsigned int)&printer_sem[asid], 0, 0);
+    SYSCALL(VERHOGEN, (unsigned int)&flash_sem[asid], 0, 0);
+    SYSCALL(VERHOGEN, (unsigned int)&term_w_sem[asid], 0, 0);
+    SYSCALL(VERHOGEN, (unsigned int)&term_r_sem[asid], 0, 0);
+    SYSCALL(VERHOGEN, (unsigned int)&swapSemaphore, 0, 0);
+    SYSCALL(VERHOGEN, (unsigned int)&mainSemaphore, 0, 0);
     // Ammazzo il processo
     SYSCALL(TERMPROCESS, 0, 0, 0);
     INC_PC;
@@ -98,8 +98,8 @@ void writeToPrinter(support_t *currSupStructPTR, char *virtAddrPTR, int len)
     for (int i = 0; i < len; i++)
     {
         // Indichiamo il punto dove iniziare a leggere/scrivere
-        device->data0 = virtAddrPTR;
-        int res = SYSCALL(DOIO, (int *)(device->command), TRANSMITCHAR, 0);
+        device->data0 = (unsigned int)virtAddrPTR;
+        int res = SYSCALL(DOIO, (unsigned int)(device->command), TRANSMITCHAR, 0);
         // Controllo nel caso la print non vada a buon fine per illecito da parte del chiamante
         if (res != READY)
         {
@@ -128,17 +128,17 @@ void writeToTerminal(support_t *currSupStructPTR, char *virtAddrPTR, int len)
     {
         int valore = (TRANSMITCHAR | (unsigned int)SUP_REG_A1 << BYTELENGTH); // capire perché
         // Indichiamo il punto dove iniziare a leggere/scrivere
-        int res = SYSCALL(DOIO, (int *)(device->transm_command), valore, 0);
+        int res = SYSCALL(DOIO, (unsigned int)(device->transm_command), valore, 0);
         // Controllo nel caso la print non vada a buon fine per illecito da parte del chiamante
         if (res != OKCHARTRANS)
         {
             SUP_REG_V0 = -(res & 0xF);
-            SYSCALL(VERHOGEN, term_r_sem[device_id], 0, 0);
+            SYSCALL(VERHOGEN, (unsigned int)term_r_sem[device_id], 0, 0);
             return;
         }
     }
     INC_PC;
-    SYSCALL(VERHOGEN, term_w_sem[device_id], 0, 0);
+    SYSCALL(VERHOGEN, (unsigned int)(term_w_sem[device_id]), 0, 0);
     SUP_REG_V0 = len;
 }
 
@@ -165,11 +165,11 @@ void readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR)
     while (guard != '\n' && i < MAXSTRLENG)
     {
         // occhio al tipo passato come secondo parametro (il cast)
-        unsigned int res = SYSCALL(DOIO, (int *)(device->recv_command), TRANSMITCHAR, 0);
+        unsigned int res = SYSCALL(DOIO, (unsigned int)(device->recv_command), TRANSMITCHAR, 0);
         if (res != OKCHARTRANS)
         {
             SUP_REG_V0 = -(res & 0xF);
-            SYSCALL(VERHOGEN, term_r_sem[device_id], 0, 0);
+            SYSCALL(VERHOGEN, (unsigned int)term_r_sem[device_id], 0, 0);
             return;
         }
         /**
@@ -180,7 +180,7 @@ void readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR)
         i++;
     }
     INC_PC;
-    SYSCALL(VERHOGEN, term_r_sem[device_id], 0, 0);
+    SYSCALL(VERHOGEN, (unsigned int)term_r_sem[device_id], 0, 0);
     buffer[i] = '\0';
     SUP_REG_V0 = i;
 }
