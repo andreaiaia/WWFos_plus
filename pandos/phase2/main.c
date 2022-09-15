@@ -93,6 +93,7 @@ int main()
     // Aggiorno il vettore dei processi
     all_processes[0] = kernel_mode_proc;
     // Chiamo lo Scheduler
+    klog_print("sono prima dello scheduler\n");
     scheduler();
 
     return 0;
