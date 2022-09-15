@@ -13,6 +13,7 @@ int swapSemaphore;
 
 void TLB_ExcHandler()
 {
+    klog_print("Sono nell'exc tlb handler\n");
     /**
      * Innanzitutto recupero il puntatore alla struttura di
      * supporto del processo che ha sollevato la TLB exception

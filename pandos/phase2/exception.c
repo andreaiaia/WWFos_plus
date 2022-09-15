@@ -28,6 +28,7 @@ void uTLB_RefillHandler()
 
     int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
     pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
+        klog_print("sono nel mezzo della refill bro\n");
 
     setENTRYHI(pte.pte_entryHI);
     TLBP();
@@ -37,5 +38,6 @@ void uTLB_RefillHandler()
     setENTRYLO(pte.pte_entryLO);
     TLBWR();
     }
+        klog_print("carico stato dopo tlb\n");
     LDST(PROCESSOR_SAVED_STATE);
 }
