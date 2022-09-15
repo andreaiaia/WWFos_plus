@@ -27,10 +27,13 @@ void uTLB_RefillHandler()
     int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
     pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
 
+    setENTRYHI(pte.pte_entryHI);
+    TLBP();
+    if (getINDEX() & PRESENTFLAG){
     // Aggiungo la PTE nel TLB
     setENTRYHI(pte.pte_entryHI);
     setENTRYLO(pte.pte_entryLO);
     TLBWR();
-
+    }
     LDST(PROCESSOR_SAVED_STATE);
 }
