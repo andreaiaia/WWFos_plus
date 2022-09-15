@@ -3,6 +3,13 @@
 
 #include "initProc.h"
 
+int printer_sem[UPROCMAX];
+int flash_sem[UPROCMAX];
+int term_w_sem[UPROCMAX];
+int term_r_sem[UPROCMAX];
+
+int mainSemaphore;
+
 void test_fase3()
 {
     // Inizializzo le strutture dati della Swap Pool Table

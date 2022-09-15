@@ -10,12 +10,6 @@
 #include "../h/pandos_types.h"
 #include "../h/pandos_const.h"
 
-int printer_sem[UPROCMAX];
-int flash_sem[UPROCMAX];
-int term_w_sem[UPROCMAX];
-int term_r_sem[UPROCMAX];
-
-int mainSemaphore;
 
 // Swap pool table e relative strutture dati
 swap_t swap_pool_table[POOLSIZE];

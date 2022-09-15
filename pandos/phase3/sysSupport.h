@@ -3,6 +3,15 @@
 
 #include "inclusive.h"
 
+
+extern int printer_sem[UPROCMAX];
+extern int flash_sem[UPROCMAX];
+extern int term_w_sem[UPROCMAX];
+extern int term_r_sem[UPROCMAX];
+
+extern int mainSemaphore;
+
+
 // Costanti
 #define GETTOD 1
 #define TERMINATE 2
