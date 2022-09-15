@@ -39,11 +39,11 @@ void test_fase3()
         // Imposto l'exceptContext per quando si verifica un page fault
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].pc = (memaddr)TLB_ExcHandler;
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON;
-        support_table[i].sup_exceptContext[PGFAULTEXCEPT].stackPtr = &(support_table[i].sup_stackTLB[499]);
+        support_table[i].sup_exceptContext[PGFAULTEXCEPT].stackPtr = support_table[i].sup_stackTLB[499]; //rimosso & perché è unsigned int
         // Imposto l'exceptContext per quando si verifica una eccezione qualsiasi
         support_table[i].sup_exceptContext[GENERALEXCEPT].pc = (memaddr)generalExcHandler;
         support_table[i].sup_exceptContext[GENERALEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON;
-        support_table[i].sup_exceptContext[GENERALEXCEPT].stackPtr = &(support_table[i].sup_stackGen[499]);
+        support_table[i].sup_exceptContext[GENERALEXCEPT].stackPtr = support_table[i].sup_stackGen[499]; //rimosso & perché è un unsigned int
 
         // Infine creo il processo
         SYSCALL(CREATEPROCESS, &(initial_status), PROCESS_PRIO_LOW, &(support_table[i]));
