@@ -65,7 +65,7 @@ klog_print("inizio a creare i processi\n");
     klog_print("Creati i processi\n");
     for (int i = 0; i < UPROCMAX; ++i)
     {
-
+        klog_print("provo a fare una passeren fra\n");
         SYSCALL(PASSEREN, (unsigned int)&mainSemaphore, 0, 0);
         klog_print("fatta una passeren\n");
     }
