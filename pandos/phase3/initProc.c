@@ -10,6 +10,12 @@ int term_r_sem[UPROCMAX];
 
 int mainSemaphore;
 
+
+/** Strutture di supporto per i processi utente */
+support_t support_table[UPROCMAX];
+
+
+
 void test_fase3()
 {
     // Inizializzo le strutture dati della Swap Pool Table

@@ -6,6 +6,10 @@
  * implementa anche Swap Pool e Swap pool table e una funzione
  * initSwapStructs da richiamare poi in initProc.c
  */
+// Swap pool table e relative strutture dati
+swap_t swap_pool_table[POOLSIZE];
+int swapSemaphore;
+
 
 void TLB_ExcHandler()
 {

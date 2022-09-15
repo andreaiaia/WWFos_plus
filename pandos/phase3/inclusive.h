@@ -11,12 +11,6 @@
 #include "../h/pandos_const.h"
 
 
-// Swap pool table e relative strutture dati
-swap_t swap_pool_table[POOLSIZE];
-int swapSemaphore;
-
-/** Strutture di supporto per i processi utente */
-support_t support_table[UPROCMAX];
 
 
 
