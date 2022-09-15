@@ -4,7 +4,7 @@
 
 #include "h/tconst.h"
 #include "h/print.h"
-
+extern void klog_print(char *);
 
 int fib (int i) {
 	if ((i == 1) || (i ==2))
@@ -15,6 +15,7 @@ int fib (int i) {
 
 
 void main() {
+	klog_print("sono qui");
 	int i;
 	
 	print(WRITETERMINAL, "Recursive Fibanaci (8) Test starts\n");
