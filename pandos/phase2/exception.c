@@ -39,5 +39,6 @@ void uTLB_RefillHandler()
     TLBWR();
     }
         klog_print("carico stato dopo tlb\n");
+    INCREMENTO_PC;
     LDST(PROCESSOR_SAVED_STATE);
 }
