@@ -176,7 +176,8 @@ void readFromTerminal(support_t *currSupStructPTR, char *virtAddrPTR)
          * Caso in cui lettura andata a buon fine shiftiamo di 8 bit
          * e facciamo l'or bit a bit con 0xFF (11111111) [5.7 pops]
          */
-        buffer[i], guard = (res >> 8) & 0xFF;
+        buffer[i] = (res >> 8) & 0xFF;
+        guard = (res >> 8) & 0xFF;
         i++;
     }
     INC_PC;
