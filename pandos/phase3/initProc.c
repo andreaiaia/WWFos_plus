@@ -18,6 +18,7 @@ support_t support_table[UPROCMAX];
 
 void test_fase3()
 {
+    klog_print("prima riga del test\n");
     // Inizializzo le strutture dati della Swap Pool Table
     initSwapStructs();
 
