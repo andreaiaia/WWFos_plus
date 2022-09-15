@@ -4,7 +4,6 @@
 #include <umps3/umps/arch.h>
 #include "../h/pandos_types.h"
 #include "../h/pandos_const.h"
-#include "helpersSupport.h"
 #include "initProc.h"
 
 // Costanti
@@ -24,16 +23,6 @@
 
 #define INC_PC currSupStructPTR->sup_exceptState[GENERALEXCEPT].pc_epc += 4
 
-// Richiami esterni
-extern int printer_sem[UPROCMAX];
-extern int flash_sem[UPROCMAX];
-extern int term_w_sem[UPROCMAX];
-extern int term_r_sem[UPROCMAX];
-extern int swapSemaphore;
-extern int mainSemaphore;
-extern int getDeviceSemaphoreIndex(int line, int device, int term_is_recv);
-// support_t supportStruct_table[UPROCMAX];
-extern struct list_head supportStruct_free;
 
 //* Dichiarazioni prototipi di funzioni
 // General Exception Handler, gestisce le system call con numero >= 1 */
