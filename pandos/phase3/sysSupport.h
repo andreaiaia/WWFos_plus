@@ -1,10 +1,7 @@
 #ifndef SYS_SUPPORT_H
 #define SYS_SUPPORT_H
 
-#include <umps3/umps/arch.h>
-#include "../h/pandos_types.h"
-#include "../h/pandos_const.h"
-#include "initProc.h"
+#include "inclusive.h"
 
 // Costanti
 #define GETTOD 1
