@@ -1,7 +1,6 @@
 #ifndef VM_SUPPORT_H
 #define VM_SUPPORT_H
 
-#include "inclusive.h"
 #include "sysSupport.h"
 
 #define SWAPSTART ((32 * PAGESIZE) + RAMSTART)
