@@ -24,7 +24,7 @@ void exceptionHandler()
 
 void uTLB_RefillHandler()
 {
-    size_tt index = getPTEIndex(PROCESSOR_SAVED_STATE->entry_hi);
+    int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
     pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
 
     // Aggiungo la PTE nel TLB
