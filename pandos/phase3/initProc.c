@@ -46,7 +46,7 @@ void test_fase3()
         support_table[i].sup_exceptContext[GENERALEXCEPT].stackPtr = support_table[i].sup_stackGen[499]; //rimosso & perché è un unsigned int
 
         // Infine creo il processo
-        SYSCALL(CREATEPROCESS, &(initial_status), PROCESS_PRIO_LOW, &(support_table[i]));
+        SYSCALL(CREATEPROCESS, (state_t *)&(initial_status), PROCESS_PRIO_LOW, (support_t *)&(support_table[i]));
     }
 
     for (int i = 0; i < UPROCMAX; ++i)
