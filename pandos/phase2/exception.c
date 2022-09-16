@@ -31,7 +31,7 @@ void uTLB_RefillHandler()
     int i;
     for (i = 0; i < MAXPAGES; i++)
     {
-        if (&current_p->p_supportStruct->sup_privatePgTbl[i])
+        if (&current_p->p_supportStruct->sup_privatePgTbl[i] == vpn)
             break;
     }
 
