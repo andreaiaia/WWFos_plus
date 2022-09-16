@@ -42,14 +42,13 @@ void TLB_ExcHandler()
 
         // Trova la missing page number (indicata con p) dal processor saved state
         state_t *procSavedState = &currSupStructPTR->sup_exceptState[PGFAULTEXCEPT];
-        int index = ENTRYHI_GET_ASID(procSavedState->entry_hi);
-
+        //int index = ENTRYHI_GET_ASID(procSavedState->entry_hi);
+        int asid = ENTRYHI_GET_ASID(procSavedState->entry_hi);
         klog_print("refill handler\n");
         unsigned int vpn = procSavedState->entry_hi >> VPNSHIFT;
 
         pteEntry_t *table = currSupStructPTR->sup_privatePgTbl;
         unsigned int newEntryHI, newEntryLO;
-
         for (int i = 0; i < USERPGTBLSIZE; i++)
         {
             if (table[i].pte_entryHI >> VPNSHIFT == vpn)
@@ -79,7 +78,7 @@ void TLB_ExcHandler()
             currSupStructPTR->sup_privatePgTbl[i].pte_entryLO &= !VALIDON;
 
             // Aggiorno il TLB
-            TLB_updater(currSupStructPTR->sup_privatePgTbl[index]);
+            TLB_updater(newEntryHI, newEntryLO);
 
             /**
              * Scrivo il contenuto da swap_frame al
@@ -92,7 +91,7 @@ void TLB_ExcHandler()
             dev->data0 = (memaddr)&swap_frame;
 
             //* 2. Effettuare la scrittura con la DOIO (NSYS5)
-            int write_result = SYSCALL(DOIO, (int)&dev->command, FLASHWRITE | index << BYTELENGTH, 0);
+            int write_result = SYSCALL(DOIO, (int)&dev->command, FLASHWRITE | asid << BYTELENGTH, 0);
 
             // Qualsiasi errore viene gestito come una trap
             if (write_result != READY){
@@ -118,7 +117,7 @@ void TLB_ExcHandler()
         // Aggiorno la swap_pool_table con i nuovi contenuti del frame i
         swap_pool_table[i].sw_asid = currSupStructPTR->sup_asid;
         swap_pool_table[i].sw_pageNo = ENTRYHI_GET_VPN(procSavedState->entry_hi);
-        swap_pool_table[i].sw_pte = currSupStructPTR->sup_privatePgTbl + index;
+        swap_pool_table[i].sw_pte = currSupStructPTR->sup_privatePgTbl + asid;
 
         // Queste operazioni vanno fatte in modo atomico
         // Quindi disattivo gli interrupts
@@ -126,10 +125,10 @@ void TLB_ExcHandler()
 
         // Aggiorno la page table entry del current process
         memaddr swap_frame_addr = SWAPSTART + i * PAGESIZE;
-        currSupStructPTR->sup_privatePgTbl[index].pte_entryLO = swap_frame_addr | VALIDON | DIRTYON;
+        currSupStructPTR->sup_privatePgTbl[asid].pte_entryLO = swap_frame_addr | VALIDON | DIRTYON;
 
         // Aggiorno il TLB
-        TLB_updater(currSupStructPTR->sup_privatePgTbl[index]);
+        TLB_updater(newEntryHI, newEntryLO);
 
         // Tana libera tutti
         SYSCALL(VERHOGEN, (int)&swapSemaphore, 0, 0);
@@ -185,14 +184,9 @@ int pandosPageReplacementAlgorithm()
     return i;
 }
 
-void TLB_updater(pteEntry_t pteEntry)
+void TLB_updater(unsigned int newEntryHI, unsigned int newEntryLO)
 {
-    setENTRYHI(pteEntry.pte_entryHI);
-    TLBP();
-    if (getINDEX() & PRESENTFLAG)
-    {
-        setENTRYHI(pteEntry.pte_entryHI);
-        setENTRYLO(pteEntry.pte_entryLO);
+        setENTRYHI(newEntryHI);
+        setENTRYLO(newEntryLO);
         TLBWI();
-    }
 }
