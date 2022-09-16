@@ -26,6 +26,7 @@ void extern klog_print_hex();
 
 void uTLB_RefillHandler()
 {
+    setSTATUS(getSTATUS() & DISABLEINTS);
     klog_print("refill handler\n");
     unsigned int vpn = PROCESSOR_SAVED_STATE->entry_hi >> VPNSHIFT;
 
@@ -50,6 +51,6 @@ void uTLB_RefillHandler()
     setENTRYHI(newEntryHI);
     setENTRYLO(newEntryLO);
     TLBWR();
-
+    setSTATUS(getSTATUS() | IECON);
     LDST(PROCESSOR_SAVED_STATE);
 }
