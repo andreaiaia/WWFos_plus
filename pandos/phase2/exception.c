@@ -26,7 +26,7 @@ void extern klog_print_hex();
 
 void uTLB_RefillHandler()
 {
-    setSTATUS(getSTATUS() & DISABLEINTS);
+    // setSTATUS(getSTATUS() & DISABLEINTS);
     // int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
     state_t *excState = PROCESSOR_SAVED_STATE;
     int index = ENTRYHI_GET_VPN(excState->entry_hi);
@@ -42,9 +42,9 @@ void uTLB_RefillHandler()
     setENTRYLO(pte.pte_entryLO);
     TLBWR();
 
-    klog_print("abilito interrupts\n");
+    // klog_print("abilito interrupts\n");
 
-    setSTATUS(getSTATUS() | IECON);
+    // setSTATUS(getSTATUS() | IECON);
 
     LDST(excState);
 }
