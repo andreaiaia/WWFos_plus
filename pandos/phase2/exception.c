@@ -37,6 +37,8 @@ void uTLB_RefillHandler()
         {
             newEntryHI = table[i].pte_entryHI;
             newEntryLO = table[i].pte_entryLO;
+            klog_print("Trovata pagina: ");
+            klog_print_hex(i);
             break;
         }
     }
