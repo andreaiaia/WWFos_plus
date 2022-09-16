@@ -22,7 +22,7 @@ void exceptionHandler()
         syscallExceptionHandler(REG_A0_SS);
 }
 
-void extern klog_print_dec;
+void extern klog_print_dec();
 
 void uTLB_RefillHandler()
 {
