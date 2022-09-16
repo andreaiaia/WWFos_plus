@@ -28,7 +28,7 @@ void uTLB_RefillHandler()
 {
     unsigned int vpn = PROCESSOR_SAVED_STATE->entry_hi >> VPNSHIFT;
 
-    pteEntry_t table[USERPGTBLSIZE] = current_p->p_supportStruct->sup_privatePgTbl;
+    pteEntry_t *table = current_p->p_supportStruct->sup_privatePgTbl;
     unsigned int newEntryHI, newEntryLO;
 
     for (int i = 0; i < USERPGTBLSIZE; i++)
