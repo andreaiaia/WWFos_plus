@@ -57,7 +57,13 @@ klog_print("inizio a creare i processi\n");
         support_table[i].sup_exceptContext[GENERALEXCEPT].pc = (memaddr)generalExcHandler;
         support_table[i].sup_exceptContext[GENERALEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON;
         support_table[i].sup_exceptContext[GENERALEXCEPT].stackPtr = (unsigned int)&(support_table[i].sup_stackGen[499]); //rimosso & perché è un unsigned int
-
+        for (int j = 0; j < MAXPAGES-1; j++){
+            support_table[i].sup_privatePgTbl[j].pte_entryHI = KUSEG + (j << VPNSHIFT) + ((i+1) << ASIDSHIFT);
+            support_table[i].sup_privatePgTbl[j].pte_entryLO = DIRTYON;            
+        }
+        support_table[i].sup_privatePgTbl[MAXPAGES-1].pte_entryHI = 0xBFFFF000 + ((i+1) << ASIDSHIFT);
+        support_table[i].sup_privatePgTbl[MAXPAGES-1].pte_entryLO = DIRTYON;
+        
         // Infine creo il processo
         klog_print("Creo un processo\n");
         SYSCALL(CREATEPROCESS, (unsigned int)&(initial_status), PROCESS_PRIO_LOW, (unsigned int)&(support_table[i]));
