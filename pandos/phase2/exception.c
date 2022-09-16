@@ -25,29 +25,20 @@ void exceptionHandler()
 void uTLB_RefillHandler()
 {
     // int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
-    // EntryHI to VPN
-    unsigned int vpn = PROCESSOR_SAVED_STATE->entry_hi >> VPNSHIFT;
-    // VPN to Index
-    int i;
-    for (i = 0; i < MAXPAGES; i++)
-    {
-        pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[i];
-        if ((pte->entry_hi >> VPNSHIFT) == vpn)
-            break;
-    }
+    state_t *excState = PROCESSOR_SAVED_STATE;
+    int index = ENTRYHI_GET_VPN(excState->entry_hi);
 
-    pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[i];
+    klog_print("Trovato indice: ");
+    klog_print_dec(index);
+    klog_print("\n");
 
-    // setENTRYHI(pte.pte_entryHI);
-    current_p->p_supportStruct->sup_privatePgTbl->pte_entryHI = pte.pte_entryHI;
-    TLBP();
-    if (getINDEX() & PRESENTFLAG)
-    {
-        // Aggiungo la PTE nel TLB
-        setENTRYHI(pte.pte_entryHI);
-        setENTRYLO(pte.pte_entryLO);
-        TLBWR();
-    }
+    pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
+
+    // Aggiungo la PTE nel TLB
+    setENTRYHI(pte.pte_entryHI);
+    setENTRYLO(pte.pte_entryLO);
+    TLBWR();
+
     klog_print("carico stato dopo tlb\n");
-    LDST(PROCESSOR_SAVED_STATE);
+    LDST(excState);
 }
