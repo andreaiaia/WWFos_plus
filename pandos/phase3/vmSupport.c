@@ -43,6 +43,26 @@ void TLB_ExcHandler()
         state_t *procSavedState = &currSupStructPTR->sup_exceptState[PGFAULTEXCEPT];
         int index = ENTRYHI_GET_ASID(procSavedState->entry_hi);
 
+        klog_print("refill handler\n");
+        unsigned int vpn = procSavedState->entry_hi >> VPNSHIFT;
+
+        pteEntry_t *table = currSupStructPTR->sup_privatePgTbl;
+        unsigned int newEntryHI, newEntryLO;
+
+        for (int i = 0; i < USERPGTBLSIZE; i++)
+        {
+            if (table[i].pte_entryHI >> VPNSHIFT == vpn)
+            {
+                newEntryHI = table[i].pte_entryHI;
+                newEntryLO = table[i].pte_entryLO;
+                klog_print("Trovata pagina: ");
+                klog_print_hex(i);
+                klog_print("vmsupport\n");
+                break;
+            }
+        }
+
+
         // Prendo un frame i dallo swap pool usando l'algoritmo di pandos
         int i = pandosPageReplacementAlgorithm();
         swap_t swap_frame = swap_pool_table[i];
