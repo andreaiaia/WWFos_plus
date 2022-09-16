@@ -24,6 +24,7 @@ void exceptionHandler()
 
 void uTLB_RefillHandler()
 {
+    setSTATUS(getSTATUS() & DISABLEINTS);
     // int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
     state_t *excState = PROCESSOR_SAVED_STATE;
     int index = ENTRYHI_GET_VPN(excState->entry_hi);
@@ -39,6 +40,9 @@ void uTLB_RefillHandler()
     setENTRYLO(pte.pte_entryLO);
     TLBWR();
 
-    klog_print("carico stato dopo tlb\n");
+    klog_print("abilito interrupts\n");
+
+    setSTATUS(getSTATUS() | IECON);
+
     LDST(excState);
 }
