@@ -32,7 +32,7 @@ void uTLB_RefillHandler()
     for (i = 0; i < MAXPAGES; i++)
     {
         pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[i];
-        if ((pte->entry_hi >> VPNSHIFT) == vpn)
+        if ((pte.pte_entryHI >> VPNSHIFT) == vpn)
             break;
     }
 
