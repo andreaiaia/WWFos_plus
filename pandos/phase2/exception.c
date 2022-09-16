@@ -26,7 +26,7 @@ void extern klog_print_hex();
 
 void uTLB_RefillHandler()
 {
-    klog_print('refill handler');
+    klog_print("refill handler");
     unsigned int vpn = PROCESSOR_SAVED_STATE->entry_hi >> VPNSHIFT;
 
     pteEntry_t *table = current_p->p_supportStruct->sup_privatePgTbl;
