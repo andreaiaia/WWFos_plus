@@ -26,25 +26,25 @@ void extern klog_print_hex();
 
 void uTLB_RefillHandler()
 {
-    // setSTATUS(getSTATUS() & DISABLEINTS);
-    // int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
-    //state_t *excState = PROCESSOR_SAVED_STATE;
-    int index = ENTRYHI_GET_VPN(PROCESSOR_SAVED_STATE->entry_hi);
+    unsigned int vpn = PROCESSOR_SAVED_STATE->entry_hi >> VPNSHIFT;
 
-    klog_print("Trovato indice: ");
-    klog_print_hex(index);
-    klog_print("\n");
+    pteEntry_t table = current_p->p_supportStruct->sup_privatePgTbl;
+    unsigned int newEntryHI, newEntryLO;
 
-    pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
+    for (int i = 0; i < USERPGTBLSIZE; i++)
+    {
+        if (table[i].pte_EntryHI >> VPNSHIFT == vpn)
+        {
+            newEntryHI = table[i].pte_entryHI;
+            newEntryLO = table[i].pte_entryLO;
+            break;
+        }
+    }
 
     // Aggiungo la PTE nel TLB
-    setENTRYHI(pte.pte_entryHI);
-    setENTRYLO(pte.pte_entryLO);
+    setENTRYHI(newEntryHI);
+    setENTRYLO(newEntryLO);
     TLBWR();
-
-    // klog_print("abilito interrupts\n");
-
-    // setSTATUS(getSTATUS() | IECON);
 
     LDST(PROCESSOR_SAVED_STATE);
 }
