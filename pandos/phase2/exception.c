@@ -30,7 +30,7 @@ void uTLB_RefillHandler()
     // VPN to Index
     for (int i = 0; i < MAXPAGES; i++)
     {
-        if (current_p->p_supportStruct->sup_privatePgTbl[i])
+        if (&current_p->p_supportStruct->sup_privatePgTbl[i])
             break;
     }
 
