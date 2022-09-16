@@ -40,10 +40,11 @@ void uTLB_RefillHandler()
             newEntryLO = table[i].pte_entryLO;
             klog_print("Trovata pagina: ");
             klog_print_hex(i);
+            klog_print("\n");
             break;
         }
     }
-    klog_print("refill handler - post for");
+    klog_print("refill handler - post for\n");
 
     // Aggiungo la PTE nel TLB
     setENTRYHI(newEntryHI);
