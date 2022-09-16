@@ -33,8 +33,5 @@
 //* Dichiarazioni di funzioni esterne */
 // La funzione test si trova nel file di test fornito
 extern void test_fase3();
-// Funzioni utile per il debugging
-extern void klog_print(char *);
-extern void klog_print_hex(unsigned int);
 
 #endif

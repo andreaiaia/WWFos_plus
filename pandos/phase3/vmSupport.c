@@ -10,8 +10,6 @@
 swap_t swap_pool_table[POOLSIZE];
 int swapSemaphore;
 
-extern void klog_print_hex();
-
 void TLB_ExcHandler()
 {
     /**

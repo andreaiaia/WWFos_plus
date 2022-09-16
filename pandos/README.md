@@ -9,11 +9,7 @@ Il sistema operativo PandOS è l'ultimo di una serie di sistemi operativi didatt
 ## Setup
 
 Per poter compilare ed eseguire il codice è necessario trovarsi su un sistema operativo GNU/Linux e installare l'emulatore [uMPS3](https://github.com/virtualsquare/umps3).
-A questo punto è sufficiente trovarsi nella directory phase2 e lanciare il comando `make`, dopodiché per avviare la macchina virtuale basta seguire [questo tutorial](https://wiki.virtualsquare.org/#!education/tutorials/umps/getting_started.md#Booting_in_%C2%B5MPS), i cui passi riassumo brevemente:
-
-- Aprire il file di configurazione "phase2.json";
-- Accendere la macchina;
-- Avviare il test.
+A questo punto è sufficiente trovarsi nella directory phase3 e lanciare il comando `make`, in seguito muoversi nella directory testers e lanciare nuovamente il comando `make`, a questo punto per inizializzare i processi di test occorre andare nelle impostazioni di umps e assegnare ad ogni flash device il file .umps del relativo processo; dopodiché per avviare la macchina virtuale basta seguire [questo tutorial](https://wiki.virtualsquare.org/#!education/tutorials/umps/getting_started.md#Booting_in_%C2%B5MPS).
 
 ## Fase 1
 
@@ -88,3 +84,9 @@ Per sopperire ad alcune mancanze che non erano emerse durante la precedente fase
 
 - La funzione allocPcb è stata modificata per impostare anche il campo p_supportStruct a NULL;
 - La funzione removeBlocked è stata modificata per impostare il campo p_semAdd del pcb a NULL quando viene rimosso.
+
+# Fase 3
+
+In questa fase viene sviluppato il livello di supporto del nostro sistema operativo, in particolare questo livello si occupa di creare un ambiente per l'esecuzione dei processi utente e gestisce le eccezioni che il kernel "passa sopra" nella PassUpOrDie.
+
+Purtroppo, nonostante ripetuti tentativi di debugging, non siamo riusciti a risolvere il problema per cui, dopo che il test ha lanciato gli 8 processi, questi non facciano nulla. Sospettiamo che il problema sia nel TLB_ExcHandler, ma anche confrontandoci con i testi forniti non siamo riusciti a capire in quale parte del codice abbiamo recepito male le indicazioni forniteci e non siamo quindi riusciti ad ottenere una funzione corretta.
