@@ -33,7 +33,7 @@ void uTLB_RefillHandler()
 
     for (int i = 0; i < USERPGTBLSIZE; i++)
     {
-        if (table[i].pte_EntryHI >> VPNSHIFT == vpn)
+        if (table[i].pte_entryHI >> VPNSHIFT == vpn)
         {
             newEntryHI = table[i].pte_entryHI;
             newEntryLO = table[i].pte_entryLO;
