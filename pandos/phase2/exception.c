@@ -28,7 +28,8 @@ void uTLB_RefillHandler()
     // EntryHI to VPN
     unsigned int vpn = PROCESSOR_SAVED_STATE->entry_hi >> VPNSHIFT;
     // VPN to Index
-    for (int i = 0; i < MAXPAGES; i++)
+    int i;
+    for (i = 0; i < MAXPAGES; i++)
     {
         if (&current_p->p_supportStruct->sup_privatePgTbl[i])
             break;
