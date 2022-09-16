@@ -22,6 +22,8 @@ void exceptionHandler()
         syscallExceptionHandler(REG_A0_SS);
 }
 
+void extern klog_print_dec;
+
 void uTLB_RefillHandler()
 {
     // int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
