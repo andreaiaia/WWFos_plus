@@ -18,6 +18,7 @@ support_t support_table[UPROCMAX];
 
 void test_fase3()
 {
+    klog_print("prima riga del test\n");
     // Inizializzo le strutture dati della Swap Pool Table
     initSwapStructs();
 
@@ -39,7 +40,7 @@ void test_fase3()
     initial_status.reg_t9 = UPROCSTARTADDR;
     initial_status.reg_sp = USERSTACKTOP;
     initial_status.status = ALLOFF | IEPON | IMON | TEBITON | USERPON;
-
+klog_print("inizio a creare i processi\n");
     // inizializzazione (creazione lista) degli 8 U-proc
     for (int i = 0; i < UPROCMAX; i++)
     {
@@ -48,7 +49,6 @@ void test_fase3()
 
         // Replico l'assegnamento dell'ASID ma nella support struct
         support_table[i].sup_asid = i + 1;
-
         // Imposto l'exceptContext per quando si verifica un page fault
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].pc = (memaddr)TLB_ExcHandler;
         support_table[i].sup_exceptContext[PGFAULTEXCEPT].status = ALLOFF | IEPON | IMON | TEBITON;
@@ -59,12 +59,15 @@ void test_fase3()
         support_table[i].sup_exceptContext[GENERALEXCEPT].stackPtr = (unsigned int)&(support_table[i].sup_stackGen[499]); //rimosso & perché è un unsigned int
 
         // Infine creo il processo
+        klog_print("Creo un processo\n");
         SYSCALL(CREATEPROCESS, (unsigned int)&(initial_status), PROCESS_PRIO_LOW, (unsigned int)&(support_table[i]));
     }
-
+    klog_print("Creati i processi\n");
     for (int i = 0; i < UPROCMAX; ++i)
     {
+        klog_print("provo a fare una passeren fra\n");
         SYSCALL(PASSEREN, (unsigned int)&mainSemaphore, 0, 0);
+        klog_print("fatta una passeren\n");
     }
 
     // Finito, chiudiamo baracca e burattini

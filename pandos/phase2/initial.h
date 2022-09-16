@@ -31,10 +31,7 @@
 #define REG_A3_SS PROCESSOR_SAVED_STATE->reg_a3
 
 //* Dichiarazioni di funzioni esterne */
-// Funzione fornita dalle specifiche, la riscriveremo nella prossima fase
-extern void uTLB_RefillHandler();
 // La funzione test si trova nel file di test fornito
-extern void test();
 extern void test_fase3();
 // Funzioni utile per il debugging
 extern void klog_print(char *);

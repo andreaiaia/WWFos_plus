@@ -10,5 +10,6 @@
 #include "../h/pandos_types.h"
 #include "../h/pandos_const.h"
 
+extern void klog_print(char *);
 
 #endif
