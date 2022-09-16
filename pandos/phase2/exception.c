@@ -24,16 +24,26 @@ void exceptionHandler()
 
 void uTLB_RefillHandler()
 {
-    int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
-    pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
+    // int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
+    // EntryHI to VPN
+    unsigned int vpn = PROCESSOR_SAVED_STATE->entry_hi >> VPNSHIFT;
+    // VPN to Index
+    for (int i = 0; i < MAXPAGES; i++)
+    {
+        if (current_p->p_supportStruct->sup_privatePgTbl[i])
+            break;
+    }
+
+    pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[i];
 
     setENTRYHI(pte.pte_entryHI);
     TLBP();
-    if (getINDEX() & PRESENTFLAG){
-    // Aggiungo la PTE nel TLB
-    setENTRYHI(pte.pte_entryHI);
-    setENTRYLO(pte.pte_entryLO);
-    TLBWR();
+    if (getINDEX() & PRESENTFLAG)
+    {
+        // Aggiungo la PTE nel TLB
+        setENTRYHI(pte.pte_entryHI);
+        setENTRYLO(pte.pte_entryLO);
+        TLBWR();
     }
     LDST(PROCESSOR_SAVED_STATE);
 }
