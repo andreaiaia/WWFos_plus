@@ -22,6 +22,8 @@ void exceptionHandler()
         syscallExceptionHandler(REG_A0_SS);
 }
 
+void extern klog_print_hex();
+
 void uTLB_RefillHandler()
 {
     setSTATUS(getSTATUS() & DISABLEINTS);
@@ -30,7 +32,7 @@ void uTLB_RefillHandler()
     int index = ENTRYHI_GET_VPN(excState->entry_hi);
 
     klog_print("Trovato indice: ");
-    klog_print_dec(index);
+    klog_print_hex(index);
     klog_print("\n");
 
     pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[index];
