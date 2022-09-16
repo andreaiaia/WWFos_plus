@@ -28,8 +28,8 @@ void uTLB_RefillHandler()
 {
     // setSTATUS(getSTATUS() & DISABLEINTS);
     // int index = ENTRYHI_GET_ASID(PROCESSOR_SAVED_STATE->entry_hi);
-    state_t *excState = PROCESSOR_SAVED_STATE;
-    int index = ENTRYHI_GET_VPN(excState->entry_hi);
+    //state_t *excState = PROCESSOR_SAVED_STATE;
+    int index = ENTRYHI_GET_VPN(PROCESSOR_SAVED_STATE->entry_hi);
 
     klog_print("Trovato indice: ");
     klog_print_hex(index);
@@ -46,5 +46,5 @@ void uTLB_RefillHandler()
 
     // setSTATUS(getSTATUS() | IECON);
 
-    LDST(excState);
+    LDST(PROCESSOR_SAVED_STATE);
 }
