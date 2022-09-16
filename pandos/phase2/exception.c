@@ -38,8 +38,8 @@ void uTLB_RefillHandler()
 
     pteEntry_t pte = current_p->p_supportStruct->sup_privatePgTbl[i];
 
-    // setENTRYHI(pte.pte_entryHI);
-    current_p->p_supportStruct->sup_privatePgTbl->pte_entryHI = pte.pte_entryHI;
+    setENTRYHI(pte.pte_entryHI);
+    //current_p->p_supportStruct->sup_privatePgTbl->pte_entryHI = pte.pte_entryHI;
     TLBP();
     if (getINDEX() & PRESENTFLAG)
     {
