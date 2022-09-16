@@ -14,7 +14,6 @@ extern void klog_print_hex();
 
 void TLB_ExcHandler()
 {
-    klog_print("Sono nell'exc tlb handler\n");
     /**
      * Innanzitutto recupero il puntatore alla struttura di
      * supporto del processo che ha sollevato la TLB exception
@@ -30,25 +29,24 @@ void TLB_ExcHandler()
      */
     if (cause == TLB_MODIFICATION)
     {
-        klog_print("chiamo una trap\n");
         // Attempt to write on a read-only page
         trapExcHandler();
     }
     else
     {
-        klog_print("chiamo una passeren\n");
         // Prendo l'accesso alla swap pool table
         SYSCALL(PASSEREN, (int)&swapSemaphore, 0, 0);
 
         // Trova la missing page number (indicata con p) dal processor saved state
         state_t *procSavedState = &currSupStructPTR->sup_exceptState[PGFAULTEXCEPT];
-        //int index = ENTRYHI_GET_ASID(procSavedState->entry_hi);
+
         int asid = ENTRYHI_GET_ASID(procSavedState->entry_hi);
-        klog_print("refill handler\n");
+
         unsigned int vpn = procSavedState->entry_hi >> VPNSHIFT;
 
         pteEntry_t *table = currSupStructPTR->sup_privatePgTbl;
         unsigned int newEntryHI, newEntryLO;
+
         for (int i = 0; i < USERPGTBLSIZE; i++)
         {
             if (table[i].pte_entryHI >> VPNSHIFT == vpn)
@@ -61,7 +59,6 @@ void TLB_ExcHandler()
                 break;
             }
         }
-
 
         // Prendo un frame i dallo swap pool usando l'algoritmo di pandos
         int i = pandosPageReplacementAlgorithm();
@@ -94,11 +91,8 @@ void TLB_ExcHandler()
             int write_result = SYSCALL(DOIO, (int)&dev->command, FLASHWRITE | asid << BYTELENGTH, 0);
 
             // Qualsiasi errore viene gestito come una trap
-            if (write_result != READY){
+            if (write_result != READY)
                 trapExcHandler();
-                
-            klog_print("chiamo una trap 2\n");
-            }
             // Adesso posso riattivare gli interrupts
             setSTATUS(getSTATUS() | IECON);
         }
@@ -186,7 +180,7 @@ int pandosPageReplacementAlgorithm()
 
 void TLB_updater(unsigned int newEntryHI, unsigned int newEntryLO)
 {
-        setENTRYHI(newEntryHI);
-        setENTRYLO(newEntryLO);
-        TLBWI();
+    setENTRYHI(newEntryHI);
+    setENTRYLO(newEntryLO);
+    TLBWI();
 }
