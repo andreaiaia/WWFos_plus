@@ -29,11 +29,13 @@ void TLB_ExcHandler()
      */
     if (cause == TLB_MODIFICATION)
     {
+        klog_print("chiamo una trap\n");
         // Attempt to write on a read-only page
         trapExcHandler();
     }
     else
     {
+        klog_print("chiamo una passeren\n");
         // Prendo l'accesso alla swap pool table
         SYSCALL(PASSEREN, (int)&swapSemaphore, 0, 0);
 
@@ -72,9 +74,11 @@ void TLB_ExcHandler()
             int write_result = SYSCALL(DOIO, (int)&dev->command, FLASHWRITE | index << BYTELENGTH, 0);
 
             // Qualsiasi errore viene gestito come una trap
-            if (write_result != READY)
+            if (write_result != READY){
                 trapExcHandler();
-
+                
+            klog_print("chiamo una trap 2\n");
+            }
             // Adesso posso riattivare gli interrupts
             setSTATUS(getSTATUS() | IECON);
         }
